@@ -61,6 +61,7 @@ round(Mineral_Check, digits=3)-West_m_Moisture[,"Mineral_Calculated_(%)"]
 
 # Autocovariance check
 # Calculate average soil moisture
-M_mean<-mean(West_m_Moisture[,"Soil_Moisture_Mineral_Calculated_(%)"])
+SM_mean<-mean(West_m_Moisture[,"Soil_Moisture_Mineral_Calculated_(%)"])
+
 ACF_Check<-sapply(
             
