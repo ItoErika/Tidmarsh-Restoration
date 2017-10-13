@@ -23,7 +23,7 @@ LastMeasured<-Measured[which(diff(Measured)>1)]
 # This is the element in Measured AFTER the elements where the next data point are more than one element away
 FirstMeasured<-Measured[which(diff(Measured)>1)+1]
 
-# Write a for loop that interpolates values in these blank clusters 
+# Write a for loop that linearly interpolates values in these blank clusters 
 # Note that there are 36 clusters of blanks ( length(FirstMeasured) = length(LastMeasured) = 36)
 for (i in 1:36){
     West_cm_Moisture[LastMeasured[i]:FirstMeasured[i],"Permittivity_Check"]<-seq(West_cm_Moisture[LastMeasured[i],"Permittivity_Check"], West_cm_Moisture[FirstMeasured[i],"Permittivity_Check"],length=length(LastMeasured[i]:FirstMeasured[i]))
