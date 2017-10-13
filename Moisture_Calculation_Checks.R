@@ -58,16 +58,35 @@ a1<-8.400
 Mineral_Check<-sapply(West_m_Moisture[,"Permittivity_(V)"], function(x, y, z) ((1+6.175*x+6.303*x^2-73.578*x^3+183.44*x^4-184.78*x^5+68.017*x^6)-y)/z, a0, a1)
 # CHECK:
 round(Mineral_Check, digits=3)-West_m_Moisture[,"Soil_Moisture_Mineral_Calculated_(%)"]
-
-# Autocovariance check
+                      
+# Autocovariance check (h=1)
 # Calculate average soil moisture
 SM_mean<-mean(West_m_Moisture[,"Soil_Moisture_Mineral_Calculated_(%)"])
 # Record number of soil moisture measurements
 n<-length(West_m_Moisture[,"Soil_Moisture_Mineral_Calculated_(%)"])
 # Make empty vector for autocovariance check
-AutoCov_Check<-vector(length=length(West_m_Moisture[,"Soil_Moisture_Mineral_Calculated_(%)"])-1)
-# Write for loop to perform sample autocovariance
-for (i in 2:length(West_m_Moisture[,"Soil_Moisture_Mineral_Calculated_(%)"])){
-    AutoCov_Check[i]<-West_m_Moisture[i,"Soil_Moisture_Mineral_Calculated_(%)"]+(West_m_Moisture[i,"Soil_Moisture_Mineral_Calculated_(%)"]-SM_mean)*(West_m_Moisture[i-1,"Soil_Moisture_Mineral_Calculated_(%)"]-SM_mean)
-    }               
-# acf(West_m_Moisture[,"Mineral_Calculated_(%)"], lag.max = 787, type ="covariance", plot = FALSE)
+AutoCov_Check1<-vector(length=length(West_m_Moisture[,"Soil_Moisture_Mineral_Calculated_(%)"])-1)
+# Assign lag                      
+lag=1
+prev<-0
+for (i in (lag)+1:length(West_m_Moisture[,"Soil_Moisture_Mineral_Calculated_(%)"])){
+    AutoCov_Check1[i]<-1/n*(AutoCov_Check1[i-lag]+(West_m_Moisture[i,"Soil_Moisture_Mineral_Calculated_(%)"]-SM_mean)*(West_m_Moisture[i-lag,"Soil_Moisture_Mineral_Calculated_(%)"]-SM_mean))
+    } 
+                      
+# Autocovariance check (h=2)
+# Calculate average soil moisture
+SM_mean<-mean(West_m_Moisture[,"Soil_Moisture_Mineral_Calculated_(%)"])
+# Record number of soil moisture measurements
+n<-length(West_m_Moisture[,"Soil_Moisture_Mineral_Calculated_(%)"])
+# Make empty vector for autocovariance check
+AutoCov_Check1<-vector(length=length(West_m_Moisture[,"Soil_Moisture_Mineral_Calculated_(%)"])-1)
+# Assign lag                      
+lag=2
+prev<-0
+for (i in (lag)+1:length(West_m_Moisture[,"Soil_Moisture_Mineral_Calculated_(%)"])){
+    AutoCov_Check1[i]<-1/n*(AutoCov_Check1[i-lag]+(West_m_Moisture[i,"Soil_Moisture_Mineral_Calculated_(%)"]-SM_mean)*(West_m_Moisture[i-lag,"Soil_Moisture_Mineral_Calculated_(%)"]-SM_mean))
+    }                          
+ 
+                  
+                      
+# acf(West_m_Moisture[,"Soil_Moisture_Mineral_Calculated_(%)"], lag.max = 787, type ="covariance", plot = FALSE)
