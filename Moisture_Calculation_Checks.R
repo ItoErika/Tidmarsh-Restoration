@@ -57,11 +57,17 @@ a0<-1.600
 a1<-8.400
 Mineral_Check<-sapply(West_m_Moisture[,"Permittivity_(V)"], function(x, y, z) ((1+6.175*x+6.303*x^2-73.578*x^3+183.44*x^4-184.78*x^5+68.017*x^6)-y)/z, a0, a1)
 # CHECK:
-round(Mineral_Check, digits=3)-West_m_Moisture[,"Mineral_Calculated_(%)"]
+round(Mineral_Check, digits=3)-West_m_Moisture[,"Soil_Moisture_Mineral_Calculated_(%)"]
 
 # Autocovariance check
 # Calculate average soil moisture
 SM_mean<-mean(West_m_Moisture[,"Soil_Moisture_Mineral_Calculated_(%)"])
-
-ACF_Check<-sapply(
-            
+# Record number of soil moisture measurements
+n<-length(West_m_Moisture[,"Soil_Moisture_Mineral_Calculated_(%)"])
+# Make empty vector for autocovariance check
+AutoCov_Check<-vector(length=length(West_m_Moisture[,"Soil_Moisture_Mineral_Calculated_(%)"])-1)
+# Write for loop to perform sample autocovariance
+for (i in 2:length(West_m_Moisture[,"Soil_Moisture_Mineral_Calculated_(%)"])){
+    AutoCov_Check[i]<-West_m_Moisture[i,"Soil_Moisture_Mineral_Calculated_(%)"]+(West_m_Moisture[i,"Soil_Moisture_Mineral_Calculated_(%)"]-SM_mean)*(West_m_Moisture[i-1,"Soil_Moisture_Mineral_Calculated_(%)"]-SM_mean)
+    }               
+# acf(West_m_Moisture[,"Mineral_Calculated_(%)"], lag.max = 787, type ="covariance", plot = FALSE)
