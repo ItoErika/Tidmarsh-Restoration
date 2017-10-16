@@ -57,25 +57,9 @@ a0<-1.600
 a1<-8.400
 Mineral_Check<-sapply(West_m_Moisture[,"Permittivity_(V)"], function(x, y, z) ((1+6.175*x+6.303*x^2-73.578*x^3+183.44*x^4-184.78*x^5+68.017*x^6)-y)/z, a0, a1)
 # CHECK:
-round(Mineral_Check, digits=3)-West_m_Moisture[,"Soil_Moisture_Mineral_Calculated_(%)"]
+round(Mineral_Check, digits=3)-West_m_Moisture[,"Soil_Moisture_Mineral_Calculated_(%)"]                                  
                       
-# Autocovariance check (h=1)
-# Calculate average soil moisture
-SM_mean<-mean(West_m_Moisture[,"Soil_Moisture_Mineral_Calculated_(%)"])
-# Record number of soil moisture measurements
-n<-length(West_m_Moisture[,"Soil_Moisture_Mineral_Calculated_(%)"])
-# Make empty vector for autocovariance check
-AutoCov_Check1<-vector(length=length(West_m_Moisture[,"Soil_Moisture_Mineral_Calculated_(%)"])-1)
-# Assign lag                      
-lag<-1
-for (i in (lag+1):n){
-    AutoCov_Check1[i]<-(West_m_Moisture[i,"Soil_Moisture_Mineral_Calculated_(%)"]-SM_mean)*(West_m_Moisture[i-lag,"Soil_Moisture_Mineral_Calculated_(%)"]-SM_mean)
-    } 
-
-# Get the sum of this vector divided by n to get the sample autocovariance for lag=1
-AutoCov_Lag1<-sum(AutoCov_Check1)/n                     
-                      
-# Write a function to do this for lags 1-9 
+# Write a function to get the autocovariance for lags 1-9
 autoCov<-function(lag, MoistureData) {
     # Calculate average soil moisture
     SM_mean<-mean(MoistureData)
@@ -85,9 +69,35 @@ autoCov<-function(lag, MoistureData) {
     AutoCov<-vector(length=length(MoistureData)-1)                    
     for (i in (lag+1):n){print(i)
     AutoCov[i]<-(MoistureData[i]-SM_mean)*(MoistureData[i-lag]-SM_mean)
-    } 
+    }
     return(AutoCov)
-    }                    
-test<-sapply(1:9, function(x,y) autoCov(x,y), West_m_Moisture[,"Soil_Moisture_Mineral_Calculated_(%)"])                 
-                      
+    } 
+                   
+AutoCov<-sapply(1:9, function(x,y) autoCov(x,y), West_m_Moisture[,"Soil_Moisture_Mineral_Calculated_(%)"])                 
+# Take sum of each column and divide by n to get autocovariance for lags 1-9
+AutoCov<-colSums(AutoCov)/n                
+                
 # acf(West_m_Moisture[,"Soil_Moisture_Mineral_Calculated_(%)"], lag.max = 787, type ="covariance", plot = FALSE)
+
+                
+                
+                
+                
+                
+                
+                
+                
+# another possibility:
+# Write a function to do this for lags 1-9 
+      autoCov<-function(MoistureData, Lags=1:9) {
+             #    # Calculate average soil moisture
+    SM_mean<-mean(MoistureData)
+    # Record number of soil moisture measurements
+    n<-length(MoistureData)
+    # Make empty vector for autocovariance check
+    AutoCov<-matrix(NA,nrow=length(Lags),ncol=length(MoistureData)-1)                    
+   for (i in Lags) {
+        AutoCov[i,]<-(MoistureData[i:n]-SM_mean)*(MoistureData[(i-1):n]-SM_mean)
+        } 
+    return(AutoCov)
+    }             
