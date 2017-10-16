@@ -68,23 +68,14 @@ n<-length(West_m_Moisture[,"Soil_Moisture_Mineral_Calculated_(%)"])
 AutoCov_Check1<-vector(length=length(West_m_Moisture[,"Soil_Moisture_Mineral_Calculated_(%)"])-1)
 # Assign lag                      
 lag<-1
-for (i in (lag)+1:length(West_m_Moisture[,"Soil_Moisture_Mineral_Calculated_(%)"])){
-    AutoCov_Check1[i]<-1/n*(AutoCov_Check1[i-lag]+(West_m_Moisture[i,"Soil_Moisture_Mineral_Calculated_(%)"]-SM_mean)*(West_m_Moisture[i-lag,"Soil_Moisture_Mineral_Calculated_(%)"]-SM_mean))
+for (i in (lag+1):n){
+    AutoCov_Check1[i]<-(West_m_Moisture[i,"Soil_Moisture_Mineral_Calculated_(%)"]-SM_mean)*(West_m_Moisture[i-lag,"Soil_Moisture_Mineral_Calculated_(%)"]-SM_mean)
     } 
+
+# Get the sum of this vector divided by n to get the sample autocovariance for lag=1
+AutoCov_Lag1<-sum(AutoCov_Check1)/n                     
                       
-# Autocovariance check (h=2)
-# Calculate average soil moisture
-SM_mean<-mean(West_m_Moisture[,"Soil_Moisture_Mineral_Calculated_(%)"])
-# Record number of soil moisture measurements
-n<-length(West_m_Moisture[,"Soil_Moisture_Mineral_Calculated_(%)"])
-# Make empty vector for autocovariance check
-AutoCov_Check1<-vector(length=length(West_m_Moisture[,"Soil_Moisture_Mineral_Calculated_(%)"])-1)
-# Assign lag                      
-lag<-2
-for (i in (lag)+1:length(West_m_Moisture[,"Soil_Moisture_Mineral_Calculated_(%)"])){
-    AutoCov_Check1[i]<-1/n*(AutoCov_Check1[i-lag]+(West_m_Moisture[i,"Soil_Moisture_Mineral_Calculated_(%)"]-SM_mean)*(West_m_Moisture[i-lag,"Soil_Moisture_Mineral_Calculated_(%)"]-SM_mean))
-    }                          
- 
+# Write a function to do this for lags 1-9 
 autoCov<-function(MoistureData, lag) {
     # Calculate average soil moisture
     SM_mean<-mean(MoistureData)
@@ -92,8 +83,8 @@ autoCov<-function(MoistureData, lag) {
     n<-length(MoistureData)
     # Make empty vector for autocovariance check
     AutoCov<-vector(length=length(MoistureData)-1)                    
-    for (i in (lag)+1:length(MoistureData)){
-    AutoCov[i]<-1/n*(AutoCov[i-lag]+(MoistureData[i]-SM_mean)*(MoistureData[i-lag]-SM_mean))
+    for (i in (lag+1):n){
+    AutoCov[i]<-(MoistureData[i]-SM_mean)*(MoistureData[i-lag]-SM_mean)
     } 
     return(AutoCov)
     }                    
