@@ -67,37 +67,20 @@ autoCov<-function(lag, MoistureData) {
     n<-length(MoistureData)
     # Make empty vector for autocovariance check
     AutoCov<-vector(length=length(MoistureData)-1)                    
-    for (i in (lag+1):n){print(i)
+    for (i in (lag+1):n){
     AutoCov[i]<-(MoistureData[i]-SM_mean)*(MoistureData[i-lag]-SM_mean)
     }
-    return(AutoCov)
+    # Final step is to sum all of the columns and multipy them by 1/n
+    return(1/n*(sum(AutoCov)))
     } 
-                   
-AutoCov<-sapply(1:9, function(x,y) autoCov(x,y), West_m_Moisture[,"Soil_Moisture_Mineral_Calculated_(%)"])                 
-# Take sum of each column and divide by n to get autocovariance for lags 1-9
-AutoCov<-colSums(AutoCov)/n                
-                
-# acf(West_m_Moisture[,"Soil_Moisture_Mineral_Calculated_(%)"], lag.max = 787, type ="covariance", plot = FALSE)
+                                                             
+AutoCov<-sapply(1:9, function(x,y) autoCov(x,y), West_m_Moisture[,"Soil_Moisture_Mineral_Calculated_(%)"])                         
+ 
+# Autocovariance function in R gives the same answers ast the function above:                
+acf(West_m_Moisture[,"Soil_Moisture_Mineral_Calculated_(%)"], lag.max = 9, type ="covariance", plot = FALSE)
 
                 
                 
+                      
                 
-                
-                
-                
-                
-                
-# another possibility:
-# Write a function to do this for lags 1-9 
-      autoCov<-function(MoistureData, Lags=1:9) {
-             #    # Calculate average soil moisture
-    SM_mean<-mean(MoistureData)
-    # Record number of soil moisture measurements
-    n<-length(MoistureData)
-    # Make empty vector for autocovariance check
-    AutoCov<-matrix(NA,nrow=length(Lags),ncol=length(MoistureData)-1)                    
-   for (i in Lags) {
-        AutoCov[i,]<-(MoistureData[i:n]-SM_mean)*(MoistureData[(i-1):n]-SM_mean)
-        } 
-    return(AutoCov)
-    }             
+              
