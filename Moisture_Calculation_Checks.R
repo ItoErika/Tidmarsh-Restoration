@@ -80,7 +80,82 @@ AutoCov<-sapply(1:9, function(x,y) autoCov(x,y), West_m_Moisture[,"Soil_Moisture
 acf(West_m_Moisture[,"Soil_Moisture_Mineral_Calculated_(%)"], lag.max = 9, type ="covariance", plot = FALSE)
 
                 
+#########################################################################################################################
+               
+# Load Raw Data
+Raw<-read.csv("file:///C:/Users/erikai94/Documents/UMass/Tidmarsh/Raw.csv")                
+# assign column names
+colnames(Raw)<-c("Meas_No", "Distance_(cm)", "Permittivity_(mV)", "Probe_Soil_Moisture_(%)", "Comments")                
+# Update the data frame so here are rows for every distance of 10 cm              
+# First, make a sequence from 0 to the maximum distance in raw data, by increments of 10
+ Distances<-seq(0, Raw[nrow(Raw),"Distance_(cm)"], 10)
+ # Next, make new data frame with a row for every distance
+MoistureData<-as.data.frame(matrix(nrow=length(Distances),ncol=ncol(Raw)))
+colnames(MoistureData)<-colnames(Raw)                
+MoistureData[,1]<-1:length(Distances)                
+MoistureData[,2]<-Distances                
+MoistureData[which(Distances%in%Raw[,"Distance_(cm)"]),3]<-Raw[,"Permittivity_(mV)"]
+MoistureData[which(Distances%in%Raw[,"Distance_(cm)"]),4]<-Raw[,"Probe_Soil_Moisture_(%)"] 
+MoistureData[which(Distances%in%Raw[,"Distance_(cm)"]),5]<-as.character(Raw[,"Comments"])                  
+ 
+# Clean up data frame                
+MoistureData[which(is.na(MoistureData[,"Comments"])),"Comments"]<-""
                 
-                      
+# Add a column of Permittivity in (V)
+MoistureData[,"Permittivity_(V)"]<-MoistureData[,"Permittivity_(mV)"]/1000
                 
-              
+# Add linearly interpolated values between probe measurement data for distance up to 8100 cm:
+# Identify which rows have data
+Measured<-which(!(is.na((MoistureData[1:which(MoistureData[,"Distance_(cm)"]==8100),"Permittivity_(V)"]))))
+# Identify clusters of blanks
+# Take difference of each measured element and element ahead
+# Can identify the start of data gaps as places where the next measured point is more than one element away
+# LastMeasured represent the last element before a patch of missing data
+LastMeasured<-Measured[which(diff(Measured)>1)]
+# FirstMeasured represent the first element after patch of missing data
+# This is the element in Measured AFTER the elements where the next data point are more than one element away
+FirstMeasured<-Measured[which(diff(Measured)>1)+1]
+                
+# Write a for loop that linearly interpolates values in these blank clusters 
+# Note that there are 36 clusters of blanks (length(FirstMeasured) = length(LastMeasured) = 36)
+# Create a column in MoistureData for interpolated values
+MoistureData[1:which(MoistureData[,"Distance_(cm)"]==8100),"Permittivitiy_interp_cm_(V)"]<-MoistureData[1:which(MoistureData[,"Distance_(cm)"]==8100), "Permittivity_(V)"]       
+for (i in 1:36){
+    MoistureData[LastMeasured[i]:FirstMeasured[i],"Permittivitiy_interp_cm_(V)"]<-seq(MoistureData[LastMeasured[i],"Permittivitiy_interp_cm_(V)"], MoistureData[FirstMeasured[i],"Permittivitiy_interp_cm_(V)"],length=length(LastMeasured[i]:FirstMeasured[i]))
+    }
+           
+# Add a column for soil moisture calculated for the linearly interpolated permittivity column              
+a0<-1.600
+a1<-8.400
+MoistureData[,"Soil_Moisture_Calculated_(%)"]<-sapply(MoistureData[,"Permittivitiy_interp_cm_(V)"], function(x, y, z) ((1+6.175*x+6.303*x^2-73.578*x^3+183.44*x^4-184.78*x^5+68.017*x^6)-y)/z, a0, a1)
+               
+ # Write a function to get the autocovariance for lags 0-9
+autoCov<-function(lag, MoistureData) {
+    # Calculate average soil moisture
+    SM_mean<-mean(MoistureData)
+    # Record number of soil moisture measurements
+    n<-length(MoistureData)
+    # Make empty vector for autocovariance check
+    AutoCov<-vector(length=length(MoistureData)-1)                    
+    for (i in (lag+1):n){
+    AutoCov[i]<-(1/n*(MoistureData[i]-SM_mean)*(MoistureData[i-lag]-SM_mean))
+    }
+    return(AutoCov)
+    } 
+                                                             
+AutoCov<-sapply(0:9, function(x,y) autoCov(x,y), MoistureData[1:which(MoistureData[,"Distance_(cm)"]==8100),"Soil_Moisture_Calculated_(%)"])
+
+MoistureData[1:which(MoistureData[,"Distance_(cm)"]==8100),"AutoCov_cm_lag1"]<-AutoCov[,2]                
+MoistureData[1:which(MoistureData[,"Distance_(cm)"]==8100),"AutoCov_cm_lag2"]<-AutoCov[,3] 
+MoistureData[1:which(MoistureData[,"Distance_(cm)"]==8100),"AutoCov_cm_lag3"]<-AutoCov[,4] 
+MoistureData[1:which(MoistureData[,"Distance_(cm)"]==8100),"AutoCov_cm_lag4"]<-AutoCov[,5] 
+MoistureData[1:which(MoistureData[,"Distance_(cm)"]==8100),"AutoCov_cm_lag5"]<-AutoCov[,6] 
+MoistureData[1:which(MoistureData[,"Distance_(cm)"]==8100),"AutoCov_cm_lag6"]<-AutoCov[,7] 
+MoistureData[1:which(MoistureData[,"Distance_(cm)"]==8100),"AutoCov_cm_lag7"]<-AutoCov[,8] 
+MoistureData[1:which(MoistureData[,"Distance_(cm)"]==8100),"AutoCov_cm_lag8"]<-AutoCov[,9] 
+MoistureData[1:which(MoistureData[,"Distance_(cm)"]==8100),"AutoCov_cm_lag8"]<-AutoCov[,10] 
+MoistureData[1:which(MoistureData[,"Distance_(cm)"]==8100),"AutoCov_cm_lag0"]<-AutoCov[,1]                                
+                
+                
+                
+                
