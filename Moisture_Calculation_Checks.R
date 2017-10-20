@@ -144,33 +144,35 @@ autoCov<-function(lag, MoistureData) {
     }
                                                                                                       
 # Run this function on the soil moisture calculated at the cm scale
-AutoCov<-sapply(0:9, function(x,y) autoCov(x,y), MoistureData[which(!(is.na(MoistureData[,"cm_Soil_Moisture_Calculated_(%)"]))),"cm_Soil_Moisture_Calculated_(%)"])
+# Create a vector of rows with data at the cm scale
+cm_Rows<-which(!(is.na(MoistureData[,"cm_Soil_Moisture_Calculated_(%)"])))                                                                                                      
+AutoCov<-sapply(0:9, function(x,y) autoCov(x,y), MoistureData[cm_Rows,"cm_Soil_Moisture_Calculated_(%)"])
 
-MoistureData[which(!(is.na(MoistureData[,"cm_Soil_Moisture_Calculated_(%)"]))),"AutoCov_cm_lag1"]<-AutoCov[,2]                
-MoistureData[which(!(is.na(MoistureData[,"cm_Soil_Moisture_Calculated_(%)"]))),"AutoCov_cm_lag2"]<-AutoCov[,3] 
-MoistureData[which(!(is.na(MoistureData[,"cm_Soil_Moisture_Calculated_(%)"]))),"AutoCov_cm_lag3"]<-AutoCov[,4] 
-MoistureData[which(!(is.na(MoistureData[,"cm_Soil_Moisture_Calculated_(%)"]))),"AutoCov_cm_lag4"]<-AutoCov[,5] 
-MoistureData[which(!(is.na(MoistureData[,"cm_Soil_Moisture_Calculated_(%)"]))),"AutoCov_cm_lag5"]<-AutoCov[,6] 
-MoistureData[which(!(is.na(MoistureData[,"cm_Soil_Moisture_Calculated_(%)"]))),"AutoCov_cm_lag6"]<-AutoCov[,7] 
-MoistureData[which(!(is.na(MoistureData[,"cm_Soil_Moisture_Calculated_(%)"]))),"AutoCov_cm_lag7"]<-AutoCov[,8] 
-MoistureData[which(!(is.na(MoistureData[,"cm_Soil_Moisture_Calculated_(%)"]))),"AutoCov_cm_lag8"]<-AutoCov[,9] 
-MoistureData[which(!(is.na(MoistureData[,"cm_Soil_Moisture_Calculated_(%)"]))),"AutoCov_cm_lag9"]<-AutoCov[,10] 
-MoistureData[which(!(is.na(MoistureData[,"cm_Soil_Moisture_Calculated_(%)"]))),"AutoCov_cm_lag0"]<-AutoCov[,1]                                
+MoistureData[cm_Rows,"AutoCov_cm_lag1"]<-AutoCov[,2]                
+MoistureData[cm_Rows,"AutoCov_cm_lag2"]<-AutoCov[,3] 
+MoistureData[cm_Rows,"AutoCov_cm_lag3"]<-AutoCov[,4] 
+MoistureData[cm_Rows,"AutoCov_cm_lag4"]<-AutoCov[,5] 
+MoistureData[cm_Rows,"AutoCov_cm_lag5"]<-AutoCov[,6] 
+MoistureData[cm_Rows,"AutoCov_cm_lag6"]<-AutoCov[,7] 
+MoistureData[cm_Rows,"AutoCov_cm_lag7"]<-AutoCov[,8] 
+MoistureData[cm_Rows,"AutoCov_cm_lag8"]<-AutoCov[,9] 
+MoistureData[cm_Rows,"AutoCov_cm_lag9"]<-AutoCov[,10] 
+MoistureData[cm_Rows,"AutoCov_cm_lag0"]<-AutoCov[,1]                                
                 
 # check
 # acf(MoistureData[which(!(is.na(MoistureData[,"cm_Soil_Moisture_Calculated_(%)"]))),"cm_Soil_Moisture_Calculated_(%)"], type="covariance", lag.max=9, plot=FALSE)                
 
 # Calculate autocovariance 
-acv0<-sum(MoistureData[which(!(is.na(MoistureData[,"cm_Soil_Moisture_Calculated_(%)"]))),"AutoCov_cm_lag0"])                
-acv1<-sum(MoistureData[which(!(is.na(MoistureData[,"cm_Soil_Moisture_Calculated_(%)"]))),"AutoCov_cm_lag1"])
-acv2<-sum(MoistureData[which(!(is.na(MoistureData[,"cm_Soil_Moisture_Calculated_(%)"]))),"AutoCov_cm_lag2"])
-acv3<-sum(MoistureData[which(!(is.na(MoistureData[,"cm_Soil_Moisture_Calculated_(%)"]))),"AutoCov_cm_lag3"])
-acv4<-sum(MoistureData[which(!(is.na(MoistureData[,"cm_Soil_Moisture_Calculated_(%)"]))),"AutoCov_cm_lag4"])
-acv5<-sum(MoistureData[which(!(is.na(MoistureData[,"cm_Soil_Moisture_Calculated_(%)"]))),"AutoCov_cm_lag5"])
-acv6<-sum(MoistureData[which(!(is.na(MoistureData[,"cm_Soil_Moisture_Calculated_(%)"]))),"AutoCov_cm_lag6"])
-acv7<-sum(MoistureData[which(!(is.na(MoistureData[,"cm_Soil_Moisture_Calculated_(%)"]))),"AutoCov_cm_lag7"])
-acv8<-sum(MoistureData[which(!(is.na(MoistureData[,"cm_Soil_Moisture_Calculated_(%)"]))),"AutoCov_cm_lag8"])
-acv9<-sum(MoistureData[which(!(is.na(MoistureData[,"cm_Soil_Moisture_Calculated_(%)"]))),"AutoCov_cm_lag9"])
+acv0<-sum(MoistureData[cm_Rows,"AutoCov_cm_lag0"])                
+acv1<-sum(MoistureData[cm_Rows,"AutoCov_cm_lag1"])
+acv2<-sum(MoistureData[cm_Rows,"AutoCov_cm_lag2"])
+acv3<-sum(MoistureData[cm_Rows,"AutoCov_cm_lag3"])
+acv4<-sum(MoistureData[cm_Rows,"AutoCov_cm_lag4"])
+acv5<-sum(MoistureData[cm_Rows,"AutoCov_cm_lag5"])
+acv6<-sum(MoistureData[cm_Rows,"AutoCov_cm_lag6"])
+acv7<-sum(MoistureData[cm_Rows,"AutoCov_cm_lag7"])
+acv8<-sum(MoistureData[cm_Rows,"AutoCov_cm_lag8"])
+acv9<-sum(MoistureData[cm_Rows,"AutoCov_cm_lag9"])
                 
 # Calculate autocorrelation coefficients 
 MoistureData[2,"AutoCor_cm_1"]<-acv1/acv0  
@@ -182,3 +184,15 @@ MoistureData[7,"AutoCor_cm_6"]<-acv6/acv0
 MoistureData[8,"AutoCor_cm_7"]<-acv7/acv0                               
 MoistureData[9,"AutoCor_cm_8"]<-acv8/acv0                               
 MoistureData[10,"AutoCor_cm_9"]<-acv9/acv0                               
+
+# Get moisture data for every meter
+# Create a vector for every meter (every 100 cm)
+m_Distances<-seq(0, max(MoistureData[,"Distance_(cm)"]), 100) 
+# Create a vector for the rows for every meter of data
+m_Rows<-sapply(m_Distances, function(x) which(MoistureData[,"Distance_(cm)"]==x))                
+# Run the soil moisture calculation on this vector
+a0<-1.600
+a1<-8.400
+MoistureData[m_Rows,"m_Soil_Moisture_Calculated_(%)"]<-sapply(MoistureData[m_Rows, "Permittivity_(V)"], function(x, y, z) ((1+6.175*x+6.303*x^2-73.578*x^3+183.44*x^4-184.78*x^5+68.017*x^6)-y)/z, a0, a1)
+                       
+                
