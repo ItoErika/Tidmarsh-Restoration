@@ -66,8 +66,12 @@ PressureData_AWC1[,"STP_interp"]<-PressureData_AWC1[,"STP"]
 for (i in 1:1170){
     PressureData_AWC1[LastMeasured[i]:FirstMeasured[i],"STP_interp"]<-seq(PressureData_AWC1[LastMeasured[i],"STP_interp"], PressureData_AWC1[FirstMeasured[i],"STP_interp"],length=length(LastMeasured[i]:FirstMeasured[i]))
  } 
+
+# Convert mb to Pa              
+PressureData_AWC1[,"STP_interp"]<-PressureData_AWC1[,"STP_interp"]*100 
+# Create a column for m of water above each logger             
+PressureData_AWC1[,"m_water"]<-(PressureData_AWC1[,"Abs.Pres..Pa..LGR.S.N..10499236..SEN.S.N..10499236."]-PressureData_AWC1[,"STP_interp"])/(9.81*1000)              
               
-# Create a column for m of water above each logger
 
               
  PressureData_AWC1[,"STP_interp"]<-as.numeric(paste(PressureData_AWC1[,"STP"]))             
