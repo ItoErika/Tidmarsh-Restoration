@@ -62,14 +62,15 @@ FirstMeasured<-Measured[which(diff(Measured)>1)+1]
 # Note that there are 36 clusters of blanks (length(FirstMeasured) = length(LastMeasured) = 36)
 # Create a column in MoistureData for interpolated values
 PressureData_AWC1[,"STP_interp"]<-PressureData_AWC1[,"STP"]       
+              
 for (i in 1:1170){
     PressureData_AWC1[LastMeasured[i]:FirstMeasured[i],"STP_interp"]<-seq(PressureData_AWC1[LastMeasured[i],"STP_interp"], PressureData_AWC1[FirstMeasured[i],"STP_interp"],length=length(LastMeasured[i]:FirstMeasured[i]))
-    }
+ } 
               
-              for (i in 1:1170){
-    PressureData_AWC1[LastMeasured[i]:FirstMeasured[i],"STP_interp"]<-seq(PressureData_AWC1[LastMeasured[i],"STP_interp"], PressureData_AWC1[FirstMeasured[i],"STP_interp"],length=length(LastMeasured[i]:FirstMeasured[i]))
-    }
+# Create a column for m of water above each logger
+
               
-              
+ PressureData_AWC1[,"STP_interp"]<-as.numeric(paste(PressureData_AWC1[,"STP"]))             
+ 
               test<-paste(dates, times, sep=" ")
 
