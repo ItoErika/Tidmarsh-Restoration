@@ -1,23 +1,102 @@
 # Load packages
 library('plyr')
 library('rnoaa')
+
 ncdc_stations(datasetid='GHCND', stationid='GHCND:USW00054769', token="fvDqAprtAssGRLiLzWpbBfBewLSytetM")
 
 # Information for the Plymouth station: https://www.ncdc.noaa.gov/homr/#ncdcstnid=20009418&tab=MSHR
 # Load Raw Data
-PressureData_AWC1<-read.csv("file:///F:/Tidmarsh_for Erika/Hydro_pressure/Tidmarsh_TW_WL_2017_10_22/TE_PZ_AWC1.csv", skip=1, row.names=1)
-
+TE_PZ_AWC1<-read.csv("file:///C:/Users/erikai94/Documents/UMass/Tidmarsh/PZ_Loggers/Tidmarsh_TW_WL_2017_10_22/TE_PZ_AWC1.csv", skip=1, row.names=1)
+TW_PZ_01<-read.csv("file:///C:/Users/erikai94/Documents/UMass/Tidmarsh/PZ_Loggers/Tidmarsh_TW_WL_2017_10_22/TW_PZ_01.csv", skip=1, row.names=1)
+TW_PZ_02<-read.csv("file:///C:/Users/erikai94/Documents/UMass/Tidmarsh/PZ_Loggers/Tidmarsh_TW_WL_2017_10_22/TW_PZ_02.csv", skip=1, row.names=1)
+TW_PZ_03<-read.csv("file:///C:/Users/erikai94/Documents/UMass/Tidmarsh/PZ_Loggers/Tidmarsh_TW_WL_2017_10_22/TW_PZ_03.csv", skip=1, row.names=1)
+TW_PZ_04<-read.csv("file:///C:/Users/erikai94/Documents/UMass/Tidmarsh/PZ_Loggers/Tidmarsh_TW_WL_2017_10_22/TW_PZ_04.csv", skip=1, row.names=1)
+TW_PZ_05<-read.csv("file:///C:/Users/erikai94/Documents/UMass/Tidmarsh/PZ_Loggers/Tidmarsh_TW_WL_2017_10_22/TW_PZ_05.csv", skip=1, row.names=1)
+TW_PZ_06<-read.csv("file:///C:/Users/erikai94/Documents/UMass/Tidmarsh/PZ_Loggers/Tidmarsh_TW_WL_2017_10_22/TW_PZ_06.csv", skip=1, row.names=1)
+TW_PZ_07<-read.csv("file:///C:/Users/erikai94/Documents/UMass/Tidmarsh/PZ_Loggers/Tidmarsh_TW_WL_2017_10_22/TW_PZ_07.csv", skip=1, row.names=1)
+TW_PZ_08<-read.csv("file:///C:/Users/erikai94/Documents/UMass/Tidmarsh/PZ_Loggers/Tidmarsh_TW_WL_2017_10_22/TW_PZ_08.csv", skip=1, row.names=1)
+TW_PZ_09<-read.csv("file:///C:/Users/erikai94/Documents/UMass/Tidmarsh/PZ_Loggers/Tidmarsh_TW_WL_2017_10_22/TW_PZ_09.csv", skip=1, row.names=1)
+TW_SW_02<-read.csv("file:///C:/Users/erikai94/Documents/UMass/Tidmarsh/PZ_Loggers/Tidmarsh_TW_WL_2017_10_22/TW_SW_02.csv", skip=1, row.names=1)
+TW_SW_03<-read.csv("file:///C:/Users/erikai94/Documents/UMass/Tidmarsh/PZ_Loggers/Tidmarsh_TW_WL_2017_10_22/TW_SW_03.csv", skip=1, row.names=1)
+TW_SW_04<-read.csv("file:///C:/Users/erikai94/Documents/UMass/Tidmarsh/PZ_Loggers/Tidmarsh_TW_WL_2017_10_22/TW_SW_04.csv", skip=1, row.names=1)
+TW_SW_07<-read.csv("file:///C:/Users/erikai94/Documents/UMass/Tidmarsh/PZ_Loggers/Tidmarsh_TW_WL_2017_10_22/TW_SW_07.csv", skip=1, row.names=1)
+TW_WARM<-read.csv("file:///C:/Users/erikai94/Documents/UMass/Tidmarsh/PZ_Loggers/Tidmarsh_TW_WL_2017_10_22/TW_WARM.csv", skip=1, row.names=1)
+TW_ICE<-read.csv("file:///C:/Users/erikai94/Documents/UMass/Tidmarsh/PZ_Loggers/Tidmarsh_TW_WL_2017_10_22/TW_ICE.csv", skip=1, row.names=1)
 
 #ncdc_stations(datasetid='GHCND', locationid='FIPS:12017', stationid='GHCND:USC00084289', token="fvDqAprtAssGRLiLzWpbBfBewLSytetM")
 
 # Load data from Plymouth Municipal Airport from NOAA
-NOAA_Plymouth_Data<-read.table("file:///C:/Users/erikai94/Desktop/NOAA/3974717470584dat.txt", fill=TRUE, header=TRUE)
+NOAA_Plymouth_Data<-read.table("file:///C:/Users/erikai94/Documents/UMass/Tidmarsh/PZ_Loggers/NOAA/3974717470584dat.txt", fill=TRUE, header=TRUE)
 # Subset the data to only include the Plymouth station (remove Taunton)
 NOAA_Plymouth_Data<-subset(NOAA_Plymouth_Data, NOAA_Plymouth_Data[,"USAF"]==725064, select=c(USAF,WBAN,YR..MODAHRMN,SKC,TEMP,DEWP,SLP,ALT,STP,MAX,MIN,PCP01,PCP06,PCP24,PCPXX,SD))
 
 # Reformat NOAA dates and times and round times to the nearest quarter hour
 dates<-sapply(NOAA_Plymouth_Data[,"YR..MODAHRMN"], function(x) paste(substr(x,5:6, 6),substr(x,7:8, 8),substr(x,3:4, 4), sep="/"))
-times<-sapply(NOAA_Plymouth_Data[,"YR..MODAHRMN"], function (x) paste(substr(x,9:10, 10), round(as.numeric(as.character((substr(x,11:12, 12))))/15)*15, sep=":"))
+times<-sapply(NOAA_Plymouth_Data[,"YR..MODAHRMN"], function (x) paste(substr(x,9:10, 10), (substr(x,11:12, 12)), sep=":"))
+#times<-sapply(NOAA_Plymouth_Data[,"YR..MODAHRMN"], function (x) paste(substr(x,9:10, 10), round(as.numeric(as.character((substr(x,11:12, 12))))/15)*15, sep=":"))
+
+# Add a column for exact times in decimal form
+dec_times<-sapply(strsplit(times,":"),
+        function(x) {
+            x <- as.numeric(x)
+            x[1]+x[2]/60
+            }
+)
+# Create a column for the times as decimals
+NOAA_Plymouth_Data[,"TIME_DEC"]<-dec_times              
+
+# Change pressure column to numeric values
+ NOAA_Plymouth_Data[,"STP"]<-as.numeric(as.character(NOAA_Plymouth_Data[,"STP"]))
+            
+STP_interp<-seq(round_any(NOAA_Plymouth_Data[1,"TIME_DEC"],.25, ceiling),round_any(NOAA_Plymouth_Data[2,"TIME_DEC"], .25, floor), .25)                           
+y<-c(NOAA_Plymouth_Data[1,"STP"],NOAA_Plymouth_Data[2,"STP"])
+x<-c(NOAA_Plymouth_Data[1,"TIME_DEC"],NOAA_Plymouth_Data[2,"TIME_DEC"])     
+app<-approx(x,y,xout=test)   
+              
+test5<- for (i in 1:(nrow(NOAA_Plymouth_Data)-1)){
+    if(!(is.na(NOAA_Plymouth_Data[i,"STP"]))&!(is.na(NOAA_Plymouth_Data[i+1,"STP"]))&NOAA_Plymouth_Data[i,"STP"]<NOAA_Plymouth_Data[i+1,"STP"]){
+    STP_interp<- seq(round_any(NOAA_Plymouth_Data[i,"TIME_DEC"],.25, floor),round_any(NOAA_Plymouth_Data[i+1,"TIME_DEC"], .25, ceiling), .25)                       
+    }
+    if(!(is.na(NOAA_Plymouth_Data[i,"STP"]))&!(is.na(NOAA_Plymouth_Data[i+1,"STP"]))&NOAA_Plymouth_Data[i,"STP"]>NOAA_Plymouth_Data[i+1,"STP"]){
+    STP_interp<- seq(round_any(NOAA_Plymouth_Data[i,"TIME_DEC"],.25, floor),round_any(NOAA_Plymouth_Data[i+1,"TIME_DEC"], .25, ceiling), -.25)                       
+    }
+    else if (is.na(NOAA_Plymouth_Data[i,"STP"])){
+    NULL
+    }
+    else if (is.na(NOAA_Plymouth_Data[i+1,"STP"])&NOAA_Plymouth_Data[i,"STP"]<NOAA_Plymouth_Data[i+2,"STP"]){
+    STP_interp<-seq(round_any(NOAA_Plymouth_Data[i,"TIME_DEC"],.25, floor),round_any(NOAA_Plymouth_Data[i+2,"TIME_DEC"], .25, ceiling), .25)   
+    }
+    else if (is.na(NOAA_Plymouth_Data[i+1,"STP"])&NOAA_Plymouth_Data[i,"STP"]>NOAA_Plymouth_Data[i+2,"STP"]){
+    STP_interp<-seq(round_any(NOAA_Plymouth_Data[i,"TIME_DEC"],.25, floor),round_any(NOAA_Plymouth_Data[i+2,"TIME_DEC"], .25, ceiling), -.25)   
+    } 
+  
+    if(!(is.na(NOAA_Plymouth_Data[i,"STP"]))&!(is.na(NOAA_Plymouth_Data[i+1,"STP"]))){
+    y<-c(NOAA_Plymouth_Data[i,"STP"],NOAA_Plymouth_Data[i+1,"STP"])
+    x<-c(NOAA_Plymouth_Data[i,"TIME_DEC"],NOAA_Plymouth_Data[i+1,"TIME_DEC"])
+    } 
+    if(is.na(NOAA_Plymouth_Data[i,"STP"])){
+    paste("NULL")
+    }
+    if(is.na(NOAA_Plymouth_Data[i+1,"STP"])){
+    y<-c(NOAA_Plymouth_Data[i,"STP"],NOAA_Plymouth_Data[i+2,"STP"])
+    x<-c(NOAA_Plymouth_Data[i,"TIME_DEC"],NOAA_Plymouth_Data[i+2,"TIME_DEC"])
+    }  
+    app<-approx(x,y,xout=STP_interp)
+    paste(app)
+    }
+   
+              
+              
+              
+              
+   
+              
+              
+              
+              
+              
+              
+
 # Fix formatting error caused by rounding
 times<-sapply(times, function(x) gsub(":0", ":00",x,  fixed=TRUE))
 # Convert hours into non-military time
