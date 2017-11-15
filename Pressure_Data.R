@@ -1,10 +1,11 @@
+##################################################### LOAD LIBRARIES ##################################################################
 # Load packages
+library('gmp')
 library('plyr')
 library('rnoaa')
 
-ncdc_stations(datasetid='GHCND', stationid='GHCND:USW00054769', token="fvDqAprtAssGRLiLzWpbBfBewLSytetM")
+####################################################### LOAD DATA ####################################################################
 
-# Information for the Plymouth station: https://www.ncdc.noaa.gov/homr/#ncdcstnid=20009418&tab=MSHR
 # Load Raw Data
 TE_PZ_AWC1<-read.csv("file:///C:/Users/erikai94/Documents/UMass/Tidmarsh/PZ_Loggers/Tidmarsh_TW_WL_2017_10_22/TE_PZ_AWC1.csv", skip=1, row.names=1)
 TW_PZ_01<-read.csv("file:///C:/Users/erikai94/Documents/UMass/Tidmarsh/PZ_Loggers/Tidmarsh_TW_WL_2017_10_22/TW_PZ_01.csv", skip=1, row.names=1)
@@ -23,14 +24,18 @@ TW_SW_07<-read.csv("file:///C:/Users/erikai94/Documents/UMass/Tidmarsh/PZ_Logger
 TW_WARM<-read.csv("file:///C:/Users/erikai94/Documents/UMass/Tidmarsh/PZ_Loggers/Tidmarsh_TW_WL_2017_10_22/TW_WARM.csv", skip=1, row.names=1)
 TW_ICE<-read.csv("file:///C:/Users/erikai94/Documents/UMass/Tidmarsh/PZ_Loggers/Tidmarsh_TW_WL_2017_10_22/TW_ICE.csv", skip=1, row.names=1)
 
+# Information for the Plymouth station: https://www.ncdc.noaa.gov/homr/#ncdcstnid=20009418&tab=MSHR
 #ncdc_stations(datasetid='GHCND', locationid='FIPS:12017', stationid='GHCND:USC00084289', token="fvDqAprtAssGRLiLzWpbBfBewLSytetM")
+#ncdc_stations(datasetid='GHCND', stationid='GHCND:USW00054769', token="fvDqAprtAssGRLiLzWpbBfBewLSytetM")
 
 # Load data from Plymouth Municipal Airport from NOAA
 NOAA_Plymouth_Data<-read.table("file:///C:/Users/erikai94/Documents/UMass/Tidmarsh/PZ_Loggers/NOAA/3974717470584dat.txt", fill=TRUE, header=TRUE)
 # Subset the data to only include the Plymouth station (remove Taunton)
 NOAA_Plymouth_Data<-subset(NOAA_Plymouth_Data, NOAA_Plymouth_Data[,"USAF"]==725064, select=c(USAF,WBAN,YR..MODAHRMN,SKC,TEMP,DEWP,SLP,ALT,STP,MAX,MIN,PCP01,PCP06,PCP24,PCPXX,SD))
 
-# Reformat NOAA dates and times and round times to the nearest quarter hour
+####################################################### REFORMAT DATA ####################################################################
+
+# Reformat NOAA dates and times
 dates<-sapply(NOAA_Plymouth_Data[,"YR..MODAHRMN"], function(x) paste(substr(x,5:6, 6),substr(x,7:8, 8),substr(x,3:4, 4), sep="/"))
 times<-sapply(NOAA_Plymouth_Data[,"YR..MODAHRMN"], function (x) paste(substr(x,9:10, 10), (substr(x,11:12, 12)), sep=":"))
 #times<-sapply(NOAA_Plymouth_Data[,"YR..MODAHRMN"], function (x) paste(substr(x,9:10, 10), round(as.numeric(as.character((substr(x,11:12, 12))))/15)*15, sep=":"))
@@ -42,48 +47,58 @@ dec_times<-sapply(strsplit(times,":"),
             x[1]+x[2]/60
             }
 )
-# Create a column for the times as decimals
-NOAA_Plymouth_Data[,"TIME_DEC"]<-dec_times              
-
+# Create a column of the times as decimals
+NOAA_Plymouth_Data[,"TIME_DEC"]<-dec_times    
+              
+# Create a column for the sum of hours that have passed since the start of the dataset  
+# Create a vector for the differences between times (in decimal form) in the rows              
+DiffTimes<-diff(NOAA_Plymouth_Data[,"TIME_DEC"]) 
+# Correct for when time jumps crosses the 24 to 0 boundary           
+DiffTimes[which(DiffTimes<0)]<-DiffTimes[which(DiffTimes<0)]+24
+# Create a column in NOAA data table for the sum of time that has passed (starting with 0 at beginng of dataset)   
+NOAA_Plymouth_Data[1,"TIME_SUM"]<-NOAA_Plymouth_Data[1,"TIME_DEC"]          
+# Write a for loop to make a vector of 
+for (i in 1:length(DiffTimes)){
+        NOAA_Plymouth_Data[i+1,"TIME_SUM"]<-NOAA_Plymouth_Data[1,"TIME_SUM"]+sum(DiffTimes[1:i])
+        }
+             
 # Change pressure column to numeric values
  NOAA_Plymouth_Data[,"STP"]<-as.numeric(as.character(NOAA_Plymouth_Data[,"STP"]))
+# Add interpolated station pressure values where they are missing
+# Identify which rows have data
+Measured<-which(!(is.na((NOAA_Plymouth_Data[,"STP"]))))
+# LastMeasured represent the last element before a patch of missing data
+LastMeasured<-Measured[which(diff(Measured)>1)]
+# FirstMeasured represent the first element after patch of missing data
+# This is the element in Measured AFTER the elements where the next data point are more than one element away
+FirstMeasured<-Measured[which(diff(Measured)>1)+1]                
+# Note that there are 75 blanks (length(FirstMeasured) = length(LastMeasured) = 75)
+# Create a column for interpolated values
+NOAA_Plymouth_Data[,"STP_interp"]<-NOAA_Plymouth_Data[,"STP"]       
+# Write a for loop that linearly interpolates values between missing data points 
+for (i in 1:75){
+    NOAA_Plymouth_Data[LastMeasured[i]:FirstMeasured[i],"STP_interp"]<-seq(NOAA_Plymouth_Data[LastMeasured[i],"STP_interp"], NOAA_Plymouth_Data[FirstMeasured[i],"STP_interp"],length=length(LastMeasured[i]:FirstMeasured[i]))
+ } 
+
+temp2<-0
+for (i in 1:(nrow(NOAA_Plymouth_Data)-1)){
+    # Use an if statement to make sure there is a multiple of .25 in between the time sums
+    if(any(is.whole(round(seq(NOAA_Plymouth_Data[i,"TIME_SUM"],NOAA_Plymouth_Data[i+1,"TIME_SUM"],.01), 2)/.25))&  round_any(NOAA_Plymouth_Data[i,"TIME_SUM"],.25, ceiling)<round_any(NOAA_Plymouth_Data[i+1,"TIME_SUM"],.25, floor)){
+    QuarterHrs<- seq(round_any(NOAA_Plymouth_Data[i,"TIME_SUM"],.25, ceiling),round_any(NOAA_Plymouth_Data[i+1,"TIME_SUM"], .25, floor), .25)                       
+    }
+    x<-c(NOAA_Plymouth_Data[i,"TIME_SUM"],NOAA_Plymouth_Data[i+1,"TIME_SUM"])        
+    y<-c(NOAA_Plymouth_Data[i,"STP_interp"],NOAA_Plymouth_Data[i+1,"STP_interp"])
+    temp<-approx(x,y,xout=QuarterHrs)
+    temp2<-rbind(temp2, cbind(i,temp$x, temp$y))
+    }
+              
             
 STP_interp<-seq(round_any(NOAA_Plymouth_Data[1,"TIME_DEC"],.25, ceiling),round_any(NOAA_Plymouth_Data[2,"TIME_DEC"], .25, floor), .25)                           
 y<-c(NOAA_Plymouth_Data[1,"STP"],NOAA_Plymouth_Data[2,"STP"])
 x<-c(NOAA_Plymouth_Data[1,"TIME_DEC"],NOAA_Plymouth_Data[2,"TIME_DEC"])     
 app<-approx(x,y,xout=test)   
               
-test5<- for (i in 1:(nrow(NOAA_Plymouth_Data)-1)){
-    if(!(is.na(NOAA_Plymouth_Data[i,"STP"]))&!(is.na(NOAA_Plymouth_Data[i+1,"STP"]))&NOAA_Plymouth_Data[i,"STP"]<NOAA_Plymouth_Data[i+1,"STP"]){
-    STP_interp<- seq(round_any(NOAA_Plymouth_Data[i,"TIME_DEC"],.25, floor),round_any(NOAA_Plymouth_Data[i+1,"TIME_DEC"], .25, ceiling), .25)                       
-    }
-    if(!(is.na(NOAA_Plymouth_Data[i,"STP"]))&!(is.na(NOAA_Plymouth_Data[i+1,"STP"]))&NOAA_Plymouth_Data[i,"STP"]>NOAA_Plymouth_Data[i+1,"STP"]){
-    STP_interp<- seq(round_any(NOAA_Plymouth_Data[i,"TIME_DEC"],.25, floor),round_any(NOAA_Plymouth_Data[i+1,"TIME_DEC"], .25, ceiling), -.25)                       
-    }
-    else if (is.na(NOAA_Plymouth_Data[i,"STP"])){
-    NULL
-    }
-    else if (is.na(NOAA_Plymouth_Data[i+1,"STP"])&NOAA_Plymouth_Data[i,"STP"]<NOAA_Plymouth_Data[i+2,"STP"]){
-    STP_interp<-seq(round_any(NOAA_Plymouth_Data[i,"TIME_DEC"],.25, floor),round_any(NOAA_Plymouth_Data[i+2,"TIME_DEC"], .25, ceiling), .25)   
-    }
-    else if (is.na(NOAA_Plymouth_Data[i+1,"STP"])&NOAA_Plymouth_Data[i,"STP"]>NOAA_Plymouth_Data[i+2,"STP"]){
-    STP_interp<-seq(round_any(NOAA_Plymouth_Data[i,"TIME_DEC"],.25, floor),round_any(NOAA_Plymouth_Data[i+2,"TIME_DEC"], .25, ceiling), -.25)   
-    } 
-  
-    if(!(is.na(NOAA_Plymouth_Data[i,"STP"]))&!(is.na(NOAA_Plymouth_Data[i+1,"STP"]))){
-    y<-c(NOAA_Plymouth_Data[i,"STP"],NOAA_Plymouth_Data[i+1,"STP"])
-    x<-c(NOAA_Plymouth_Data[i,"TIME_DEC"],NOAA_Plymouth_Data[i+1,"TIME_DEC"])
-    } 
-    if(is.na(NOAA_Plymouth_Data[i,"STP"])){
-    paste("NULL")
-    }
-    if(is.na(NOAA_Plymouth_Data[i+1,"STP"])){
-    y<-c(NOAA_Plymouth_Data[i,"STP"],NOAA_Plymouth_Data[i+2,"STP"])
-    x<-c(NOAA_Plymouth_Data[i,"TIME_DEC"],NOAA_Plymouth_Data[i+2,"TIME_DEC"])
-    }  
-    app<-approx(x,y,xout=STP_interp)
-    paste(app)
-    }
+
    
               
               
@@ -125,23 +140,18 @@ NOAA_Plymouth_Data[,"Date_Time"]<-paste(dates, times, sep=" ")
 
 PressureData_AWC1<-merge(PressureData_AWC1, NOAA_Plymouth_Data[,c("TEMP","DEWP","SLP","ALT","STP","Date_Time")], by.x="Date.Time..GMT.04.00", by.y="Date_Time", all.x=TRUE)
               
-# Add linearly interpolated values between probe measurement data for distance up to 8100 cm:
 # Identify which rows have data
 Measured<-which(!(is.na((PressureData_AWC1[,"STP"]))))
-# Identify clusters of blanks
-# Take difference of each measured element and element ahead
-# Can identify the start of data gaps as places where the next measured point is more than one element away
 # LastMeasured represent the last element before a patch of missing data
 LastMeasured<-Measured[which(diff(Measured)>1)]
 # FirstMeasured represent the first element after patch of missing data
 # This is the element in Measured AFTER the elements where the next data point are more than one element away
 FirstMeasured<-Measured[which(diff(Measured)>1)+1]
                 
-# Write a for loop that linearly interpolates values in these blank clusters 
 # Note that there are 36 clusters of blanks (length(FirstMeasured) = length(LastMeasured) = 36)
-# Create a column in MoistureData for interpolated values
+# Create a column for interpolated values
 PressureData_AWC1[,"STP_interp"]<-PressureData_AWC1[,"STP"]       
-              
+# Write a for loop that linearly interpolates values between missing data points 
 for (i in 1:1170){
     PressureData_AWC1[LastMeasured[i]:FirstMeasured[i],"STP_interp"]<-seq(PressureData_AWC1[LastMeasured[i],"STP_interp"], PressureData_AWC1[FirstMeasured[i],"STP_interp"],length=length(LastMeasured[i]:FirstMeasured[i]))
  } 
