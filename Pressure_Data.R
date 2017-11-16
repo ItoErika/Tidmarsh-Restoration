@@ -56,10 +56,10 @@ DiffTimes<-diff(NOAA_Plymouth_Data[,"TIME_DEC"])
 # Correct for when time jumps crosses the 24 to 0 boundary           
 DiffTimes[which(DiffTimes<0)]<-DiffTimes[which(DiffTimes<0)]+24
 # Create a column in NOAA data table for the sum of time that has passed (starting with 0 at beginng of dataset)   
-NOAA_Plymouth_Data[1,"TIME_SUM"]<-NOAA_Plymouth_Data[1,"TIME_DEC"]          
+NOAA_Plymouth_Data[1,"HRS_ELAPSED"]<-NOAA_Plymouth_Data[1,"TIME_DEC"]          
 # Write a for loop to make a vector of 
 for (i in 1:length(DiffTimes)){
-        NOAA_Plymouth_Data[i+1,"TIME_SUM"]<-NOAA_Plymouth_Data[1,"TIME_SUM"]+sum(DiffTimes[1:i])
+        NOAA_Plymouth_Data[i+1,"HRS_ELAPSED"]<-NOAA_Plymouth_Data[1,"HRS_ELAPSED"]+sum(DiffTimes[1:i])
         }
              
 # Change pressure column to numeric values
@@ -80,16 +80,16 @@ for (i in 1:75){
     NOAA_Plymouth_Data[LastMeasured[i]:FirstMeasured[i],"STP_interp"]<-seq(NOAA_Plymouth_Data[LastMeasured[i],"STP_interp"], NOAA_Plymouth_Data[FirstMeasured[i],"STP_interp"],length=length(LastMeasured[i]:FirstMeasured[i]))
  } 
 
-temp2<-0
+FinalList<-vector("list")
 for (i in 1:(nrow(NOAA_Plymouth_Data)-1)){
     # Use an if statement to make sure there is a multiple of .25 in between the time sums
-    if(any(is.whole(round(seq(NOAA_Plymouth_Data[i,"TIME_SUM"],NOAA_Plymouth_Data[i+1,"TIME_SUM"],.01), 2)/.25))&  round_any(NOAA_Plymouth_Data[i,"TIME_SUM"],.25, ceiling)<round_any(NOAA_Plymouth_Data[i+1,"TIME_SUM"],.25, floor)){
-    QuarterHrs<- seq(round_any(NOAA_Plymouth_Data[i,"TIME_SUM"],.25, ceiling),round_any(NOAA_Plymouth_Data[i+1,"TIME_SUM"], .25, floor), .25)                       
+    if(any(is.whole(round(seq(NOAA_Plymouth_Data[i,"HRS_ELAPSED"],NOAA_Plymouth_Data[i+1,"HRS_ELAPSED"],.01), 2)/.25))){
+    QuarterHrs<- seq(round_any(NOAA_Plymouth_Data[i,"HRS_ELAPSED"],.25, ceiling),round_any(NOAA_Plymouth_Data[i+1,"HRS_ELAPSED"], .25, floor), .25)                       
     }
-    x<-c(NOAA_Plymouth_Data[i,"TIME_SUM"],NOAA_Plymouth_Data[i+1,"TIME_SUM"])        
+    x<-c(NOAA_Plymouth_Data[i,"HRS_ELAPSED"],NOAA_Plymouth_Data[i+1,"HRS_ELAPSED"])        
     y<-c(NOAA_Plymouth_Data[i,"STP_interp"],NOAA_Plymouth_Data[i+1,"STP_interp"])
     temp<-approx(x,y,xout=QuarterHrs)
-    temp2<-rbind(temp2, cbind(i,temp$x, temp$y))
+    FinalList[[i]]<-cbind(i,temp$x, temp$y)
     }
               
             
