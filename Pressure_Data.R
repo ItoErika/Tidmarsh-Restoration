@@ -66,7 +66,9 @@ for (i in 1:length(DiffTimes)){
 NOAA_Plymouth_Data[,"DAYS_ELAPSED"]<-NOAA_Plymouth_Data[,"HRS_ELAPSED"]/24
 # Add a column for a day assignment for each row
 NOAA_Plymouth_Data[,"DAY"]<-# Add a column for a day assignment for each row
-NOAA_Plymouth_Data[,"DAY"]<-floor(NOAA_Plymouth_Data[,"DAYS_ELAPSED"])                  
+NOAA_Plymouth_Data[,"DAY"]<-floor(NOAA_Plymouth_Data[,"DAYS_ELAPSED"])
+# Add a column for a date assignment for each row
+NOAA_Plymouth_Data[,"DATE"]<-dates            
              
 # Change pressure column to numeric values
  NOAA_Plymouth_Data[,"STP"]<-as.numeric(as.character(NOAA_Plymouth_Data[,"STP"]))
@@ -105,25 +107,26 @@ NOAA_STP<-cbind(time_col, STP_col)
               
 # Remove rows with NA from FinalList
 NOAA_STP<-NOAA_STP[which(!(is.na(NOAA_STP[,2]))),] 
-# Remove duplicate rows
+# Remove duplicate rows            
 NOAA_STP<-NOAA_STP[-which(duplicated(NOAA_STP[,1])&duplicated(NOAA_STP[,2])),]                       
 
-
-   
+# Add a column for the day in NOAA_STP
+NOAA_STP<-cbind(NOAA_STP, floor(NOAA_STP[,"time_col"]/24))
+# Create a key to merge the correct date into the NOAA_STP matrix                       
+DateKey<-unique(NOAA_Plymouth_Data[,c("DAY","DATE")])
+# Assign colnames to NOAA_STP for merge 
+colnames(NOAA_STP)<-c("HRS_ELAPSED","STP","DAY")                       
+NOAA_STP<-merge(NOAA_STP, DateKey, by="DAY")              
               
-              
-              
-              
-   
-              
-              
-              
-              
-              
-              
-
-# Fix formatting error caused by rounding
-times<-sapply(times, function(x) gsub(":0", ":00",x,  fixed=TRUE))
+# Convert elapsed time back to time
+NOAA_STP[,"DEC_TIME"]<-NOAA_STP[,"HRS_ELAPSED"]-24*floor(NOAA_STP[,"HRS_ELAPSED"]/24)             
+# Extract only hours
+hours<-floor(NOAA_STP[,"DEC_TIME"])                       
+# Extract only minutes
+minutes<-round((NOAA_STP[,"DEC_TIME"]-floor(NOAA_STP[,"DEC_TIME"]))*60)
+minutes[which(nchar(minutes)==1)]<-paste(0, minutes[which(nchar(minutes)==1)], sep="")                  
+# Paste hours and minutes together
+times<-paste(hours, minutes, sep=":")                      
 # Convert hours into non-military time
 hours<-sub(":.*", "", times)
 PM<-which(as.numeric(as.character(hours))>=12&as.numeric(as.character(hours))!=24)
@@ -146,7 +149,7 @@ times<-paste(times, ":00", sep="")
 times[AM]<-paste(times[AM], "AM")
 times[PM]<-paste(times[PM], "PM")              
 # Paste dates and times together as new column in NOAA data
-NOAA_Plymouth_Data[,"Date_Time"]<-paste(dates, times, sep=" ")            
+NOAA_STP[,"DATE_TIME"]<-paste(NOAA_STP[,"DATE"], times, sep=" ")            
 
 PressureData_AWC1<-merge(PressureData_AWC1, NOAA_Plymouth_Data[,c("TEMP","DEWP","SLP","ALT","STP","Date_Time")], by.x="Date.Time..GMT.04.00", by.y="Date_Time", all.x=TRUE)
               
