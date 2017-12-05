@@ -121,7 +121,9 @@ NOAA_STP<-merge(NOAA_STP, DateKey, by="DAY")
 # Convert elapsed time back to time
 NOAA_STP[,"DEC_TIME"]<-NOAA_STP[,"HRS_ELAPSED"]-24*floor(NOAA_STP[,"HRS_ELAPSED"]/24)             
 # Extract only hours
-hours<-floor(NOAA_STP[,"DEC_TIME"])                       
+hours<-floor(NOAA_STP[,"DEC_TIME"])
+# Convert 0s to 24s in hours
+hours[which(hours==0)]<-24                    
 # Extract only minutes
 minutes<-round((NOAA_STP[,"DEC_TIME"]-floor(NOAA_STP[,"DEC_TIME"]))*60)
 minutes[which(nchar(minutes)==1)]<-paste(0, minutes[which(nchar(minutes)==1)], sep="")                  
@@ -142,7 +144,15 @@ hrs<-paste(hours, ":", sep="")
 mins<-sub(".*:", "", times[Military])
 MTimes<-paste(hrs, mins, sep="")
 # Replace military times with updated times
-times[Military]<-MTimes 
+times[Military]<-MTimes
+# Paste a zero in front of single digit hours in the rest of the times
+test<-sub(":.*", "", times)
+test[which(nchar(test)==1)]<-paste("0",test[which(nchar(test)==1)], sep="")
+mins<-sub(".*:", "", times)
+# paste back together with minutes
+times<-paste(test, mins, sep=":")                      
+                       
+                       
 # add :00 at the end of all times for seconds
 times<-paste(times, ":00", sep="")              
 # Add AM or PM tags
@@ -154,24 +164,10 @@ NOAA_STP[,"DATE_TIME"]<-paste(NOAA_STP[,"DATE"], times, sep=" ")
 # Change date time column from logger files to characters
 TE_PZ_AWC1[,"Date.Time..GMT.04.00"]<-as.character(TE_PZ_AWC1[,"Date.Time..GMT.04.00"]) 
 # Add a column to sort the data back to original order                       
-TE_PZ_AWC1[,"sort"]<-1:nrow(TE_PZ_AWC1)                      
-TE_PZ_AWC1<-merge(TE_PZ_AWC1, NOAA_STP[,c("STP","DATE_TIME")], by.x="Date.Time..GMT.04.00", by.y="DATE_TIME", sort="sort", all.x=TRUE)              
-
-# Identify which rows have data
-Measured<-which(!(is.na((PressureData_AWC1[,"STP"]))))
-# LastMeasured represent the last element before a patch of missing data
-LastMeasured<-Measured[which(diff(Measured)>1)]
-# FirstMeasured represent the first element after patch of missing data
-# This is the element in Measured AFTER the elements where the next data point are more than one element away
-FirstMeasured<-Measured[which(diff(Measured)>1)+1]
-                
-# Note that there are 36 clusters of blanks (length(FirstMeasured) = length(LastMeasured) = 36)
-# Create a column for interpolated values
-PressureData_AWC1[,"STP_interp"]<-PressureData_AWC1[,"STP"]       
-# Write a for loop that linearly interpolates values between missing data points 
-for (i in 1:1170){
-    PressureData_AWC1[LastMeasured[i]:FirstMeasured[i],"STP_interp"]<-seq(PressureData_AWC1[LastMeasured[i],"STP_interp"], PressureData_AWC1[FirstMeasured[i],"STP_interp"],length=length(LastMeasured[i]:FirstMeasured[i]))
- } 
+TE_PZ_AWC1[,"order"]<-1:nrow(TE_PZ_AWC1)                      
+TE_PZ_AWC1<-merge(TE_PZ_AWC1, NOAA_STP[,c("STP","DATE_TIME")], by.x="Date.Time..GMT.04.00", by.y="DATE_TIME", all.x=TRUE)
+# re-order matrix
+TE_PZ_AWC1<-TE_PZ_AWC1[order(TE_PZ_AWC1[,"order"]),]                       
 
 # Convert mb to Pa              
 PressureData_AWC1[,"STP_interp"]<-PressureData_AWC1[,"STP_interp"]*100 
