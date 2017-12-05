@@ -151,8 +151,8 @@ times[PM]<-paste(times[PM], "PM")
 # Paste dates and times together as new column in NOAA data
 NOAA_STP[,"DATE_TIME"]<-paste(NOAA_STP[,"DATE"], times, sep=" ")            
 
-PressureData_AWC1<-merge(PressureData_AWC1, NOAA_Plymouth_Data[,c("TEMP","DEWP","SLP","ALT","STP","Date_Time")], by.x="Date.Time..GMT.04.00", by.y="Date_Time", all.x=TRUE)
-              
+TE_PZ_AWC1<-merge(TE_PZ_AWC1, NOAA_STP[,c("STP","DATE_TIME")], by.x="Date.Time..GMT.04.00", by.y="DATE_TIME", all.x=TRUE)              
+
 # Identify which rows have data
 Measured<-which(!(is.na((PressureData_AWC1[,"STP"]))))
 # LastMeasured represent the last element before a patch of missing data
