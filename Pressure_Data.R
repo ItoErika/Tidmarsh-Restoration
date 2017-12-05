@@ -61,6 +61,12 @@ NOAA_Plymouth_Data[1,"HRS_ELAPSED"]<-NOAA_Plymouth_Data[1,"TIME_DEC"]
 for (i in 1:length(DiffTimes)){
         NOAA_Plymouth_Data[i+1,"HRS_ELAPSED"]<-NOAA_Plymouth_Data[1,"HRS_ELAPSED"]+sum(DiffTimes[1:i])
         }
+              
+# Add a column for the number of days elapsed
+NOAA_Plymouth_Data[,"DAYS_ELAPSED"]<-NOAA_Plymouth_Data[,"HRS_ELAPSED"]/24
+# Add a column for a day assignment for each row
+NOAA_Plymouth_Data[,"DAY"]<-# Add a column for a day assignment for each row
+NOAA_Plymouth_Data[,"DAY"]<-floor(NOAA_Plymouth_Data[,"DAYS_ELAPSED"])                  
              
 # Change pressure column to numeric values
  NOAA_Plymouth_Data[,"STP"]<-as.numeric(as.character(NOAA_Plymouth_Data[,"STP"]))
