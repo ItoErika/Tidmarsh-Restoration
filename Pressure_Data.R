@@ -149,9 +149,13 @@ times<-paste(times, ":00", sep="")
 times[AM]<-paste(times[AM], "AM")
 times[PM]<-paste(times[PM], "PM")              
 # Paste dates and times together as new column in NOAA data
-NOAA_STP[,"DATE_TIME"]<-paste(NOAA_STP[,"DATE"], times, sep=" ")            
-
-TE_PZ_AWC1<-merge(TE_PZ_AWC1, NOAA_STP[,c("STP","DATE_TIME")], by.x="Date.Time..GMT.04.00", by.y="DATE_TIME", all.x=TRUE)              
+NOAA_STP[,"DATE_TIME"]<-paste(NOAA_STP[,"DATE"], times, sep=" ") 
+                       
+# Change date time column from logger files to characters
+TE_PZ_AWC1[,"Date.Time..GMT.04.00"]<-as.character(TE_PZ_AWC1[,"Date.Time..GMT.04.00"]) 
+# Add a column to sort the data back to original order                       
+TE_PZ_AWC1[,"sort"]<-1:nrow(TE_PZ_AWC1)                      
+TE_PZ_AWC1<-merge(TE_PZ_AWC1, NOAA_STP[,c("STP","DATE_TIME")], by.x="Date.Time..GMT.04.00", by.y="DATE_TIME", sort="sort", all.x=TRUE)              
 
 # Identify which rows have data
 Measured<-which(!(is.na((PressureData_AWC1[,"STP"]))))
