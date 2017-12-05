@@ -89,15 +89,19 @@ for (i in 1:(nrow(NOAA_Plymouth_Data)-1)){
     x<-c(NOAA_Plymouth_Data[i,"HRS_ELAPSED"],NOAA_Plymouth_Data[i+1,"HRS_ELAPSED"])        
     y<-c(NOAA_Plymouth_Data[i,"STP_interp"],NOAA_Plymouth_Data[i+1,"STP_interp"])
     temp<-approx(x,y,xout=QuarterHrs)
-    FinalList[[i]]<-cbind(i,temp$x, temp$y)
+    FinalList[[i]]<-rbind(c(NOAA_Plymouth_Data[i,"HRS_ELAPSED"], NOAA_Plymouth_Data[i,"STP_interp"]),cbind(temp$x, temp$y))
     }
               
-            
-STP_interp<-seq(round_any(NOAA_Plymouth_Data[1,"TIME_DEC"],.25, ceiling),round_any(NOAA_Plymouth_Data[2,"TIME_DEC"], .25, floor), .25)                           
-y<-c(NOAA_Plymouth_Data[1,"STP"],NOAA_Plymouth_Data[2,"STP"])
-x<-c(NOAA_Plymouth_Data[1,"TIME_DEC"],NOAA_Plymouth_Data[2,"TIME_DEC"])     
-app<-approx(x,y,xout=test)   
+# Bind the list into a single matrix of STP values
+time_col<-unlist(sapply(FinalList, function(x) x[,1])) 
+STP_col<-unlist(sapply(FinalList, function(x) x[,2]))         
+NOAA_STP<-cbind(time_col, STP_col)                        
               
+# Remove rows with NA from FinalList
+NOAA_STP<-NOAA_STP[which(!(is.na(NOAA_STP[,2]))),] 
+# Remove duplicate rows
+NOAA_STP<-NOAA_STP[-which(duplicated(NOAA_STP[,1])&duplicated(NOAA_STP[,2])),]                       
+
 
    
               
