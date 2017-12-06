@@ -164,5 +164,9 @@ TE_PZ_AWC1<-TE_PZ_AWC1[order(TE_PZ_AWC1[,"order"]),]
 
 # Add column for water density
 TE_PZ_AWC1[,"water_density"]<-1000*(1-(TE_PZ_AWC1[,"Temp_C"]+2.889414)/(508929.2*(TE_PZ_AWC1[,"Temp_C"]+68.12963))*(TE_PZ_AWC1[,"Temp_C"]-3.9863)^2)      
-
+# Convert mb to Pa              
+ TE_PZ_AWC1[,"STP"]<-TE_PZ_AWC1[,"STP"]*100 
+ # Create a column for m of water above each logger             
+ TE_PZ_AWC1[,"m_water"]<-(TE_PZ_AWC1[,"Abs_Pres_Pa"]-TE_PZ_AWC1[,"STP"])/(9.81*TE_PZ_AWC1[,"water_density"])              
+ 
 
