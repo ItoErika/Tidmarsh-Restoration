@@ -55,7 +55,7 @@ NOAA_Plymouth_Data[,"TIME_DEC"]<-dec_times
 DiffTimes<-diff(NOAA_Plymouth_Data[,"TIME_DEC"]) 
 # Correct for when time jumps crosses the 24 to 0 boundary           
 DiffTimes[which(DiffTimes<0)]<-DiffTimes[which(DiffTimes<0)]+24
-# Create a column in NOAA data table for the sum of time that has passed (starting with 0 at beginng of dataset)   
+# Create a column in NOAA data table for the sum of time that has passed (starting with 0 at midnight on the first day of dataset)   
 NOAA_Plymouth_Data[1,"HRS_ELAPSED"]<-NOAA_Plymouth_Data[1,"TIME_DEC"]          
 # Write a for loop to make a vector of 
 for (i in 1:length(DiffTimes)){
@@ -65,7 +65,6 @@ for (i in 1:length(DiffTimes)){
 # Add a column for the number of days elapsed
 NOAA_Plymouth_Data[,"DAYS_ELAPSED"]<-NOAA_Plymouth_Data[,"HRS_ELAPSED"]/24
 # Add a column for a day assignment for each row
-NOAA_Plymouth_Data[,"DAY"]<-# Add a column for a day assignment for each row
 NOAA_Plymouth_Data[,"DAY"]<-floor(NOAA_Plymouth_Data[,"DAYS_ELAPSED"])
 # Add a column for a date assignment for each row
 NOAA_Plymouth_Data[,"DATE"]<-dates            
@@ -84,10 +83,11 @@ FirstMeasured<-Measured[which(diff(Measured)>1)+1]
 # Create a column for interpolated values
 NOAA_Plymouth_Data[,"STP_interp"]<-NOAA_Plymouth_Data[,"STP"]       
 # Write a for loop that linearly interpolates values between missing data points 
-for (i in 1:75){
+for (i in 1:length(FirstMeasured)){
     NOAA_Plymouth_Data[LastMeasured[i]:FirstMeasured[i],"STP_interp"]<-seq(NOAA_Plymouth_Data[LastMeasured[i],"STP_interp"], NOAA_Plymouth_Data[FirstMeasured[i],"STP_interp"],length=length(LastMeasured[i]:FirstMeasured[i]))
  } 
 
+# Use the data to estimate the STP value for every quarter hour              
 FinalList<-vector("list")
 for (i in 1:(nrow(NOAA_Plymouth_Data)-1)){
     # Use an if statement to make sure there is a multiple of .25 in between the time sums
@@ -103,17 +103,16 @@ for (i in 1:(nrow(NOAA_Plymouth_Data)-1)){
 # Bind the list into a single matrix of STP values
 time_col<-unlist(sapply(FinalList, function(x) x[,1])) 
 STP_col<-unlist(sapply(FinalList, function(x) x[,2]))         
-NOAA_STP<-cbind(time_col, STP_col)                        
-              
-# Remove rows with NA from FinalList
+NOAA_STP<-cbind(time_col, STP_col)                                    
+# Remove rows with NA from NOAA_STP
 NOAA_STP<-NOAA_STP[which(!(is.na(NOAA_STP[,2]))),] 
 # Remove duplicate rows            
 NOAA_STP<-NOAA_STP[-which(duplicated(NOAA_STP[,1])&duplicated(NOAA_STP[,2])),]                       
 
+# Create a key to merge the correct date into the NOAA_STP matrix                       
+DateKey<-unique(NOAA_Plymouth_Data[,c("DAY","DATE")])                       
 # Add a column for the day in NOAA_STP
 NOAA_STP<-cbind(NOAA_STP, floor(NOAA_STP[,"time_col"]/24))
-# Create a key to merge the correct date into the NOAA_STP matrix                       
-DateKey<-unique(NOAA_Plymouth_Data[,c("DAY","DATE")])
 # Assign colnames to NOAA_STP for merge 
 colnames(NOAA_STP)<-c("HRS_ELAPSED","STP","DAY")                       
 NOAA_STP<-merge(NOAA_STP, DateKey, by="DAY")              
@@ -123,41 +122,33 @@ NOAA_STP[,"DEC_TIME"]<-NOAA_STP[,"HRS_ELAPSED"]-24*floor(NOAA_STP[,"HRS_ELAPSED"
 # Extract only hours
 hours<-floor(NOAA_STP[,"DEC_TIME"])
 # Convert 0s to 24s in hours
-hours[which(hours==0)]<-24                    
+hours[which(hours==0)]<-24
+# Determine which hours are AM                                              
+AM<-which(hours<12|hours==24)                        
+# Determine which hours are PM                       
+PM<-which(hours>=12&hours!=24)
+# Determine which hours are >12                       
+Military<-which(hours>12)
+# Convert from military to civilian time              
+hours[Military]<-hours[Military]-12
+# convert hours to character vector so it is easier to paste
+hours<-as.character(hours)
+# Paste a zero in front of single digit hours
+hours[which(nchar(hours)==1)]<-paste("0",hours[which(nchar(hours)==1)], sep="")                       
+                       
 # Extract only minutes
 minutes<-round((NOAA_STP[,"DEC_TIME"]-floor(NOAA_STP[,"DEC_TIME"]))*60)
 minutes[which(nchar(minutes)==1)]<-paste(0, minutes[which(nchar(minutes)==1)], sep="")                  
 # Paste hours and minutes together
 times<-paste(hours, minutes, sep=":")                      
-# Convert hours into non-military time
-hours<-sub(":.*", "", times)
-PM<-which(as.numeric(as.character(hours))>=12&as.numeric(as.character(hours))!=24)
-AM<-which(as.numeric(as.character(hours))<12|as.numeric(as.character(hours))==24)              
-Military<-which(as.numeric(as.character(hours))>12)              
-hours<-as.numeric(as.character(hours[Military]))-12
-# convert hours to character vector so it is easier to paste
-hours<-as.character(hours)
-# Paste a zero in front of single digit hours|
-hours[which(nchar(hours)==1)]<-paste("0",hours[which(nchar(hours)==1)], sep="")
-# Paste a colon after the hour digits
-hrs<-paste(hours, ":", sep="")  
-mins<-sub(".*:", "", times[Military])
-MTimes<-paste(hrs, mins, sep="")
-# Replace military times with updated times
-times[Military]<-MTimes
-# Paste a zero in front of single digit hours in the rest of the times
-test<-sub(":.*", "", times)
-test[which(nchar(test)==1)]<-paste("0",test[which(nchar(test)==1)], sep="")
-mins<-sub(".*:", "", times)
-# paste back together with minutes
-times<-paste(test, mins, sep=":")                      
-                       
-                       
+                                            
 # add :00 at the end of all times for seconds
-times<-paste(times, ":00", sep="")              
+times<-paste(times, ":00", sep="") 
+                       
 # Add AM or PM tags
 times[AM]<-paste(times[AM], "AM")
-times[PM]<-paste(times[PM], "PM")              
+times[PM]<-paste(times[PM], "PM")   
+                       
 # Paste dates and times together as new column in NOAA data
 NOAA_STP[,"DATE_TIME"]<-paste(NOAA_STP[,"DATE"], times, sep=" ") 
                        
