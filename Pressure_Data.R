@@ -151,23 +151,18 @@ times[PM]<-paste(times[PM], "PM")
                        
 # Paste dates and times together as new column in NOAA data
 NOAA_STP[,"DATE_TIME"]<-paste(NOAA_STP[,"DATE"], times, sep=" ") 
-                       
+
+# Change column names for logger files
+colnames(TE_PZ_AWC1)<-c("Date_Time","Abs_Pres_Pa","Temp_C")                
 # Change date time column from logger files to characters
-TE_PZ_AWC1[,"Date.Time..GMT.04.00"]<-as.character(TE_PZ_AWC1[,"Date.Time..GMT.04.00"]) 
+TE_PZ_AWC1[,"Date_Time"]<-as.character(TE_PZ_AWC1[,"Date_Time"]) 
 # Add a column to sort the data back to original order                       
 TE_PZ_AWC1[,"order"]<-1:nrow(TE_PZ_AWC1)                      
-TE_PZ_AWC1<-merge(TE_PZ_AWC1, NOAA_STP[,c("STP","DATE_TIME")], by.x="Date.Time..GMT.04.00", by.y="DATE_TIME", all.x=TRUE)
+TE_PZ_AWC1<-merge(TE_PZ_AWC1, NOAA_STP[,c("STP","DATE_TIME")], by.x="Date_Time", by.y="DATE_TIME", all.x=TRUE)
 # re-order matrix
 TE_PZ_AWC1<-TE_PZ_AWC1[order(TE_PZ_AWC1[,"order"]),]                       
 
-# Convert mb to Pa              
-PressureData_AWC1[,"STP_interp"]<-PressureData_AWC1[,"STP_interp"]*100 
-# Create a column for m of water above each logger             
-PressureData_AWC1[,"m_water"]<-(PressureData_AWC1[,"Abs.Pres..Pa..LGR.S.N..10499236..SEN.S.N..10499236."]-PressureData_AWC1[,"STP_interp"])/(9.81*1000)              
-              
+# Add column for water density
+TE_PZ_AWC1[,"water_density"]<-1000*(1-(TE_PZ_AWC1[,"Temp_C"]+2.889414)/(508929.2*(TE_PZ_AWC1[,"Temp_C"]+68.12963))*(TE_PZ_AWC1[,"Temp_C"]-3.9863)^2)      
 
-              
- PressureData_AWC1[,"STP_interp"]<-as.numeric(paste(PressureData_AWC1[,"STP"]))             
- 
-              test<-paste(dates, times, sep=" ")
 
