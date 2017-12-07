@@ -218,4 +218,4 @@ TW_SW_07<-loggerProcess(TW_SW_07)
 # MAKE PLOTS                       
 test<-as.POSIXct(TE_PZ_AWC1[,"Date_Time"], "%m/%d/%y %I:%M:%S %p", tz="America/New_York")
 plot(test, TE_PZ_AWC1[,"m_water"])                     
-                       
+ggplot(TE_PZ_AWC1)+geom_point(data=TE_PZ_AWC1, aes(test,TE_PZ_AWC1[,"m_water"]), color='royalblue3', size=.2)
