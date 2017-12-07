@@ -173,8 +173,32 @@ loggerProcess<-function(LoggerData) {
         return(LoggerData)
         }                  
 
-# Runt this function on all of the logger files                       
+# Runt this function on the logger file with pressure as Pa                       
 TE_PZ_AWC1<-loggerProcess(TE_PZ_AWC1)
+                                   
+# Write a function to merge STP from NOAA to logger data, and calculate m of water above loggers
+loggerProcess<-function(LoggerData) {
+        # Change column names for logger files
+        colnames(LoggerData)<-c("Date_Time","Abs_Pres_Pa","Temp_C")                
+                # Change date time column from logger files to characters
+        LoggerData[,"Date_Time"]<-as.character(LoggerData[,"Date_Time"]) 
+        # Add a column to sort the data back to original order                       
+        LoggerData[,"order"]<-1:nrow(LoggerData)                      
+        LoggerData<-merge(LoggerData, NOAA_STP[,c("STP","DATE_TIME")], by.x="Date_Time", by.y="DATE_TIME", all.x=TRUE)
+        # re-order matrix
+        LoggerData<-LoggerData[order(LoggerData[,"order"]),]                       
+
+        # Add column for water density
+        LoggerData[,"water_density"]<-1000*(1-(LoggerData[,"Temp_C"]+2.889414)/(508929.2*(LoggerData[,"Temp_C"]+68.12963))*(LoggerData[,"Temp_C"]-3.9863)^2)      
+        # Convert mb to Pa              
+        LoggerData[,"STP"]<-LoggerData[,"STP"]*100
+        # Convert KPa to Pa
+        LoggerData[,"Abs_Pres_Pa"]<-LoggerData[,"Abs_Pres_Pa"]*1000
+        # Create a column for m of water above each logger             
+        LoggerData[,"m_water"]<-(LoggerData[,"Abs_Pres_Pa"]-LoggerData[,"STP"])/(9.81*LoggerData[,"water_density"]) 
+        return(LoggerData)
+        }                            
+                       
 TW_PZ_01<-loggerProcess(TW_PZ_01)
 TW_PZ_02<-loggerProcess(TW_PZ_02)
 TW_PZ_03<-loggerProcess(TW_PZ_03)
