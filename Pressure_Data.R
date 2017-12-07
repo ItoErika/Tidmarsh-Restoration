@@ -213,4 +213,9 @@ TW_SW_03<-loggerProcess(TW_SW_03)
 TW_SW_04<-loggerProcess(TW_SW_04)
 TW_SW_07<-loggerProcess(TW_SW_07)
 #TW_WARM<-loggerProcess(TW_WARM)
-#TW_ICE<-loggerProcess(TW_ICE)                      
+#TW_ICE<-loggerProcess(TW_ICE) 
+
+# MAKE PLOTS                       
+test<-as.POSIXct(TE_PZ_AWC1[,"Date_Time"], "%m/%d/%y %I:%M:%S %p", tz="America/New_York")
+plot(test, TE_PZ_AWC1[,"m_water"])                     
+                       
