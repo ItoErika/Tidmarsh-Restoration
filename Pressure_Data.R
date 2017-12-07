@@ -151,22 +151,42 @@ times[PM]<-paste(times[PM], "PM")
                        
 # Paste dates and times together as new column in NOAA data
 NOAA_STP[,"DATE_TIME"]<-paste(NOAA_STP[,"DATE"], times, sep=" ") 
+                                   
+# Write a function to merge STP from NOAA to logger data, and calculate m of water above loggers
+loggerProcess<-function(LoggerData) {
+        # Change column names for logger files
+        colnames(LoggerData)<-c("Date_Time","Abs_Pres_Pa","Temp_C")                
+                # Change date time column from logger files to characters
+        LoggerData[,"Date_Time"]<-as.character(LoggerData[,"Date_Time"]) 
+        # Add a column to sort the data back to original order                       
+        LoggerData[,"order"]<-1:nrow(LoggerData)                      
+        LoggerData<-merge(LoggerData, NOAA_STP[,c("STP","DATE_TIME")], by.x="Date_Time", by.y="DATE_TIME", all.x=TRUE)
+        # re-order matrix
+        LoggerData<-LoggerData[order(LoggerData[,"order"]),]                       
 
-# Change column names for logger files
-colnames(TE_PZ_AWC1)<-c("Date_Time","Abs_Pres_Pa","Temp_C")                
-# Change date time column from logger files to characters
-TE_PZ_AWC1[,"Date_Time"]<-as.character(TE_PZ_AWC1[,"Date_Time"]) 
-# Add a column to sort the data back to original order                       
-TE_PZ_AWC1[,"order"]<-1:nrow(TE_PZ_AWC1)                      
-TE_PZ_AWC1<-merge(TE_PZ_AWC1, NOAA_STP[,c("STP","DATE_TIME")], by.x="Date_Time", by.y="DATE_TIME", all.x=TRUE)
-# re-order matrix
-TE_PZ_AWC1<-TE_PZ_AWC1[order(TE_PZ_AWC1[,"order"]),]                       
+        # Add column for water density
+        LoggerData[,"water_density"]<-1000*(1-(LoggerData[,"Temp_C"]+2.889414)/(508929.2*(LoggerData[,"Temp_C"]+68.12963))*(LoggerData[,"Temp_C"]-3.9863)^2)      
+        # Convert mb to Pa              
+        LoggerData[,"STP"]<-LoggerData[,"STP"]*100 
+        # Create a column for m of water above each logger             
+        LoggerData[,"m_water"]<-(LoggerData[,"Abs_Pres_Pa"]-LoggerData[,"STP"])/(9.81*LoggerData[,"water_density"]) 
+        return(LoggerData)
+        }                  
 
-# Add column for water density
-TE_PZ_AWC1[,"water_density"]<-1000*(1-(TE_PZ_AWC1[,"Temp_C"]+2.889414)/(508929.2*(TE_PZ_AWC1[,"Temp_C"]+68.12963))*(TE_PZ_AWC1[,"Temp_C"]-3.9863)^2)      
-# Convert mb to Pa              
- TE_PZ_AWC1[,"STP"]<-TE_PZ_AWC1[,"STP"]*100 
- # Create a column for m of water above each logger             
- TE_PZ_AWC1[,"m_water"]<-(TE_PZ_AWC1[,"Abs_Pres_Pa"]-TE_PZ_AWC1[,"STP"])/(9.81*TE_PZ_AWC1[,"water_density"])              
- 
-
+# Runt this function on all of the logger files                       
+TE_PZ_AWC1<-loggerProcess(TE_PZ_AWC1)
+TW_PZ_01<-loggerProcess(TW_PZ_01)
+TW_PZ_02<-loggerProcess(TW_PZ_02)
+TW_PZ_03<-loggerProcess(TW_PZ_03)
+TW_PZ_04<-loggerProcess(TW_PZ_04)
+TW_PZ_05<-loggerProcess(TW_PZ_05)
+TW_PZ_06<-loggerProcess(TW_PZ_06)
+TW_PZ_07<-loggerProcess(TW_PZ_07)
+TW_PZ_08<-loggerProcess(TW_PZ_08)
+TW_PZ_09<-loggerProcess(TW_PZ_09)
+TW_SW_02<-loggerProcess(TW_SW_02)
+TW_SW_03<-loggerProcess(TW_SW_03)
+TW_SW_04<-loggerProcess(TW_SW_04)
+TW_SW_07<-loggerProcess(TW_SW_07)
+#TW_WARM<-loggerProcess(TW_WARM)
+#TW_ICE<-loggerProcess(TW_ICE)                      
