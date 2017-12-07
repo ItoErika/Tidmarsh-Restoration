@@ -195,7 +195,7 @@ loggerProcess<-function(LoggerData) {
         # Convert KPa to Pa
         LoggerData[,"Abs_Pres_Pa"]<-LoggerData[,"Abs_Pres_Pa"]*1000
         # Create a column for m of water above each logger             
-        LoggerData[,"m_water"]<-(LoggerData[,"Abs_Pres_Pa"]-LoggerData[,"STP"])/(9.81*LoggerData[,"water_density"]) 
+        LoggerData[,"m_water"]<-(LoggerData[,"Abs_Pres_Pa"]-LoggerData[,"STP"])/(9.81*LoggerData[,"water_density"])
         return(LoggerData)
         }                            
                        
