@@ -1,45 +1,25 @@
 % GOOGLE EARTH PLOTS of SOIL MOISTURE at TIDMARSH
 
-load Soil_Moisture_LatLong.txt
-LatLong=Soil_Moisture_LatLong;
+LatLong= xlsread('LatLong.xlsx')
 
-load moisture_data.mat
-numpoints=33;
+numpoints=113;
 GES=zeros(1,numpoints);
 x=1;
 
-% Soil Moisture 0 to 100%; From 0 to 6 cm depth "A"
+% Dynamax TH2O Soil Moisture Measurements - effectively an integrated measurement 0-6 cm
+Probe_Data= xlsread('Probe_Data.xlsx');
 
-grav_hi_lo=1-grav_0_6;
+% Extract 2nd column of Probe_Data
+Theta=Probe_Data(:,2)
 
-crange=0:(1/63):1;
-for x=1:numpoints
-[d p] = min(abs(crange - grav_hi_lo(x,1)));
-colval(x,:)=floor(((cmap(p,:))*255));     
-end
-
-% Soil Moisture 0 to 100%; From 6 to 12 cm depth "B"
-
-grav_hi_lo_deep=1-grav_6_12;
+hi_lo_theta=1-Theta;
 
 crange=0:(1/63):1;
 for x=1:numpoints
-[d p] = min(abs(crange - grav_hi_lo_deep(x,1)));
+[d p] = min(abs(crange - hi_lo_theta(x,1)));
 colval(x,:)=floor(((cmap(p,:))*255));     
 end
 
-% Soil Moisture 0 to 100%; From 0 to 6 cm depth "Theta Probe"
-
-grav_hi_lo_theta=100-theta;
-
-crange=0:(100/63):100;
-for x=1:numpoints
-[d p] = min(abs(crange - grav_hi_lo_theta(x,1)));
-colval(x,:)=floor(((cmap(p,:))*255));     
-end
-
-
-x=1;
 for x=1:numpoints
 RGB=dec2hex(colval(x,:));
 RR=RGB(1,:);
