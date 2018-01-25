@@ -1,6 +1,7 @@
 % GOOGLE EARTH PLOTS of SOIL MOISTURE at TIDMARSH
 
-LatLong= xlsread('LatLong.xlsx')
+LatLong= xlsread('LatLong.xlsx');
+load cmap.mat
 
 numpoints=113;
 GES=zeros(1,numpoints);
@@ -8,15 +9,14 @@ x=1;
 
 % Dynamax TH2O Soil Moisture Measurements - effectively an integrated measurement 0-6 cm
 Probe_Data= xlsread('Probe_Data.xlsx');
-
 % Extract 2nd column of Probe_Data
 Theta=Probe_Data(:,2)
 
-hi_lo_theta=1-Theta;
+hi_lo_Theta=1-Theta;
 
 crange=0:(1/63):1;
 for x=1:numpoints
-[d p] = min(abs(crange - hi_lo_theta(x,1)));
+[d p] = min(abs(crange - hi_lo_Theta(x,1)));
 colval(x,:)=floor(((cmap(p,:))*255));     
 end
 
