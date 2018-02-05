@@ -3,6 +3,7 @@
 library('gmp')
 library('plyr')
 library('rnoaa')
+library('ggplot2')
 
 ####################################################### LOAD DATA ####################################################################
 
@@ -27,21 +28,25 @@ TW_WARM<-read.csv("file:///C:/Users/erikai94/Documents/UMass/Tidmarsh/PZ_Loggers
 TW_ICE<-read.csv("file:///C:/Users/erikai94/Documents/UMass/Tidmarsh/PZ_Loggers/Tidmarsh_TW_WL_2017_10_22/TW_ICE.csv", skip=1, row.names=1)
 
 # For data from 8/17 through 11/17
-TW_PZ_02<-read.csv("file:///C:/Users/erikai94/Documents/UMass/Tidmarsh/PZ_Loggers/Tidmarsh_TW_WL_2017_11_17/TW_PZ_02.csv", skip=1, row.names=1)
-TW_PZ_03<-read.csv("file:///C:/Users/erikai94/Documents/UMass/Tidmarsh/PZ_Loggers/Tidmarsh_TW_WL_2017_11_17/TW_PZ_03.csv", skip=1, row.names=1)
-TW_PZ_04<-read.csv("file:///C:/Users/erikai94/Documents/UMass/Tidmarsh/PZ_Loggers/Tidmarsh_TW_WL_2017_11_17/TW_PZ_04.csv", skip=1, row.names=1)
-TW_PZ_07<-read.csv("file:///C:/Users/erikai94/Documents/UMass/Tidmarsh/PZ_Loggers/Tidmarsh_TW_WL_2017_11_17/TW_PZ_07.csv", skip=1, row.names=1)
-TW_SW_02<-read.csv("file:///C:/Users/erikai94/Documents/UMass/Tidmarsh/PZ_Loggers/Tidmarsh_TW_WL_2017_11_17/TW_SW_02.csv", skip=1, row.names=1)
-TW_SW_03<-read.csv("file:///C:/Users/erikai94/Documents/UMass/Tidmarsh/PZ_Loggers/Tidmarsh_TW_WL_2017_11_17/TW_SW_03.csv", skip=1, row.names=1)
-TW_SW_04<-read.csv("file:///C:/Users/erikai94/Documents/UMass/Tidmarsh/PZ_Loggers/Tidmarsh_TW_WL_2017_11_17/TW_SW_04.csv", skip=1, row.names=1)
-TW_SW_07<-read.csv("file:///C:/Users/erikai94/Documents/UMass/Tidmarsh/PZ_Loggers/Tidmarsh_TW_WL_2017_11_17/TW_SW_07.csv", skip=1, row.names=1)
+TW_PZ_02<-read.csv("file:///C:/Users/erikai94/Documents/UMass/Tidmarsh/PZ_Loggers/Tidmarsh_TW_WL_2017_11_17/TW_PZ_02_2017_11_17.csv", skip=1, row.names=1)
+TW_PZ_03<-read.csv("file:///C:/Users/erikai94/Documents/UMass/Tidmarsh/PZ_Loggers/Tidmarsh_TW_WL_2017_11_17/TW_PZ_03_2017_11_17.csv", skip=1, row.names=1)
+TW_PZ_04<-read.csv("file:///C:/Users/erikai94/Documents/UMass/Tidmarsh/PZ_Loggers/Tidmarsh_TW_WL_2017_11_17/TW_PZ_04_2017_11_17.csv", skip=1, row.names=1)
+TW_PZ_07<-read.csv("file:///C:/Users/erikai94/Documents/UMass/Tidmarsh/PZ_Loggers/Tidmarsh_TW_WL_2017_11_17/TW_PZ_07_2017_11_17.csv", skip=1, row.names=1)
+TW_SW_02<-read.csv("file:///C:/Users/erikai94/Documents/UMass/Tidmarsh/PZ_Loggers/Tidmarsh_TW_WL_2017_11_17/TW_SW_02_2017_11_17.csv", skip=1, row.names=1)
+TW_SW_03<-read.csv("file:///C:/Users/erikai94/Documents/UMass/Tidmarsh/PZ_Loggers/Tidmarsh_TW_WL_2017_11_17/TW_SW_03_2017_11_17.csv", skip=1, row.names=1)
+TW_SW_04<-read.csv("file:///C:/Users/erikai94/Documents/UMass/Tidmarsh/PZ_Loggers/Tidmarsh_TW_WL_2017_11_17/TW_SW_04_2017_11_17.csv", skip=1, row.names=1)
+TW_SW_07<-read.csv("file:///C:/Users/erikai94/Documents/UMass/Tidmarsh/PZ_Loggers/Tidmarsh_TW_WL_2017_11_17/TW_SW_07_2017_11_17.csv", skip=1, row.names=1)
 
 # Information for the Plymouth station: https://www.ncdc.noaa.gov/homr/#ncdcstnid=20009418&tab=MSHR
 #ncdc_stations(datasetid='GHCND', locationid='FIPS:12017', stationid='GHCND:USC00084289', token="fvDqAprtAssGRLiLzWpbBfBewLSytetM")
 #ncdc_stations(datasetid='GHCND', stationid='GHCND:USW00054769', token="fvDqAprtAssGRLiLzWpbBfBewLSytetM")
 
 # Load data from Plymouth Municipal Airport from NOAA
-NOAA_Plymouth_Data<-read.table("file:///C:/Users/erikai94/Documents/UMass/Tidmarsh/PZ_Loggers/NOAA/3974717470584dat.txt", fill=TRUE, header=TRUE)
+# For data from 8/17 through 10/17
+NOAA_Plymouth_Data<-read.table("file:///C:/Users/erikai94/Documents/UMass/Tidmarsh/PZ_Loggers/NOAA/10_17/3974717470584dat.txt", fill=TRUE, header=TRUE)
+# For data from 8/17 through 11/17
+NOAA_Plymouth_Data<-read.table("file:///C:/Users/erikai94/Documents/UMass/Tidmarsh/PZ_Loggers/NOAA/11_17/5486487547073dat.txt", fill=TRUE, header=TRUE)
+
 # Subset the data to only include the Plymouth station (remove Taunton)
 NOAA_Plymouth_Data<-subset(NOAA_Plymouth_Data, NOAA_Plymouth_Data[,"USAF"]==725064, select=c(USAF,WBAN,YR..MODAHRMN,SKC,TEMP,DEWP,SLP,ALT,STP,MAX,MIN,PCP01,PCP06,PCP24,PCPXX,SD))
 
@@ -185,7 +190,7 @@ loggerProcess<-function(LoggerData) {
         return(LoggerData)
         }                  
 
-# Runt this function on the logger file with pressure as Pa                       
+# Run this function on the logger file with pressure as Pa                       
 TE_PZ_AWC1<-loggerProcess(TE_PZ_AWC1)
                                    
 # Write a function to merge STP from NOAA to logger data, and calculate m of water above loggers
@@ -228,6 +233,13 @@ TW_SW_07<-loggerProcess(TW_SW_07)
 #TW_ICE<-loggerProcess(TW_ICE) 
 
 # MAKE PLOTS                       
-test<-as.POSIXct(TE_PZ_AWC1[,"Date_Time"], "%m/%d/%y %I:%M:%S %p", tz="America/New_York")
-plot(test, TE_PZ_AWC1[,"m_water"])                     
-ggplot(TE_PZ_AWC1)+geom_point(data=TE_PZ_AWC1, aes(test,TE_PZ_AWC1[,"m_water"]), color='royalblue3', size=.2)
+Plot_Times<-as.POSIXct(TW_PZ_02[,"Date_Time"], "%m/%d/%y %I:%M:%S %p", tz="America/New_York")
+ggplot(TW_PZ_02, aes(Plot_Times, TW_PZ_02[,"m_water"]))+geom_point(color='royalblue3', size=.2)+ ylim(1.1, 1.4) + xlab("Date") + ylab("Water Column above Logger (m)")+ggtitle("TW_PZ_09")+  scale_x_datetime(breaks = seq(Plot_Times[1], Plot_Times[length(Plot_Times)], "7 days"))+theme(axis.text.x = element_text(angle=45, vjust = 0.5))                       
+                       TW_PZ_02<-read.csv("file:///C:/Users/erikai94/Documents/UMass/Tidmarsh/PZ_Loggers/Tidmarsh_TW_WL_2017_11_17/TW_PZ_02_2017_11_17.csv", skip=1, row.names=1)
+TW_PZ_03<-read.csv("file:///C:/Users/erikai94/Documents/UMass/Tidmarsh/PZ_Loggers/Tidmarsh_TW_WL_2017_11_17/TW_PZ_03_2017_11_17.csv", skip=1, row.names=1)
+TW_PZ_04<-read.csv("file:///C:/Users/erikai94/Documents/UMass/Tidmarsh/PZ_Loggers/Tidmarsh_TW_WL_2017_11_17/TW_PZ_04_2017_11_17.csv", skip=1, row.names=1)
+TW_PZ_07<-read.csv("file:///C:/Users/erikai94/Documents/UMass/Tidmarsh/PZ_Loggers/Tidmarsh_TW_WL_2017_11_17/TW_PZ_07_2017_11_17.csv", skip=1, row.names=1)
+TW_SW_02<-read.csv("file:///C:/Users/erikai94/Documents/UMass/Tidmarsh/PZ_Loggers/Tidmarsh_TW_WL_2017_11_17/TW_SW_02_2017_11_17.csv", skip=1, row.names=1)
+TW_SW_03<-read.csv("file:///C:/Users/erikai94/Documents/UMass/Tidmarsh/PZ_Loggers/Tidmarsh_TW_WL_2017_11_17/TW_SW_03_2017_11_17.csv", skip=1, row.names=1)
+TW_SW_04<-read.csv("file:///C:/Users/erikai94/Documents/UMass/Tidmarsh/PZ_Loggers/Tidmarsh_TW_WL_2017_11_17/TW_SW_04_2017_11_17.csv", skip=1, row.names=1)
+TW_SW_07                      
