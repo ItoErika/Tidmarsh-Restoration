@@ -256,6 +256,3 @@ ggplot(TW_SW_04, aes(Plot_Times, TW_SW_04[,"m_water"]))+geom_point(color='royalb
                       
 Plot_Times<-as.POSIXct(TW_SW_07[,"Date_Time"], "%m/%d/%y %I:%M:%S %p", tz="America/New_York")
 ggplot(TW_SW_07, aes(Plot_Times, TW_SW_07[,"m_water"]))+geom_point(color='royalblue3', size=.2)+ ylim(-10, -2.5) + xlab("Date") + ylab("Water Column above Logger (m)")+ggtitle("TW_SW_07")+  scale_x_datetime(breaks = seq(Plot_Times[1], Plot_Times[length(Plot_Times)], "7 days"))+theme(axis.text.x = element_text(angle=45, vjust = 0.5)) 
-
-                       
-                                           
