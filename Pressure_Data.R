@@ -6,7 +6,9 @@ library('rnoaa')
 
 ####################################################### LOAD DATA ####################################################################
 
-# Load Raw Data
+# Load Raw Data:
+
+# For data from 8/17 through 10/17
 TE_PZ_AWC1<-read.csv("file:///C:/Users/erikai94/Documents/UMass/Tidmarsh/PZ_Loggers/Tidmarsh_TW_WL_2017_10_22/TE_PZ_AWC1.csv", skip=1, row.names=1)
 TW_PZ_01<-read.csv("file:///C:/Users/erikai94/Documents/UMass/Tidmarsh/PZ_Loggers/Tidmarsh_TW_WL_2017_10_22/TW_PZ_01.csv", skip=1, row.names=1)
 TW_PZ_02<-read.csv("file:///C:/Users/erikai94/Documents/UMass/Tidmarsh/PZ_Loggers/Tidmarsh_TW_WL_2017_10_22/TW_PZ_02.csv", skip=1, row.names=1)
@@ -23,6 +25,16 @@ TW_SW_04<-read.csv("file:///C:/Users/erikai94/Documents/UMass/Tidmarsh/PZ_Logger
 TW_SW_07<-read.csv("file:///C:/Users/erikai94/Documents/UMass/Tidmarsh/PZ_Loggers/Tidmarsh_TW_WL_2017_10_22/TW_SW_07.csv", skip=1, row.names=1)
 TW_WARM<-read.csv("file:///C:/Users/erikai94/Documents/UMass/Tidmarsh/PZ_Loggers/Tidmarsh_TW_WL_2017_10_22/TW_WARM.csv", skip=1, row.names=1)
 TW_ICE<-read.csv("file:///C:/Users/erikai94/Documents/UMass/Tidmarsh/PZ_Loggers/Tidmarsh_TW_WL_2017_10_22/TW_ICE.csv", skip=1, row.names=1)
+
+# For data from 8/17 through 11/17
+TW_PZ_02<-read.csv("file:///C:/Users/erikai94/Documents/UMass/Tidmarsh/PZ_Loggers/Tidmarsh_TW_WL_2017_11_17/TW_PZ_02.csv", skip=1, row.names=1)
+TW_PZ_03<-read.csv("file:///C:/Users/erikai94/Documents/UMass/Tidmarsh/PZ_Loggers/Tidmarsh_TW_WL_2017_11_17/TW_PZ_03.csv", skip=1, row.names=1)
+TW_PZ_04<-read.csv("file:///C:/Users/erikai94/Documents/UMass/Tidmarsh/PZ_Loggers/Tidmarsh_TW_WL_2017_11_17/TW_PZ_04.csv", skip=1, row.names=1)
+TW_PZ_07<-read.csv("file:///C:/Users/erikai94/Documents/UMass/Tidmarsh/PZ_Loggers/Tidmarsh_TW_WL_2017_11_17/TW_PZ_07.csv", skip=1, row.names=1)
+TW_SW_02<-read.csv("file:///C:/Users/erikai94/Documents/UMass/Tidmarsh/PZ_Loggers/Tidmarsh_TW_WL_2017_11_17/TW_SW_02.csv", skip=1, row.names=1)
+TW_SW_03<-read.csv("file:///C:/Users/erikai94/Documents/UMass/Tidmarsh/PZ_Loggers/Tidmarsh_TW_WL_2017_11_17/TW_SW_03.csv", skip=1, row.names=1)
+TW_SW_04<-read.csv("file:///C:/Users/erikai94/Documents/UMass/Tidmarsh/PZ_Loggers/Tidmarsh_TW_WL_2017_11_17/TW_SW_04.csv", skip=1, row.names=1)
+TW_SW_07<-read.csv("file:///C:/Users/erikai94/Documents/UMass/Tidmarsh/PZ_Loggers/Tidmarsh_TW_WL_2017_11_17/TW_SW_07.csv", skip=1, row.names=1)
 
 # Information for the Plymouth station: https://www.ncdc.noaa.gov/homr/#ncdcstnid=20009418&tab=MSHR
 #ncdc_stations(datasetid='GHCND', locationid='FIPS:12017', stationid='GHCND:USC00084289', token="fvDqAprtAssGRLiLzWpbBfBewLSytetM")
