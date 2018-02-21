@@ -45,6 +45,14 @@ hi_lo_P1020=1-(P1020/19.775);
 P2030=Data20_30(:,3);
 hi_lo_P2030=1-(P2030/19.775);
 
+hi_lo_P2030=20-P2030;
+ colormap('Hot')
+crange=0:(20/63):20;
+for x=1:numpoints2030
+[d p] = min(abs(crange - hi_lo_P2030(x,1)));
+colval(x,:)=floor(((cmap(p,:))*255));     
+end
+
 crange=0:(1/63):1;
 for x=1:numpoints2030
 [d p] = min(abs(crange - hi_lo_P2030(x,1)));
