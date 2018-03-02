@@ -50,4 +50,61 @@ plt.grid(True);
 plt.plot(t,y,'r_');
 plt.show()
 
+dx=.1;
+x=np.arange(0, 2, dx);
+A=1/2;
+B=-1/2;
+e=np.e;
+y=A*e**x+B*e**-x;
+plt.figure(1);
+plt.grid(True);
+plt.plot(x,y);
+plt.show()
+
+dx=.1;
+x=np.arange(0, 2, dx);
+A=-1;
+B=1;
+e=np.e;
+y=A*e**x+B*e**-x;
+plt.figure(1);
+plt.grid(True);
+plt.plot(x,y);
+plt.show()
+
+dx=.1;
+x=np.arange(0, 2, dx);
+e=np.e;
+y=e**x;
+plt.figure(1);
+plt.grid(True);
+plt.plot(x,y);
+plt.show()
+
+dx=.1;
+x=np.arange(0, 2, dx);
+y=2**x;
+plt.figure(1);
+plt.grid(True);
+plt.plot(x,y);
+plt.show()
+
+dx=.1;
+x=np.arange(0, 2, dx);
+y=3**x;
+plt.figure(1);
+plt.grid(True);
+plt.plot(x,y);
+plt.show()
+
+dx=.1;
+x=np.arange(0, 2, dx);
+y=4**x;
+plt.figure(1);
+plt.grid(True);
+plt.plot(x,y);
+plt.show()
+
+
+
 
