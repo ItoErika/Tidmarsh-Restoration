@@ -17,10 +17,10 @@ numpoints10=11;
 numpoints20=11;
 numpoints30=11;
 
-GES05=zeros(1,numpoints05);
-GES510=zeros(1,numpoints510);
-GES1020=zeros(1,numpoints1020);
-GES2030=zeros(1,numpoints2030);
+GES05=zeros(1,numpoints5);
+GES510=zeros(1,numpoints10);
+GES1020=zeros(1,numpoints20);
+GES2030=zeros(1,numpoints30);
 
 x=1;
 
@@ -41,7 +41,7 @@ hilo_N30=Nmax-Data30(:,8);
 hilo_N30_5=Nmax-Data30(:,16);
 
 % Assign cmap for Nitrate
-Ncmap=cmap_blue_white;
+Ncmap=cmap_dkgreen_white;
 %0-5
 crange=0:(Nmax/63):Nmax;
 for x=1:numpoints5
@@ -393,6 +393,374 @@ cb.Ticks=linspace(0,1,11);
 cb.TickLabels = num2cell(0:Camax);
 cb.TickLabels={'0','10','20','30','40','50','60','70','80','90','>/=100'}
 set(get(cb,'label'),'string','ppm Ca');
+
+
+% Extract ppm Iron data
+% Assign Femax
+Femax=80
+hilo_Fe5=Femax-Data5(:,11);
+hilo_Fe10=Femax-Data10(:,11);
+hilo_Fe20=Femax-Data20(:,11);
+hilo_Fe30=Femax-Data30(:,11);
+hilo_Fe5_sub=Femax-Data10(:,19);
+
+% Assign cmap for Fe
+Fecmap=cmap_orange_white;
+%0-5
+crange=0:(Femax/63):Femax;
+for x=1:numpoints5
+[d p] = min(abs(crange - hilo_Fe5(x,1)));
+colval(x,:)=floor(((Fecmap(p,:))*255));     
+end
+for x=1:numpoints5
+RGB=dec2hex(colval(x,:));
+RR=RGB(1,:);
+GG=RGB(2,:);
+BB=RGB(3,:);
+GE_DTScolour{x,1}=['ff',BB,GG,RR];
+end
+x=1;
+k = kml('Fe_0-5_Map');
+for x=1:numpoints5;
+    k.point(LatLong5(x,2),LatLong5(x,1),0,'name', ' ', 'iconColor',GE_DTScolour{x,1},'iconScale', 0.5);%IRGPS(x,9),IRGPS(x,10));
+    hold on   
+end
+k.run
+%5-10
+crange=0:(Femax/63):Femax;
+for x=1:numpoints10
+[d p] = min(abs(crange - hilo_Fe10(x,1)));
+colval(x,:)=floor(((Fecmap(p,:))*255));     
+end
+for x=1:numpoints10
+RGB=dec2hex(colval(x,:));
+RR=RGB(1,:);
+GG=RGB(2,:);
+BB=RGB(3,:);
+GE_DTScolour{x,1}=['ff',BB,GG,RR];
+end
+x=1;
+k = kml('Fe_5-10_Map');
+for x=1:numpoints10;
+    k.point(LatLong10(x,2),LatLong10(x,1),0,'name', ' ', 'iconColor',GE_DTScolour{x,1},'iconScale', 0.5);%IRGPS(x,9),IRGPS(x,10));
+    hold on   
+end
+k.run
+%10-20
+crange=0:(Femax/63):Femax;
+for x=1:numpoints20
+[d p] = min(abs(crange - hilo_Fe20(x,1)));
+colval(x,:)=floor(((Fecmap(p,:))*255));     
+end
+for x=1:numpoints20
+RGB=dec2hex(colval(x,:));
+RR=RGB(1,:);
+GG=RGB(2,:);
+BB=RGB(3,:);
+GE_DTScolour{x,1}=['ff',BB,GG,RR];
+end
+x=1;
+k = kml('Fe_10-20_Map');
+for x=1:numpoints20;
+    k.point(LatLong20(x,2),LatLong20(x,1),0,'name', ' ', 'iconColor',GE_DTScolour{x,1},'iconScale', 0.5);%IRGPS(x,9),IRGPS(x,10));
+    hold on   
+end
+k.run
+%20-30
+crange=0:(Femax/63):Femax;
+for x=1:numpoints30
+[d p] = min(abs(crange - hilo_Fe30(x,1)));
+colval(x,:)=floor(((Fecmap(p,:))*255));     
+end
+for x=1:numpoints30
+RGB=dec2hex(colval(x,:));
+RR=RGB(1,:);
+GG=RGB(2,:);
+BB=RGB(3,:);
+GE_DTScolour{x,1}=['ff',BB,GG,RR];
+end
+x=1;
+k = kml('Fe_20-30_Map');
+for x=1:numpoints30;
+    k.point(LatLong30(x,2),LatLong30(x,1),0,'name', ' ', 'iconColor',GE_DTScolour{x,1},'iconScale', 0.5);%IRGPS(x,9),IRGPS(x,10));
+    hold on   
+end
+k.run
+% 0-5 subset
+crange=0:(Femax/63):Femax;
+for x=1:numpoints10
+[d p] = min(abs(crange - hilo_Fe5_sub(x,1)));
+colval(x,:)=floor(((Fecmap(p,:))*255));     
+end
+for x=1:numpoints10
+RGB=dec2hex(colval(x,:));
+RR=RGB(1,:);
+GG=RGB(2,:);
+BB=RGB(3,:);
+GE_DTScolour{x,1}=['ff',BB,GG,RR];
+end
+x=1;
+k = kml('Fe_0-5_Map_subset');
+for x=1:numpoints10;
+    k.point(LatLong10(x,2),LatLong10(x,1),0,'name', ' ', 'iconColor',GE_DTScolour{x,1},'iconScale', 0.5);%IRGPS(x,9),IRGPS(x,10));
+    hold on   
+end
+k.run
+% Create colorbar for legend
+clear colorbar
+revcmap=flipud(Fecmap);
+colormap(revcmap);
+cb=colorbar;
+cb.Ticks=linspace(0,1,9);
+cb.TickLabels = num2cell(0:Femax);
+cb.TickLabels={'0','10','20','30','40','50','60','70','>/=80'}
+set(get(cb,'label'),'string','ppm Fe');
+
+% Extract ppm Potassium data
+% Assign Kmax
+Kmax=100
+hilo_K5=Kmax-Data5(:,12);
+hilo_K10=Kmax-Data10(:,12);
+hilo_K20=Kmax-Data20(:,12);
+hilo_K30=Kmax-Data30(:,12);
+hilo_K5_sub=Kmax-Data10(:,20);
+
+% Assign cmap for K
+Kcmap=cmap_salmon_white;
+%0-5
+crange=0:(Kmax/63):Kmax;
+for x=1:numpoints5
+[d p] = min(abs(crange - hilo_K5(x,1)));
+colval(x,:)=floor(((Kcmap(p,:))*255));     
+end
+for x=1:numpoints5
+RGB=dec2hex(colval(x,:));
+RR=RGB(1,:);
+GG=RGB(2,:);
+BB=RGB(3,:);
+GE_DTScolour{x,1}=['ff',BB,GG,RR];
+end
+x=1;
+k = kml('K_0-5_Map');
+for x=1:numpoints5;
+    k.point(LatLong5(x,2),LatLong5(x,1),0,'name', ' ', 'iconColor',GE_DTScolour{x,1},'iconScale', 0.5);%IRGPS(x,9),IRGPS(x,10));
+    hold on   
+end
+k.run
+%5-10
+crange=0:(Kmax/63):Kmax;
+for x=1:numpoints10
+[d p] = min(abs(crange - hilo_K10(x,1)));
+colval(x,:)=floor(((Kcmap(p,:))*255));     
+end
+for x=1:numpoints10
+RGB=dec2hex(colval(x,:));
+RR=RGB(1,:);
+GG=RGB(2,:);
+BB=RGB(3,:);
+GE_DTScolour{x,1}=['ff',BB,GG,RR];
+end
+x=1;
+k = kml('K_5-10_Map');
+for x=1:numpoints10;
+    k.point(LatLong10(x,2),LatLong10(x,1),0,'name', ' ', 'iconColor',GE_DTScolour{x,1},'iconScale', 0.5);%IRGPS(x,9),IRGPS(x,10));
+    hold on   
+end
+k.run
+%10-20
+crange=0:(Kmax/63):Kmax;
+for x=1:numpoints20
+[d p] = min(abs(crange - hilo_K20(x,1)));
+colval(x,:)=floor(((Kcmap(p,:))*255));     
+end
+for x=1:numpoints20
+RGB=dec2hex(colval(x,:));
+RR=RGB(1,:);
+GG=RGB(2,:);
+BB=RGB(3,:);
+GE_DTScolour{x,1}=['ff',BB,GG,RR];
+end
+x=1;
+k = kml('K_10-20_Map');
+for x=1:numpoints20;
+    k.point(LatLong20(x,2),LatLong20(x,1),0,'name', ' ', 'iconColor',GE_DTScolour{x,1},'iconScale', 0.5);%IRGPS(x,9),IRGPS(x,10));
+    hold on   
+end
+k.run
+%20-30
+crange=0:(Kmax/63):Kmax;
+for x=1:numpoints30
+[d p] = min(abs(crange - hilo_K30(x,1)));
+colval(x,:)=floor(((Kcmap(p,:))*255));     
+end
+for x=1:numpoints30
+RGB=dec2hex(colval(x,:));
+RR=RGB(1,:);
+GG=RGB(2,:);
+BB=RGB(3,:);
+GE_DTScolour{x,1}=['ff',BB,GG,RR];
+end
+x=1;
+k = kml('K_20-30_Map');
+for x=1:numpoints30;
+    k.point(LatLong30(x,2),LatLong30(x,1),0,'name', ' ', 'iconColor',GE_DTScolour{x,1},'iconScale', 0.5);%IRGPS(x,9),IRGPS(x,10));
+    hold on   
+end
+k.run
+% 0-5 subset
+crange=0:(Kmax/63):Kmax;
+for x=1:numpoints10
+[d p] = min(abs(crange - hilo_K5_sub(x,1)));
+colval(x,:)=floor(((Kcmap(p,:))*255));     
+end
+for x=1:numpoints10
+RGB=dec2hex(colval(x,:));
+RR=RGB(1,:);
+GG=RGB(2,:);
+BB=RGB(3,:);
+GE_DTScolour{x,1}=['ff',BB,GG,RR];
+end
+x=1;
+k = kml('K_0-5_Map_subset');
+for x=1:numpoints10;
+    k.point(LatLong10(x,2),LatLong10(x,1),0,'name', ' ', 'iconColor',GE_DTScolour{x,1},'iconScale', 0.5);%IRGPS(x,9),IRGPS(x,10));
+    hold on   
+end
+k.run
+% Create colorbar for legend
+clear colorbar
+revcmap=flipud(Kcmap);
+colormap(revcmap);
+cb=colorbar;
+cb.Ticks=linspace(0,1,11);
+cb.TickLabels = num2cell(0:Kmax);
+cb.TickLabels={'0','10','20','30','40','50','60','70','80','90','>/=100'}
+set(get(cb,'label'),'string','ppm K');
+
+% Extract ppm Magnesium data
+% Assign Mgmax
+Mgmax=100
+hilo_Mg5=Mgmax-Data5(:,13);
+hilo_Mg10=Mgmax-Data10(:,13);
+hilo_Mg20=Mgmax-Data20(:,13);
+hilo_Mg30=Mgmax-Data30(:,13);
+hilo_Mg5_sub=Mgmax-Data10(:,21);
+
+% Assign cmap for Mg
+Mgcmap=colormap(cmap_pink);
+%0-5
+crange=0:(Mgmax/63):Mgmax;
+for x=1:numpoints5
+[d p] = min(abs(crange - hilo_Mg5(x,1)));
+colval(x,:)=floor(((Mgcmap(p,:))*255));     
+end
+for x=1:numpoints5
+RGB=dec2hex(colval(x,:));
+RR=RGB(1,:);
+GG=RGB(2,:);
+BB=RGB(3,:);
+GE_DTScolour{x,1}=['ff',BB,GG,RR];
+end
+x=1;
+k = kml('Mg_0-5_Map');
+for x=1:numpoints5;
+    k.point(LatLong5(x,2),LatLong5(x,1),0,'name', ' ', 'iconColor',GE_DTScolour{x,1},'iconScale', 0.5);%IRGPS(x,9),IRGPS(x,10));
+    hold on   
+end
+k.run
+%5-10
+crange=0:(Mgmax/63):Mgmax;
+for x=1:numpoints10
+[d p] = min(abs(crange - hilo_Mg10(x,1)));
+colval(x,:)=floor(((Mgcmap(p,:))*255));     
+end
+for x=1:numpoints10
+RGB=dec2hex(colval(x,:));
+RR=RGB(1,:);
+GG=RGB(2,:);
+BB=RGB(3,:);
+GE_DTScolour{x,1}=['ff',BB,GG,RR];
+end
+x=1;
+k = kml('Mg_5-10_Map');
+for x=1:numpoints10;
+    k.point(LatLong10(x,2),LatLong10(x,1),0,'name', ' ', 'iconColor',GE_DTScolour{x,1},'iconScale', 0.5);%IRGPS(x,9),IRGPS(x,10));
+    hold on   
+end
+k.run
+%10-20
+crange=0:(Kmax/63):Kmax;
+for x=1:numpoints20
+[d p] = min(abs(crange - hilo_K20(x,1)));
+colval(x,:)=floor(((Kcmap(p,:))*255));     
+end
+for x=1:numpoints20
+RGB=dec2hex(colval(x,:));
+RR=RGB(1,:);
+GG=RGB(2,:);
+BB=RGB(3,:);
+GE_DTScolour{x,1}=['ff',BB,GG,RR];
+end
+x=1;
+k = kml('K_10-20_Map');
+for x=1:numpoints20;
+    k.point(LatLong20(x,2),LatLong20(x,1),0,'name', ' ', 'iconColor',GE_DTScolour{x,1},'iconScale', 0.5);%IRGPS(x,9),IRGPS(x,10));
+    hold on   
+end
+k.run
+%20-30
+crange=0:(Kmax/63):Kmax;
+for x=1:numpoints30
+[d p] = min(abs(crange - hilo_K30(x,1)));
+colval(x,:)=floor(((Kcmap(p,:))*255));     
+end
+for x=1:numpoints30
+RGB=dec2hex(colval(x,:));
+RR=RGB(1,:);
+GG=RGB(2,:);
+BB=RGB(3,:);
+GE_DTScolour{x,1}=['ff',BB,GG,RR];
+end
+x=1;
+k = kml('K_20-30_Map');
+for x=1:numpoints30;
+    k.point(LatLong30(x,2),LatLong30(x,1),0,'name', ' ', 'iconColor',GE_DTScolour{x,1},'iconScale', 0.5);%IRGPS(x,9),IRGPS(x,10));
+    hold on   
+end
+k.run
+% 0-5 subset
+crange=0:(Kmax/63):Kmax;
+for x=1:numpoints10
+[d p] = min(abs(crange - hilo_K5_sub(x,1)));
+colval(x,:)=floor(((Kcmap(p,:))*255));     
+end
+for x=1:numpoints10
+RGB=dec2hex(colval(x,:));
+RR=RGB(1,:);
+GG=RGB(2,:);
+BB=RGB(3,:);
+GE_DTScolour{x,1}=['ff',BB,GG,RR];
+end
+x=1;
+k = kml('K_0-5_Map_subset');
+for x=1:numpoints10;
+    k.point(LatLong10(x,2),LatLong10(x,1),0,'name', ' ', 'iconColor',GE_DTScolour{x,1},'iconScale', 0.5);%IRGPS(x,9),IRGPS(x,10));
+    hold on   
+end
+k.run
+% Create colorbar for legend
+clear colorbar
+revcmap=flipud(Kcmap);
+colormap(revcmap);
+cb=colorbar;
+cb.Ticks=linspace(0,1,11);
+cb.TickLabels = num2cell(0:Kmax);
+cb.TickLabels={'0','10','20','30','40','50','60','70','80','90','>/=100'}
+set(get(cb,'label'),'string','ppm K');
+
+
+
+
 
 
 
