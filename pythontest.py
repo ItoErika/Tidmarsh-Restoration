@@ -42,4 +42,12 @@ plt.grid(True);
 plt.plot(t,y,'r_');
 plt.show()
 
+C=0;
+D=4;
+y=A*np.sin(B*t+C)+D;
+plt.figure(1);
+plt.grid(True);
+plt.plot(t,y,'r_');
+plt.show()
+
 
