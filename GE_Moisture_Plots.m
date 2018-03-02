@@ -1607,6 +1607,8 @@ cb.TickLabels = num2cell(0:Kmax);
 cb.TickLabels={'0','10','20','30','40','50','60','70','80','90','>=100'}
 set(get(cb,'label'),'string','ppm K');
 % Extract ppm Mg data
+
+
 % Assign Mg max
 Mgmax=100;
 Mg05=Data0_5(:,9);
@@ -1623,85 +1625,7 @@ Mg2030=Data20_30(:,7);
 hi_lo_Mg2030=Mgmax-Mg2030;
 Mg2030_05=Data20_30(:,16);
 hi_lo_Mg2030_05=Mgmax-Mg2030_05;
-% Assign Mg max
-Mgmax=100;
-Mg05=Data0_5(:,9);
-hi_lo_Mg05=Mgmax-Mg05;
-Mg510=Data5_10(:,7);
-hi_lo_Mg510=Mgmax-Mg510;
-Mg510_05=Data5_10(:,16);
-hi_lo_Mg510_05=Mgmax-Mg510_05;
-Mg1020=Data10_20(:,7);
-hi_lo_Mg1020=Mgmax-Mg1020;
-Mg1020_05=Data10_20(:,16);
-hi_lo_Mg1020_05=Mgmax-Mg1020_05;
-Mg2030=Data20_30(:,7);
-hi_lo_Mg2030=Mgmax-Mg2030;
-Mg2030_05=Data20_30(:,16);
-hi_lo_Mg2030_05=Mgmax-Mg2030_05;
-% Assign cmap for Mg
-cmapMg=cmap_red_white;
-crange=0:(Mgmax/63):Mgmax;
-for x=1:numpoints05
-[d p] = min(abs(crange - hi_lo_Mg05(x,1)));
-colval(x,:)=floor(((cmapMg(p,:))*255));
-end
-for x=1:numpoints05
-RGB=dec2hex(colval(x,:));
-RR=RGB(1,:);
-GG=RGB(2,:);
-BB=RGB(3,:);
-GE_DTScolour{x,1}=['ff',BB,GG,RR];
-end
-x=1;
-k = kml('Mg_05_GEMap');
-for x=1:numpoints05;
-k.point(LatLong05(x,2),LatLong05(x,1),0,'name', ' ', 'iconColor',GE_DTScolour{x,1},'iconScale', 0.5);%IRGPS(x,9),IRGPS(x,10));
-hold on
-end
-k.run
-% Assign cmap for Mg
-cmapMg=cmap_red_black_white;
-crange=0:(Mgmax/63):Mgmax;
-for x=1:numpoints05
-[d p] = min(abs(crange - hi_lo_Mg05(x,1)));
-colval(x,:)=floor(((cmapMg(p,:))*255));
-end
-for x=1:numpoints05
-RGB=dec2hex(colval(x,:));
-RR=RGB(1,:);
-GG=RGB(2,:);
-BB=RGB(3,:);
-GE_DTScolour{x,1}=['ff',BB,GG,RR];
-end
-x=1;
-k = kml('Mg_05_GEMap');
-for x=1:numpoints05;
-k.point(LatLong05(x,2),LatLong05(x,1),0,'name', ' ', 'iconColor',GE_DTScolour{x,1},'iconScale', 0.5);%IRGPS(x,9),IRGPS(x,10));
-hold on
-end
-k.run
-% Assign cmap for Mg
-cmapMg=cmap_black_red_white;
-crange=0:(Mgmax/63):Mgmax;
-for x=1:numpoints05
-[d p] = min(abs(crange - hi_lo_Mg05(x,1)));
-colval(x,:)=floor(((cmapMg(p,:))*255));
-end
-for x=1:numpoints05
-RGB=dec2hex(colval(x,:));
-RR=RGB(1,:);
-GG=RGB(2,:);
-BB=RGB(3,:);
-GE_DTScolour{x,1}=['ff',BB,GG,RR];
-end
-x=1;
-k = kml('Mg_05_GEMap');
-for x=1:numpoints05;
-k.point(LatLong05(x,2),LatLong05(x,1),0,'name', ' ', 'iconColor',GE_DTScolour{x,1},'iconScale', 0.5);%IRGPS(x,9),IRGPS(x,10));
-hold on
-end
-k.run
+
 % Assign cmap for Mg
 cmapMg=cmap_purple_white;
 crange=0:(Mgmax/63):Mgmax;
@@ -1727,19 +1651,6 @@ k.run
 
 
 
-
-
-
-
-% Extract ppm P data
-P05=Data0_5(:,5);
-hi_lo_P05=1-(P05/19.775);
-P510=Data5_10(:,3);
-hi_lo_P510=1-(P510/19.775);
-P1020=Data10_20(:,3);
-hi_lo_P1020=1-(P1020/19.775);
-P2030=Data20_30(:,3);
-hi_lo_P2030=1-(P2030/19.775);
 
 hi_lo_P2030=20-P2030;
  colormap('Hot')
