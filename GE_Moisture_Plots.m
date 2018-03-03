@@ -32,7 +32,7 @@ x=1;
 % Extract ppm nitrate data
 % Assign Nmax
 Nmax=1;
-hilo_N5=Nmax-Data5(1:65,8);
+hilo_N5=Nmax-Data5(:,8);
 hilo_N10=Nmax-Data10(:,8);
 hilo_N20=Nmax-Data20(:,8);
 hilo_N30=Nmax-Data30(:,8);
@@ -42,11 +42,11 @@ hilo_N5_sub=Nmax-Data10(:,16);
 Ncmap=cmap_dkgreen_white;
 %0-5
 crange=0:(Nmax/63):Nmax;
-for x=1:numpoints5-7
+for x=1:numpoints5
 [d p] = min(abs(crange - hilo_N5(x,1)));
 colval(x,:)=floor(((Ncmap(p,:))*255));     
 end
-for x=1:numpoints5-7
+for x=1:numpoints5
 RGB=dec2hex(colval(x,:));
 RR=RGB(1,:);
 GG=RGB(2,:);
@@ -55,7 +55,7 @@ GE_DTScolour{x,1}=['ff',BB,GG,RR];
 end
 x=1;
 k = kml('N_0-5_Map');
-for x=1:numpoints5-7;
+for x=1:numpoints5;
     k.point(LatLong5(x,2),LatLong5(x,1),0,'name', ' ', 'iconColor',GE_DTScolour{x,1},'iconScale', 0.5);%IRGPS(x,9),IRGPS(x,10));
     hold on   
 end
@@ -881,7 +881,7 @@ set(get(cb,'label'),'string','ppm Total Kjeldahl nitrogen (TKN)');
 % Extract ppm Total nitrogen data
 % Assign total N max
 Ntmax=1500;
-hilo_Nt5=Ntmax-Data5(1:65,15);
+hilo_Nt5=Ntmax-Data5(:,15);
 hilo_Nt10=Ntmax-Data10(:,15);
 hilo_Nt20=Ntmax-Data20(:,15);
 hilo_Nt30=Ntmax-Data30(:,15);
@@ -891,11 +891,11 @@ Ntcmap=cmap_dkgreen_white;
 
 %0-5
 crange=0:(Ntmax/63):Ntmax;
-for x=1:numpoints5-7
+for x=1:numpoints5
 [d p] = min(abs(crange - hilo_Nt5(x,1)));
 colval(x,:)=floor(((Ntcmap(p,:))*255));     
 end
-for x=1:numpoints5-7
+for x=1:numpoints5
 RGB=dec2hex(colval(x,:));
 RR=RGB(1,:);
 GG=RGB(2,:);
@@ -904,7 +904,7 @@ GE_DTScolour{x,1}=['ff',BB,GG,RR];
 end
 x=1;
 k = kml('Nt_0-5_Map');
-for x=1:numpoints5-7;
+for x=1:numpoints5;
     k.point(LatLong5(x,2),LatLong5(x,1),0,'name', ' ', 'iconColor',GE_DTScolour{x,1},'iconScale', 0.5);%IRGPS(x,9),IRGPS(x,10));
     hold on   
 end
@@ -999,4 +999,58 @@ cb.TickLabels = num2cell(0:Ntmax);
 cb.TickLabels={'0','150','300','450','600','750','900','1050','1200','1450','>/=1500'}
 set(get(cb,'label'),'string','ppm Total N');
 
+% Plot probe and gravimetric moisture data 
+% Load data
+m_Data= xlsread('moisture_Data.xlsx');
+LatLongm=m_Data(:,1:2);
+numpoints=72;
+% Assign moisture max
+moisturemax=1
+hilo_probe_m=moisturemax-m_Data(:,4)
 
+% Assign colormap for moisture
+mcmap=cmap;
+
+% probe plot
+crange=0:(moisturemax/63):moisturemax;
+for x=1:numpoints
+[d p] = min(abs(crange - hilo_probe_m(x,1)));
+colval(x,:)=floor(((mcmap(p,:))*255));     
+end
+for x=1:numpoints
+RGB=dec2hex(colval(x,:));
+RR=RGB(1,:);
+GG=RGB(2,:);
+BB=RGB(3,:);
+GE_DTScolour{x,1}=['ff',BB,GG,RR];
+end
+x=1;
+k = kml('probe_moisture_Map');
+for x=1:numpoints;
+    k.point(LatLongm(x,2),LatLongm(x,1),0,'name', ' ', 'iconColor',GE_DTScolour{x,1},'iconScale', 0.5);%IRGPS(x,9),IRGPS(x,10));
+    hold on   
+end
+k.run
+% Create colorbar for legend
+clear colorbar
+revcmap=flipud(mcmap);
+colormap(revcmap);
+cb=colorbar;
+cb.Ticks=linspace(0,1,11);
+cb.TickLabels = num2cell(0:moisturemax);
+cb.TickLabels={'0','10','20','30','40','50','60','70','80','90','100',}
+set(get(cb,'label'),'string','Probe Moisture %');
+
+% extract gravimetric moisture data
+m5=
+m10
+m20
+m30
+
+
+
+hilo_K5=Kmax-Data5(:,12);
+hilo_K10=Kmax-Data10(:,12);
+hilo_K20=Kmax-Data20(:,12);
+hilo_K30=Kmax-Data30(:,12);
+hilo_K5_sub=Kmax-Data10(:,20);
