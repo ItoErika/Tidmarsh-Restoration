@@ -1042,15 +1042,102 @@ cb.TickLabels={'0','10','20','30','40','50','60','70','80','90','100',}
 set(get(cb,'label'),'string','Probe Moisture %');
 
 % extract gravimetric moisture data
-m5=
-m10
-m20
-m30
+hilo_m5=moisturemax-m_Data(:,17);
+hilo_m10=moisturemax-m_Data(:,18);
+hilo_m20=moisturemax-m_Data(:,19);
+hilo_m30=moisturemax-m_Data(:,20);
+
+%0-5 grav moisture plot
+crange=0:(moisturemax/63):moisturemax;
+for x=1:numpoints
+[d p] = min(abs(crange - hilo_m5(x,1)));
+colval(x,:)=floor(((mcmap(p,:))*255));     
+end
+for x=1:numpoints
+RGB=dec2hex(colval(x,:));
+RR=RGB(1,:);
+GG=RGB(2,:);
+BB=RGB(3,:);
+GE_DTScolour{x,1}=['ff',BB,GG,RR];
+end
+x=1;
+k = kml('0-5_grav_m_Map');
+for x=1:numpoints;
+    k.point(LatLongm(x,2),LatLongm(x,1),0,'name', ' ', 'iconColor',GE_DTScolour{x,1},'iconScale', 0.5);%IRGPS(x,9),IRGPS(x,10));
+    hold on   
+end
+k.run
+
+%5-10 grav moisture plot
+crange=0:(moisturemax/63):moisturemax;
+for x=1:numpoints
+[d p] = min(abs(crange - hilo_m10(x,1)));
+colval(x,:)=floor(((mcmap(p,:))*255));     
+end
+for x=1:numpoints
+RGB=dec2hex(colval(x,:));
+RR=RGB(1,:);
+GG=RGB(2,:);
+BB=RGB(3,:);
+GE_DTScolour{x,1}=['ff',BB,GG,RR];
+end
+x=1;
+k = kml('5-10_grav_m_Map');
+for x=1:numpoints;
+    k.point(LatLongm(x,2),LatLongm(x,1),0,'name', ' ', 'iconColor',GE_DTScolour{x,1},'iconScale', 0.5);%IRGPS(x,9),IRGPS(x,10));
+    hold on   
+end
+k.run
+
+%10-20 grav moisture plot
+crange=0:(moisturemax/63):moisturemax;
+for x=1:numpoints
+[d p] = min(abs(crange - hilo_m20(x,1)));
+colval(x,:)=floor(((mcmap(p,:))*255));     
+end
+for x=1:numpoints
+RGB=dec2hex(colval(x,:));
+RR=RGB(1,:);
+GG=RGB(2,:);
+BB=RGB(3,:);
+GE_DTScolour{x,1}=['ff',BB,GG,RR];
+end
+x=1;
+k = kml('10-20_grav_m_Map');
+for x=1:numpoints;
+    k.point(LatLongm(x,2),LatLongm(x,1),0,'name', ' ', 'iconColor',GE_DTScolour{x,1},'iconScale', 0.5);%IRGPS(x,9),IRGPS(x,10));
+    hold on   
+end
+k.run
 
 
+%20-30 grav moisture plot
+crange=0:(moisturemax/63):moisturemax;
+for x=1:numpoints
+[d p] = min(abs(crange - hilo_m30(x,1)));
+colval(x,:)=floor(((mcmap(p,:))*255));     
+end
+for x=1:numpoints
+RGB=dec2hex(colval(x,:));
+RR=RGB(1,:);
+GG=RGB(2,:);
+BB=RGB(3,:);
+GE_DTScolour{x,1}=['ff',BB,GG,RR];
+end
+x=1;
+k = kml('20-30_grav_m_Map');
+for x=1:numpoints;
+    k.point(LatLongm(x,2),LatLongm(x,1),0,'name', ' ', 'iconColor',GE_DTScolour{x,1},'iconScale', 0.5);%IRGPS(x,9),IRGPS(x,10));
+    hold on   
+end
+k.run
 
-hilo_K5=Kmax-Data5(:,12);
-hilo_K10=Kmax-Data10(:,12);
-hilo_K20=Kmax-Data20(:,12);
-hilo_K30=Kmax-Data30(:,12);
-hilo_K5_sub=Kmax-Data10(:,20);
+% Create colorbar for legend
+clear colorbar
+revcmap=flipud(mcmap);
+colormap(revcmap);
+cb=colorbar;
+cb.Ticks=linspace(0,1,11);
+cb.TickLabels = num2cell(0:moisturemax);
+cb.TickLabels={'0','10','20','30','40','50','60','70','80','90','100',}
+set(get(cb,'label'),'string','Gravimetric Water Content %');
