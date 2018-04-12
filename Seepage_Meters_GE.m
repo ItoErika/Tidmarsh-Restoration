@@ -12,11 +12,11 @@ GES=zeros(1,numpoints);
 
 x=1;
 
-% Extract seepage data (mL)
+% Extract seepage data (cm^3/day)
 % Assign Nmax
-SMmax=200;
-% Add 100 too account for negative data 
-hilo_SM=SMmax-(SM_Data(:,3)+100);
+SMmax=4400;
+% Add 2200 too account for negative data 
+hilo_SM=SMmax-(SM_Data(:,5)+2200);
 
 % Make plot
 crange=0:(SMmax/63):SMmax;
@@ -44,7 +44,7 @@ clear colorbar
 revcmap=flipud(cmap);
 colormap(revcmap);
 cb=colorbar;
-cb.Ticks=linspace(0,1,11);
+cb.Ticks=linspace(0,1,13);
 cb.TickLabels = num2cell(0:SMmax);
-cb.TickLabels={'-100','-80','-60','-40','-20','0','20','40','60','80','100'}
-set(get(cb,'label'),'string','seepage (mL)');
+cb.TickLabels={'-1200','-1000','-800','-600','-400','-200','0','200','400','600','800','1000','1200'}
+set(get(cb,'label'),'string','seepage (cm^3/day)');
