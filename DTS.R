@@ -25,4 +25,6 @@ colnames(df)<-c("datetime", "trefint", "tref1", "tref2")
 
 g<-ggplot()+ geom_point(data=df, aes(x=datetime, y=trefint, color='trefint'))+ geom_point(data=df, aes(x=datetime, y=tref1, color='tref1'))+geom_point(data=df, aes(x=datetime, y=tref2, color='tref2'))
 
+ggplot(data = df, aes(x = metrics, y = teams)) +
+  geom_tile(aes(fill = performance)) 
 plot(Dist_10, Temp_10[,1])
