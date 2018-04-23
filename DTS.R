@@ -23,7 +23,6 @@ datetime_10<-TW_10$datetime
 df<-as.data.frame(t(rbind(datetime_10, trefint_10, tref1_10, tref2_10)))
 colnames(df)<-c("datetime", "trefint", "tref1", "tref2")
 
-g<-ggplot()+ geom_point(data=df, aes(x=datetime, y=trefint))+ geom_point(color='black', size=.2)+ geom_point(data=df, aes(x=datetime, y=tref1))+geom_point(data=df, aes(x=datetime, y=tref2))
-
+g<-ggplot()+ geom_point(data=df, aes(x=datetime, y=trefint, color='trefint'))+ geom_point(data=df, aes(x=datetime, y=tref1, color='tref1'))+geom_point(data=df, aes(x=datetime, y=tref2, color='tref2'))
 
 plot(Dist_10, Temp_10[,1])
