@@ -8,16 +8,11 @@
 
 load DTS_Deployment_Name.mat
 
-% Here is a sample command for plotting one line (x-y plot)
+% Plot all temps at once with default colors:
 
-plot (datetime, tref_int)
+plot (distance, TtmpC)
 
-% If you want to plot all of the temperatures at once, with default colors...
-
-plot (distance, TempC)
-
-% Plotting all of the reference temperatures together, specifying line widths and
-colors
+% Plotting all of the reference temperatures together, specifying line widths and colors
 % translating "matlab" time into real timestamps once plotted
 % the number 13 might be good for times and 6 good for dates but check this
 % labeling axes
@@ -43,16 +38,27 @@ print plot1_tref.pdf -dpdf
 % plot a color axis, then specify its range
 % assorted labels etc...
 
+max(tempC(:))
+min(tempC(:))
+
 figure
-imagesc(datetime,distance,TempC)
+imagesc(distance, datetime, rot90(tempC))
 colorbar
-datetick('x',13,'keeplimits')
-caxis([-5 40])
-title('DTS Data Collected at Field Site in Stream')
+datetick('y', 0, 'keeplimits')
+caxis([-8 27])
+title('Tidmarsh West Soil 10 cm')
 ylabel('Distance (m)')
 xlabel('Time on March 31, 2011')
 y2label('Temperature (degC)')
-clabel('Temperature (degC)')
+clabel('Temperature (degC)');
+
+
+NumTicks=15
+L = get(gca,'YLim');
+set(gca,'YTick',linspace(L(1),L(2),NumTicks))
+
+tick_locations = datenum(2009,10:1:54,1);
+set(gca,'XTick',tick_locations)
 
 print DTS_Data_TMap.pdf -dpdf
 
