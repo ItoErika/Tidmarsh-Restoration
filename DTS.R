@@ -20,6 +20,8 @@ tref2_10<-TW_10$tref.2
 trefint_10<-TW_10$tref.int
 datetime_10<-TW_10$datetime
 
+as.POSIXct((datetime_10[1] - 719529)*86400, origin = "1970-01-01", tz = "UTC")
+
 df<-as.data.frame(t(rbind(datetime_10, trefint_10, tref1_10, tref2_10)))
 colnames(df)<-c("datetime", "trefint", "tref1", "tref2")
 
