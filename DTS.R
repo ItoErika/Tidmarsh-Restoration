@@ -1,5 +1,6 @@
 # Load required libraries
 library('R.matlab')
+library('matlab')
 library('ggplot2')
 
 # Load DTS data
