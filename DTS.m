@@ -44,13 +44,75 @@ min(tempC(:))
 figure
 imagesc(distance, datetime, rot90(tempC))
 colorbar
-datetick('y', 0, 'keeplimits')
-caxis([-8 27])
+datetick('y', 2, 'keeplimits')
+caxis([-5 25])
 title('Tidmarsh West Soil 10 cm')
-ylabel('Distance (m)')
-xlabel('Time on March 31, 2011')
-y2label('Temperature (degC)')
-clabel('Temperature (degC)');
+ylabel('Date')
+xlabel('Distance (m)')
+clabel('Temperature (degC)')
+print DTS_Data_TMap.pdf -dpdf
+
+datetext=datestr(datetime)
+
+figure
+imagesc(distance, datetime(191:216), rot90(tempC(:,191:216)))
+colorbar
+datetick('y', 13, 'keeplimits')
+caxis([-5 25])
+title('Tidmarsh West Soil 10 cm (2/24/18)')
+ylabel('Time')
+xlabel('Distance (m)')
+clabel('Temperature (degC)')
+print DTS_Data_TMap.pdf -dpdf
+
+figure
+imagesc(distance, datetime, rot90(tempC))
+colorbar
+datetick('y', 2, 'keeplimits')
+caxis([-5 25])
+title('Tidmarsh West Soil 20 cm')
+ylabel('Date')
+xlabel('Distance (m)')
+clabel('Temperature (degC)')
+print DTS_Data_TMap.pdf -dpdf
+
+figure
+imagesc(distance, datetime(191:216), rot90(tempC(:,191:216)))
+colorbar
+datetick('y', 13, 'keeplimits')
+caxis([-5 25])
+title('Tidmarsh West Soil 20 cm (2/24/18)')
+ylabel('Time')
+xlabel('Distance (m)')
+clabel('Temperature (degC)')
+print DTS_Data_TMap.pdf -dpdf
+
+
+figure
+imagesc(distance, datetime, rot90(tempC))
+colorbar
+datetick('y', 2, 'keeplimits')
+caxis([-5 25])
+title('Tidmarsh West Soil 30 cm')
+ylabel('Date')
+xlabel('Distance (m)')
+clabel('Temperature (degC)')
+print DTS_Data_TMap.pdf -dpdf
+%ime on March 31, 2011
+
+figure
+imagesc(distance, datetime(191:216), rot90(tempC(:,191:216)))
+colorbar
+datetick('y', 13, 'keeplimits')
+caxis([-5 25])
+title('Tidmarsh West Soil 30 cm (2/24/18)')
+ylabel('Time')
+xlabel('Distance (m)')
+clabel('Temperature (degC)')
+print DTS_Data_TMap.pdf -dpdf
+
+
+
 
 
 NumTicks=15
