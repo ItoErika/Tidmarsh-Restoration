@@ -55,15 +55,17 @@ print DTS_Data_TMap.pdf -dpdf
 datetext=datestr(datetime)
 
 figure
-imagesc(distance, datetime(191:216), rot90(tempC(:,191:216)))
+imagesc(distance, datetime(166:240), rot90(tempC(:,166:240)))
 colorbar
 datetick('y', 13, 'keeplimits')
 caxis([-5 15])
-title('Tidmarsh West Soil 10 cm (2/24/18)')
+title('Tidmarsh West Soil 10 cm (2/23/18-2/25/18)')
 ylabel('Time')
 xlabel('Distance (m)')
 clabel('Temperature (degC)')
 print DTS_Data_TMap.pdf -dpdf
+
+#191:216
 
 figure
 imagesc(distance, datetime, rot90(tempC))
