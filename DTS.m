@@ -41,76 +41,129 @@ print plot1_tref.pdf -dpdf
 max(tempC(:))
 min(tempC(:))
 
+% Shift datenum by 4 hours to convert from GMT?
+datetimeshifted=[];
+for i=1:numel(datetime)
+datetimeshifted=[datetimeshifted;addtodate(datetime(i),-4,'hour')];
+end
+
 figure
-imagesc(distance, datetime, rot90(tempC))
+imagesc(distance, datetimeshifted, rot90(tempC))
 colorbar
 datetick('y', 2, 'keeplimits')
 caxis([-5 15])
 title('Tidmarsh West Soil 10 cm')
 ylabel('Date')
 xlabel('Distance (m)')
-clabel('Temperature (degC)')
+set(get(colorbar,'label'),'string','Temperature (deg C)');
+set(gcf,'PaperOrientation','landscape');
+set(gcf, 'Units', 'inches', 'PaperPosition', [0,0,11.5,7.5]);
+print(gcf, '-dpdf', 'TW_DTS_All_10cm.pdf');
 print DTS_Data_TMap.pdf -dpdf
 
-datetext=datestr(datetime)
+% Shift datenum by 4 hours to convert from GMT?
+datetimeshifted=[];
+for i=1:numel(datetime)
+datetimeshifted=[datetimeshifted;addtodate(datetime(i),-4,'hour')];
+end
 
 figure
-imagesc(distance, datetime(166:240), rot90(tempC(:,166:240)))
-colorbar
-datetick('y', 13, 'keeplimits')
-caxis([-5 15])
-title('Tidmarsh West Soil 10 cm (2/23/18-2/25/18)')
-ylabel('Time')
-xlabel('Distance (m)')
-clabel('Temperature (degC)')
-print DTS_Data_TMap.pdf -dpdf
-
-#191:216
-
-figure
-imagesc(distance, datetime, rot90(tempC))
+imagesc(distance, datetimeshifted, rot90(tempC))
 colorbar
 datetick('y', 2, 'keeplimits')
 caxis([-5 15])
 title('Tidmarsh West Soil 20 cm')
 ylabel('Date')
 xlabel('Distance (m)')
-clabel('Temperature (degC)')
-print DTS_Data_TMap.pdf -dpdf
+set(get(colorbar,'label'),'string','Temperature (deg C)');
+set(gcf,'PaperOrientation','landscape');
+set(gcf, 'Units', 'inches', 'PaperPosition', [0,0,11.5,7.5]);
+print(gcf, '-dpdf', 'TW_DTS_All_20cm.pdf');
 
-figure
-imagesc(distance, datetime(191:216), rot90(tempC(:,191:216)))
-colorbar
-datetick('y', 13, 'keeplimits')
-caxis([-5 15])
-title('Tidmarsh West Soil 20 cm (2/24/18)')
-ylabel('Time')
-xlabel('Distance (m)')
-clabel('Temperature (degC)')
-print DTS_Data_TMap.pdf -dpdf
+% Shift datenum by 4 hours to convert from GMT?
+datetimeshifted=[];
+for i=1:numel(datetime)
+datetimeshifted=[datetimeshifted;addtodate(datetime(i),-4,'hour')];
+end
 
 
 figure
-imagesc(distance, datetime, rot90(tempC))
+imagesc(distance, datetimeshifted, rot90(tempC))
 colorbar
 datetick('y', 2, 'keeplimits')
 caxis([-5 15])
 title('Tidmarsh West Soil 30 cm')
 ylabel('Date')
 xlabel('Distance (m)')
-clabel('Temperature (degC)')
-print DTS_Data_TMap.pdf -dpdf
-%ime on March 31, 2011
+set(get(colorbar,'label'),'string','Temperature (deg C)');
+set(gcf,'PaperOrientation','landscape');
+set(gcf, 'Units', 'inches', 'PaperPosition', [0,0,11.5,7.5]);
+print(gcf, '-dpdf', 'TW_DTS_All_30cm.pdf');
+
+
+datetext=datestr(datetime)
+
+% Shift datenum by 4 hours to convert from GMT?
+datetimeshifted=[];
+for i=1:numel(datetime)
+datetimeshifted=[datetimeshifted;addtodate(datetime(i),-4,'hour')];
+end
+
 
 figure
-imagesc(distance, datetime(191:216), rot90(tempC(:,191:216)))
+imagesc(distance, datetimeshifted(147:268), rot90(tempC(:,147:268)))
+colorbar
+datetick('y', 2, 'keeplimits')
+caxis([-5 15])
+title('Tidmarsh West Soil 10 cm (2/22/18-2/26/18)')
+ylabel('Date')
+xlabel('Distance (m)')
+set(get(colorbar,'label'),'string','Temperature (deg C)');
+set(gcf,'PaperOrientation','landscape');
+set(gcf, 'Units', 'inches', 'PaperPosition', [0,0,11.5,7.5]);
+print(gcf, '-dpdf', 'TW_DTS_Field_10cm.pdf');
+
+#191:216
+
+% Shift datenum by 4 hours to convert from GMT?
+datetimeshifted=[];
+for i=1:numel(datetime)
+datetimeshifted=[datetimeshifted;addtodate(datetime(i),-4,'hour')];
+end
+
+
+figure
+imagesc(distance, datetimeshifted(147:268), rot90(tempC(:,147:268)))
+colorbar
+datetick('y', 2, 'keeplimits')
+caxis([-5 15])
+title('Tidmarsh West Soil 20 cm (2/22/18-2/26/18)')
+ylabel('Time')
+xlabel('Distance (m)')
+set(get(colorbar,'label'),'string','Temperature (deg C)');
+set(gcf,'PaperOrientation','landscape');
+set(gcf, 'Units', 'inches', 'PaperPosition', [0,0,11.5,7.5]);
+print(gcf, '-dpdf', 'TW_DTS_Field_20cm.pdf');
+
+% Shift datenum by 4 hours to convert from GMT?
+datetimeshifted=[];
+for i=1:numel(datetime)
+datetimeshifted=[datetimeshifted;addtodate(datetime(i),-4,'hour')];
+end
+
+
+figure
+imagesc(distance, datetimeshifted(147:268), rot90(tempC(:,147:268)))
 colorbar
 datetick('y', 13, 'keeplimits')
 caxis([-5 15])
 title('Tidmarsh West Soil 30 cm (2/24/18)')
 ylabel('Time')
 xlabel('Distance (m)')
-clabel('Temperature (degC)')
+set(get(cb,'label'),'string','Temperature (deg C)');
+
+
+
 print DTS_Data_TMap.pdf -dpdf
 
 
