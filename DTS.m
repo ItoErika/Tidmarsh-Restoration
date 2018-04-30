@@ -41,6 +41,17 @@ print plot1_tref.pdf -dpdf
 max(tempC(:))
 min(tempC(:))
 
+% Remove mirrored part of plot
+% Remove negative distance values in DTS box in barn
+posdist=distance(distance>0)
+% Find the middle point in the positive distance data
+middist=length(posdist)/2
+% Subset distance data to only include half of mirrored data
+% NOTE: remember to add the length of negative data to find the proper midpoint
+plotdist=distance(1:(length(distance(distance<=0))+middist))
+% Subset the temperature data matrix to only include the selected distances
+plottemp=tempC(1:length(plotdist),:)
+
 % Shift datenum by 4 hours to convert from GMT?
 datetimeshifted=[];
 for i=1:numel(datetime)
@@ -48,7 +59,7 @@ datetimeshifted=[datetimeshifted;addtodate(datetime(i),-4,'hour')];
 end
 
 figure
-imagesc(distance, datetimeshifted, rot90(tempC))
+imagesc(plotdist, datetimeshifted, rot90(plottemp))
 colorbar
 datetick('y', 2, 'keeplimits')
 caxis([-5 15])
@@ -59,7 +70,6 @@ set(get(colorbar,'label'),'string','Temperature (deg C)');
 set(gcf,'PaperOrientation','landscape');
 set(gcf, 'Units', 'inches', 'PaperPosition', [0,0,11.5,7.5]);
 print(gcf, '-dpdf', 'TW_DTS_All_10cm.pdf');
-print DTS_Data_TMap.pdf -dpdf
 
 % Shift datenum by 4 hours to convert from GMT?
 datetimeshifted=[];
