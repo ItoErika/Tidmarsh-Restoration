@@ -41,6 +41,8 @@ print plot1_tref.pdf -dpdf
 max(tempC(:))
 min(tempC(:))
 
+load('TW_10cm.mat')
+
 % Remove mirrored part of plot
 % Remove negative distance values in DTS box in barn
 posdist=distance(distance>0)
@@ -69,7 +71,20 @@ xlabel('Distance (m)')
 set(get(colorbar,'label'),'string','Temperature (deg C)');
 set(gcf,'PaperOrientation','landscape');
 set(gcf, 'Units', 'inches', 'PaperPosition', [0,0,11.5,7.5]);
-print(gcf, '-dpdf', 'TW_DTS_All_10cm.pdf');
+print(gcf, '-dpdf', 'TW_DTS_All_10cm_half.pdf');
+
+load('TW_20cm.mat')
+
+% Remove mirrored part of plot
+% Remove negative distance values in DTS box in barn
+posdist=distance(distance>0)
+% Find the middle point in the positive distance data
+middist=length(posdist)/2
+% Subset distance data to only include half of mirrored data
+% NOTE: remember to add the length of negative data to find the proper midpoint
+plotdist=distance(1:(length(distance(distance<=0))+middist))
+% Subset the temperature data matrix to only include the selected distances
+plottemp=tempC(1:length(plotdist),:)
 
 % Shift datenum by 4 hours to convert from GMT?
 datetimeshifted=[];
@@ -78,7 +93,7 @@ datetimeshifted=[datetimeshifted;addtodate(datetime(i),-4,'hour')];
 end
 
 figure
-imagesc(distance, datetimeshifted, rot90(tempC))
+imagesc(plotdist, datetimeshifted, rot90(plottemp))
 colorbar
 datetick('y', 2, 'keeplimits')
 caxis([-5 15])
@@ -88,7 +103,20 @@ xlabel('Distance (m)')
 set(get(colorbar,'label'),'string','Temperature (deg C)');
 set(gcf,'PaperOrientation','landscape');
 set(gcf, 'Units', 'inches', 'PaperPosition', [0,0,11.5,7.5]);
-print(gcf, '-dpdf', 'TW_DTS_All_20cm.pdf');
+print(gcf, '-dpdf', 'TW_DTS_All_20cm_half.pdf');
+
+load('TW_30cm.mat')
+
+% Remove mirrored part of plot
+% Remove negative distance values in DTS box in barn
+posdist=distance(distance>0)
+% Find the middle point in the positive distance data
+middist=length(posdist)/2
+% Subset distance data to only include half of mirrored data
+% NOTE: remember to add the length of negative data to find the proper midpoint
+plotdist=distance(1:(length(distance(distance<=0))+middist))
+% Subset the temperature data matrix to only include the selected distances
+plottemp=tempC(1:length(plotdist),:)
 
 % Shift datenum by 4 hours to convert from GMT?
 datetimeshifted=[];
@@ -96,9 +124,8 @@ for i=1:numel(datetime)
 datetimeshifted=[datetimeshifted;addtodate(datetime(i),-4,'hour')];
 end
 
-
 figure
-imagesc(distance, datetimeshifted, rot90(tempC))
+imagesc(plotdist, datetimeshifted, rot90(plottemp))
 colorbar
 datetick('y', 2, 'keeplimits')
 caxis([-5 15])
@@ -108,10 +135,20 @@ xlabel('Distance (m)')
 set(get(colorbar,'label'),'string','Temperature (deg C)');
 set(gcf,'PaperOrientation','landscape');
 set(gcf, 'Units', 'inches', 'PaperPosition', [0,0,11.5,7.5]);
-print(gcf, '-dpdf', 'TW_DTS_All_30cm.pdf');
+print(gcf, '-dpdf', 'TW_DTS_All_30cm_half.pdf');
 
+load('TW_10cm.mat')
 
-datetext=datestr(datetime)
+% Remove mirrored part of plot
+% Remove negative distance values in DTS box in barn
+posdist=distance(distance>0)
+% Find the middle point in the positive distance data
+middist=length(posdist)/2
+% Subset distance data to only include half of mirrored data
+% NOTE: remember to add the length of negative data to find the proper midpoint
+plotdist=distance(1:(length(distance(distance<=0))+middist))
+% Subset the temperature data matrix to only include the selected distances
+plottemp=tempC(1:length(plotdist),:)
 
 % Shift datenum by 4 hours to convert from GMT?
 datetimeshifted=[];
@@ -119,9 +156,8 @@ for i=1:numel(datetime)
 datetimeshifted=[datetimeshifted;addtodate(datetime(i),-4,'hour')];
 end
 
-
 figure
-imagesc(distance, datetimeshifted(147:268), rot90(tempC(:,147:268)))
+imagesc(plotdist, datetimeshifted(147:268), rot90(plottemp(:,147:268)))
 colorbar
 datetick('y', 2, 'keeplimits')
 caxis([-5 15])
@@ -131,9 +167,22 @@ xlabel('Distance (m)')
 set(get(colorbar,'label'),'string','Temperature (deg C)');
 set(gcf,'PaperOrientation','landscape');
 set(gcf, 'Units', 'inches', 'PaperPosition', [0,0,11.5,7.5]);
-print(gcf, '-dpdf', 'TW_DTS_Field_10cm.pdf');
+print(gcf, '-dpdf', 'TW_DTS_Field_10cm_half.pdf');
 
 #191:216
+
+load('TW_20cm.mat')
+
+% Remove mirrored part of plot
+% Remove negative distance values in DTS box in barn
+posdist=distance(distance>0)
+% Find the middle point in the positive distance data
+middist=length(posdist)/2
+% Subset distance data to only include half of mirrored data
+% NOTE: remember to add the length of negative data to find the proper midpoint
+plotdist=distance(1:(length(distance(distance<=0))+middist))
+% Subset the temperature data matrix to only include the selected distances
+plottemp=tempC(1:length(plotdist),:)
 
 % Shift datenum by 4 hours to convert from GMT?
 datetimeshifted=[];
@@ -141,9 +190,8 @@ for i=1:numel(datetime)
 datetimeshifted=[datetimeshifted;addtodate(datetime(i),-4,'hour')];
 end
 
-
 figure
-imagesc(distance, datetimeshifted(147:268), rot90(tempC(:,147:268)))
+imagesc(plotdist, datetimeshifted(147:268), rot90(plottemp(:,147:268)))
 colorbar
 datetick('y', 2, 'keeplimits')
 caxis([-5 15])
@@ -153,7 +201,21 @@ xlabel('Distance (m)')
 set(get(colorbar,'label'),'string','Temperature (deg C)');
 set(gcf,'PaperOrientation','landscape');
 set(gcf, 'Units', 'inches', 'PaperPosition', [0,0,11.5,7.5]);
-print(gcf, '-dpdf', 'TW_DTS_Field_20cm.pdf');
+print(gcf, '-dpdf', 'TW_DTS_Field_20cm_half.pdf');
+
+
+load('TW_30cm.mat')
+
+% Remove mirrored part of plot
+% Remove negative distance values in DTS box in barn
+posdist=distance(distance>0)
+% Find the middle point in the positive distance data
+middist=length(posdist)/2
+% Subset distance data to only include half of mirrored data
+% NOTE: remember to add the length of negative data to find the proper midpoint
+plotdist=distance(1:(length(distance(distance<=0))+middist))
+% Subset the temperature data matrix to only include the selected distances
+plottemp=tempC(1:length(plotdist),:)
 
 % Shift datenum by 4 hours to convert from GMT?
 datetimeshifted=[];
@@ -161,16 +223,18 @@ for i=1:numel(datetime)
 datetimeshifted=[datetimeshifted;addtodate(datetime(i),-4,'hour')];
 end
 
-
 figure
-imagesc(distance, datetimeshifted(147:268), rot90(tempC(:,147:268)))
+imagesc(plotdist, datetimeshifted(147:268), rot90(plottemp(:,147:268)))
 colorbar
 datetick('y', 13, 'keeplimits')
 caxis([-5 15])
-title('Tidmarsh West Soil 30 cm (2/24/18)')
+title('Tidmarsh West Soil 30 cm (2/22/18-2/26/18)')
 ylabel('Time')
 xlabel('Distance (m)')
-set(get(cb,'label'),'string','Temperature (deg C)');
+set(get(colorbar,'label'),'string','Temperature (deg C)');
+set(gcf,'PaperOrientation','landscape');
+set(gcf, 'Units', 'inches', 'PaperPosition', [0,0,11.5,7.5]);
+print(gcf, '-dpdf', 'TW_DTS_Field_30cm_half.pdf');
 
 
 
