@@ -210,10 +210,11 @@ plot(datetimeshifted(195:220), gwtemp(195:220), 'b-','linewidth',2)
 hold
 datetick('x', 13, 'keeplimits')
 % plot average gw temperature
-meangw=mean(gwtemp(195:220))*(ones(size(195:220)))
+meangw=mean(gwtemp(195:220))*(ones(size(195:220)));
 plot(datetimeshifted(195:220), meangw, 'k--', 'linewidth', 2)
 ylabel('Temperature (deg C)')
 xlabel('Time')
+ylim([5, 9.5])
 title('Field Trip Ground Water Temperature (2/24/18)')
 set(gcf,'PaperOrientation','landscape');
 set(gcf, 'Units', 'inches', 'PaperPosition', [0,0,11.5,7.5]);
