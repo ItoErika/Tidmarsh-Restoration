@@ -169,7 +169,17 @@ set(gcf,'PaperOrientation','landscape');
 set(gcf, 'Units', 'inches', 'PaperPosition', [0,0,11.5,7.5]);
 print(gcf, '-dpdf', 'TW_DTS_Field_10cm_half.pdf');
 
-#191:216
+%196:221
+% Extract air temperature from the field trip date
+airtemp=plottemp(length(plottemp),:)
+plot(datetimeshifted(196:221), airtemp(196:221), 'b-','linewidth',2)
+datetick('x', 13, 'keeplimits')
+ylabel('Temperature (deg C)')
+xlabel('Time')
+title('Field Trip Air Temperature (2/24/18)')
+set(gcf,'PaperOrientation','landscape');
+set(gcf, 'Units', 'inches', 'PaperPosition', [0,0,11.5,7.5]);
+print(gcf, '-dpdf', 'TW_DTS_airtemp.pdf');
 
 load('TW_20cm.mat')
 
