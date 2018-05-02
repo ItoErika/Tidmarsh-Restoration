@@ -276,14 +276,14 @@ figure
 imagesc(plotdist, datetimeshifted(147:268), rot90(plottemp(:,147:268)))
 colorbar
 datetick('y', 13, 'keeplimits')
-caxis([-5 15])
+caxis([5 9.5])
 title('Tidmarsh West Soil 30 cm (2/22/18-2/26/18)')
 ylabel('Time')
 xlabel('Distance (m)')
 set(get(colorbar,'label'),'string','Temperature (deg C)');
 set(gcf,'PaperOrientation','landscape');
 set(gcf, 'Units', 'inches', 'PaperPosition', [0,0,11.5,7.5]);
-print(gcf, '-dpdf', 'TW_DTS_Field_30cm_half.pdf');
+print(gcf, '-dpdf', 'TW_DTS_Field_30cm_half_test.pdf');
 
 
 
