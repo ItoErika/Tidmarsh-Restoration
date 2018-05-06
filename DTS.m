@@ -64,7 +64,7 @@ figure
 imagesc(plotdist, datetimeshifted, rot90(plottemp))
 colorbar
 datetick('y', 2, 'keeplimits')
-caxis([-5 15])
+caxis([0 15])
 title('Tidmarsh West Soil 10 cm')
 ylabel('Date')
 xlabel('Distance (m)')
@@ -96,7 +96,7 @@ figure
 imagesc(plotdist, datetimeshifted, rot90(plottemp))
 colorbar
 datetick('y', 2, 'keeplimits')
-caxis([-5 15])
+caxis([0 15])
 title('Tidmarsh West Soil 20 cm')
 ylabel('Date')
 xlabel('Distance (m)')
@@ -128,7 +128,7 @@ figure
 imagesc(plotdist, datetimeshifted, rot90(plottemp))
 colorbar
 datetick('y', 2, 'keeplimits')
-caxis([-5 15])
+caxis([0 15])
 title('Tidmarsh West Soil 30 cm')
 ylabel('Date')
 xlabel('Distance (m)')
@@ -157,11 +157,11 @@ datetimeshifted=[datetimeshifted;addtodate(datetime(i),-4,'hour')];
 end
 
 figure
-imagesc(plotdist, datetimeshifted(147:268), rot90(plottemp(:,147:268)))
+imagesc(plotdist, datetimeshifted(315:456), rot90(plottemp(:,315:456)))
 colorbar
 datetick('y', 2, 'keeplimits')
-caxis([-5 15])
-title('Tidmarsh West Soil 10 cm (2/22/18-2/26/18)')
+caxis([0 15])
+title('Tidmarsh West Soil 10 cm (3/1/18-3/6/18)')
 ylabel('Date')
 xlabel('Distance (m)')
 set(get(colorbar,'label'),'string','Temperature (deg C)');
@@ -170,17 +170,18 @@ set(gcf, 'Units', 'inches', 'PaperPosition', [0,0,11.5,7.5]);
 print(gcf, '-dpdf', 'TW_DTS_Field_10cm_half.pdf');
 
 %196:221
-% Extract air temperature from the field trip date
+% Extract air temperature from the field trip dates
 airtemp=plottemp(length(plottemp),:)
-plot(datetimeshifted(196:221), airtemp(196:221), 'b-','linewidth',2)
+plot(datetimeshifted(363:408), airtemp(363:408), 'b-','linewidth',2)
 hold
 datetick('x', 13, 'keeplimits')
 % plot average air temperature
-meanair=mean(airtemp(196:221))*(ones(size(196:221)))
-plot(datetimeshifted(196:221), meanair, 'k--', 'linewidth', 2)
+meanair=mean(airtemp(363:408))*(ones(size(363:408)))
+plot(datetimeshifted(363:408), meanair, 'k--', 'linewidth', 2)
+ylim([4, 6.5])
 ylabel('Temperature (deg C)')
 xlabel('Time')
-title('Field Trip Air Temperature (2/24/18)')
+title('Field Trip Air Temperature (3/3/18-3/4/18)')
 set(gcf,'PaperOrientation','landscape');
 set(gcf, 'Units', 'inches', 'PaperPosition', [0,0,11.5,7.5]);
 print(gcf, '-dpdf', 'TW_DTS_airtemp.pdf');
@@ -206,16 +207,16 @@ datetimeshifted=[datetimeshifted;addtodate(datetime(i),-4,'hour')];
 end
 
 gwtemp=plottemp(3200,:)
-plot(datetimeshifted(195:220), gwtemp(195:220), 'b-','linewidth',2)
+plot(datetimeshifted(315:456), gwtemp(315:456), 'b-','linewidth',2)
 hold
 datetick('x', 13, 'keeplimits')
 % plot average gw temperature
-meangw=mean(gwtemp(195:220))*(ones(size(195:220)));
-plot(datetimeshifted(195:220), meangw, 'k--', 'linewidth', 2)
+meangw=mean(gwtemp(315:456))*(ones(size(315:456)));
+plot(datetimeshifted(315:456), meangw, 'k--', 'linewidth', 2)
 ylabel('Temperature (deg C)')
 xlabel('Time')
 ylim([5, 9.5])
-title('Field Trip Ground Water Temperature (2/24/18)')
+title('Field Trip Ground Water Temperature (3//18)')
 set(gcf,'PaperOrientation','landscape');
 set(gcf, 'Units', 'inches', 'PaperPosition', [0,0,11.5,7.5]);
 print(gcf, '-dpdf', 'TW_DTS_gwtemp.pdf');
