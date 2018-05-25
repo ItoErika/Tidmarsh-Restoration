@@ -20,18 +20,19 @@ for i=1:numel(datetime)
 datetimeshifted=[datetimeshifted;addtodate(datetime(i),-4,'hour')];
 end
 
+
 figure
-imagesc(plotdist, datetimeshifted(315:456), rot90(plottemp(:,315:456)))
+imagesc(plotdist, datetimeshifted, flipud(rot90(plottemp)))
 colorbar
 datetick('y', 2, 'keeplimits')
-caxis([0 15])
-title('Tidmarsh West Soil 10 cm (3/1/18-3/6/18)')
+caxis([-5 10])
+title('Tidmarsh West Soil 10 cm')
 ylabel('Date')
 xlabel('Distance (m)')
 set(get(colorbar,'label'),'string','Temperature (deg C)');
 set(gcf,'PaperOrientation','landscape');
 set(gcf, 'Units', 'inches', 'PaperPosition', [0,0,11.5,7.5]);
-print(gcf, '-dpdf', 'TW_DTS_Field_10cm_half.pdf');
+print(gcf, '-dpdf', 'TW_DTS_10cm_Jan.pdf');
 
 %%%%%%%%%%%%%%%%%%%%%%% Field 20 cm %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -54,17 +55,17 @@ datetimeshifted=[datetimeshifted;addtodate(datetime(i),-4,'hour')];
 end
 
 figure
-imagesc(plotdist, datetimeshifted(315:456), rot90(plottemp(:,315:456)))
+imagesc(plotdist, datetimeshifted, flipud(rot90(plottemp)))
 colorbar
 datetick('y', 2, 'keeplimits')
-caxis([0 15])
-title('Tidmarsh West Soil 20 cm (3/1/18-3/6/18)')
+caxis([-5 10])
+title('Tidmarsh West Soil 20 cm')
 ylabel('Date')
 xlabel('Distance (m)')
 set(get(colorbar,'label'),'string','Temperature (deg C)');
 set(gcf,'PaperOrientation','landscape');
 set(gcf, 'Units', 'inches', 'PaperPosition', [0,0,11.5,7.5]);
-print(gcf, '-dpdf', 'TW_DTS_Field_20cm_half.pdf');
+print(gcf, '-dpdf', 'TW_DTS_20cm_Jan.pdf');
 
 %%%%%%%%%%%%%%%%%%%%%%% Field 30 cm %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -88,17 +89,17 @@ datetimeshifted=[datetimeshifted;addtodate(datetime(i),-4,'hour')];
 end
 
 figure
-imagesc(plotdist, datetimeshifted(315:456), rot90(plottemp(:,315:456)))
+imagesc(plotdist, datetimeshifted, rot90(plottemp))
 colorbar
 datetick('y', 2, 'keeplimits')
-caxis([0 15])
-title('Tidmarsh West Soil 30 cm (3/1/18-3/6/18)')
+caxis([-5 10])
+title('Tidmarsh West Soil 30 cm')
 ylabel('Date')
 xlabel('Distance (m)')
 set(get(colorbar,'label'),'string','Temperature (deg C)');
 set(gcf,'PaperOrientation','landscape');
 set(gcf, 'Units', 'inches', 'PaperPosition', [0,0,11.5,7.5]);
-print(gcf, '-dpdf', 'TW_DTS_Field_30cm_half.pdf');
+print(gcf, '-dpdf', 'TW_DTS_30cm_Jan.pdf');
 
 %%%%%%%%%%%%%%%%%%%%%%% Air Temp %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -124,15 +125,16 @@ end
 %196:221
 % Extract air temperature from the field trip dates
 airtemp=plottemp(length(plottemp),:)
-plot(datetimeshifted(363:408), airtemp(363:408), 'b-','linewidth',2)
-datetick('x', 13, 'keeplimits')
+plot(datetimeshifted, airtemp, 'b-','linewidth',2)
+datetick('x', 2, 'keeplimits')
+hold on
 % plot average air temperature
-meanair=mean(airtemp(363:408))*(ones(size(363:408)))
-plot(datetimeshifted(363:408), meanair, 'k--', 'linewidth', 2)
-ylim([4, 6.5])
+meanair=mean(airtemp)*(ones(size(airtemp)))
+plot(datetimeshifted, meanair, 'k--', 'linewidth', 2)
+ylim([-10, 15])
 ylabel('Temperature (deg C)')
 xlabel('Time')
-title('Field Trip Air Temperature (3/3/18-3/4/18)')
+title('Air Temperature')
 set(gcf,'PaperOrientation','landscape');
 set(gcf, 'Units', 'inches', 'PaperPosition', [0,0,11.5,7.5]);
 print(gcf, '-dpdf', 'TW_DTS_airtemp.pdf');
@@ -315,18 +317,7 @@ set(gcf,'PaperOrientation','landscape');
 set(gcf, 'Units', 'inches', 'PaperPosition', [0,0,11.5,7.5]);
 print(gcf, '-dpdf', 'TW_DTS_All_30cm_half.pdf');
 
-
-
-
-
-
-
-
 print DTS_Data_TMap.pdf -dpdf
-
-
-
-
 
 NumTicks=15
 L = get(gca,'YLim');
