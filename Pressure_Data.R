@@ -233,7 +233,12 @@ TW_SW_07<-loggerProcess(TW_SW_07)
 #TW_WARM<-loggerProcess(TW_WARM)
 #TW_ICE<-loggerProcess(TW_ICE) 
 
+# MAKE PLOTS  
+    
 # MAKE PLOTS                       
+Plot_Times<-as.POSIXct(T_PZ_02_May[,"Date_Time"], "%m/%d/%y %I:%M:%S %p", tz="America/New_York")
+ggplot(TE_PZ_02_May, aes(Plot_Times, TE_PZ_02_May[,"m_water"]))+geom_point(color='royalblue3', size=.2)+ ylim(0.5, 1.4) + xlab("Date") + ylab("Water Column above Logger (m)")+ggtitle("TW_PZ_02")+  scale_x_datetime(breaks = seq(Plot_Times[1], Plot_Times[length(Plot_Times)], "7 days"),date_labels="%d %b")+theme(axis.text.x = element_text(angle=45, vjust = 0.5))                         
+                       
 Plot_Times<-as.POSIXct(TW_PZ_02[,"Date_Time"], "%m/%d/%y %I:%M:%S %p", tz="America/New_York")
 ggplot(TW_PZ_02, aes(Plot_Times, TW_PZ_02[,"m_water"]))+geom_point(color='royalblue3', size=.2)+ ylim(1.135, 1.4) + xlab("Date") + ylab("Water Column above Logger (m)")+ggtitle("TW_PZ_02")+  scale_x_datetime(breaks = seq(Plot_Times[1], Plot_Times[length(Plot_Times)], "7 days"))+theme(axis.text.x = element_text(angle=45, vjust = 0.5))                        
 
