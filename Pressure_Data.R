@@ -57,6 +57,8 @@ NOAA_Plymouth_Data<-subset(NOAA_Plymouth_Data, NOAA_Plymouth_Data[,"USAF"]==7250
 # Re-order TW_PZ_04 columns
 #TW_PZ_04_May<-as.data.frame(cbind(as.character(TW_PZ_04_May[,1]),as.numeric(as.character(TW_PZ_04_May[,3])),as.numeric(as.character(TW_PZ_04_May[,2]))),row.names=FALSE)
 #colnames(TW_PZ_04_May)<-c("Date.Time..GMT.05.00","Abs.Pres..kPa..LGR.S.N..10499227..SEN.S.N..10499227.","Temp..Â.C..LGR.S.N..10499227..SEN.S.N..10499227.")
+#TW_PZ_04_May[,3]<-as.numeric(as.character(TW_PZ_04_May[,3]))
+#TW_PZ_04_May[,2]<-as.numeric(as.character(TW_PZ_04_May[,2]))
 
 # Reformat NOAA dates and times
 dates<-sapply(NOAA_Plymouth_Data[,"YR..MODAHRMN"], function(x) paste(substr(x,5:6, 6),substr(x,7:8, 8),substr(x,3:4, 4), sep="/"))
