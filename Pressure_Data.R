@@ -38,6 +38,37 @@ TW_SW_03<-read.csv("file:///C:/Users/erikai94/Documents/UMass/Tidmarsh/PZ_Logger
 TW_SW_04<-read.csv("file:///C:/Users/erikai94/Documents/UMass/Tidmarsh/PZ_Loggers/Tidmarsh_TW_WL_2017_11_17/TW_SW_04_2017_11_17.csv", skip=1, row.names=1)
 TW_SW_07<-read.csv("file:///C:/Users/erikai94/Documents/UMass/Tidmarsh/PZ_Loggers/Tidmarsh_TW_WL_2017_11_17/TW_SW_07_2017_11_17.csv", skip=1, row.names=1)
 
+# Load Raw Data:
+TW_PZ_02_May<-read.csv("file:///C:/Users/erikai94/Documents/TIDMARSH/Hydro_Pressure/2018_05_06/TW_PZ_02.csv", skip=1, row.names=1)
+TW_PZ_04_May<-read.csv("file:///C:/Users/erikai94/Documents/TIDMARSH/Hydro_Pressure/2018_05_06/TW_PZ_04.csv", skip=1, row.names=1)
+TW_PZ_09_May<-read.csv("file:///C:/Users/erikai94/Documents/TIDMARSH/Hydro_Pressure/2018_05_06/TW_PZ_09.csv", skip=1, row.names=1)
+TW_SW_03_May<-read.csv("file:///C:/Users/erikai94/Documents/TIDMARSH/Hydro_Pressure/2018_05_06/TW_SW_03.csv", skip=1, row.names=1)
+
+# Latest Batch:
+TW_PZ_01_Mar<-read.csv("file:///C:/Users/erikai94/Documents/TIDMARSH/Hydro_Pressure/TW_PZ_01_2018_03_04.csv", skip=1, row.names=1)
+TW_PZ_02_Nov<-read.csv("file:///C:/Users/erikai94/Documents/TIDMARSH/Hydro_Pressure/TW_PZ_02_2017_11_17.csv", skip=1, row.names=1)
+TW_PZ_03_Nov<-read.csv("file:///C:/Users/erikai94/Documents/TIDMARSH/Hydro_Pressure/TW_PZ_03_2017_11_17.csv", skip=1, row.names=1)
+TW_PZ_03_Mar<-read.csv("file:///C:/Users/erikai94/Documents/TIDMARSH/Hydro_Pressure/TW_PZ_03_2018_03_03.csv", skip=1, row.names=1)
+TW_PZ_04_Nov<-read.csv("file:///C:/Users/erikai94/Documents/TIDMARSH/Hydro_Pressure/TW_PZ_04_2017_11_17.csv", skip=1, row.names=1)
+TW_PZ_04_Mar<-read.csv("file:///C:/Users/erikai94/Documents/TIDMARSH/Hydro_Pressure/TW_PZ_04_2018_03_03.csv", skip=1, row.names=1)
+TW_SW_02_Nov<-read.csv("file:///C:/Users/erikai94/Documents/TIDMARSH/Hydro_Pressure/TW_SW_02_2017_11_17.csv", skip=1, row.names=1)
+TW_SW_02_Mar<-read.csv("file:///C:/Users/erikai94/Documents/TIDMARSH/Hydro_Pressure/TW_SW_02_2018_03_03.csv", skip=1, row.names=1)
+TW_SW_03_Nov<-read.csv("file:///C:/Users/erikai94/Documents/TIDMARSH/Hydro_Pressure/TW_SW_03_2017_11_17.csv", skip=1, row.names=1)
+TW_SW_03_Mar<-read.csv("file:///C:/Users/erikai94/Documents/TIDMARSH/Hydro_Pressure/TW_SW_03_2018_03_03.csv", skip=1, row.names=1)
+TW_SW_04_Nov<-read.csv("file:///C:/Users/erikai94/Documents/TIDMARSH/Hydro_Pressure/TW_SW_04_2017_11_17.csv", skip=1, row.names=1)
+TW_SW_04_Mar<-read.csv("file:///C:/Users/erikai94/Documents/TIDMARSH/Hydro_Pressure/TW_SW_04_2018_03_03.csv", skip=1, row.names=1)
+TW_SW_07_Nov<-read.csv("file:///C:/Users/erikai94/Documents/TIDMARSH/Hydro_Pressure/TW_SW_07_2017_11_17.csv", skip=1, row.names=1)
+TW_SW_07_Mar<-read.csv("file:///C:/Users/erikai94/Documents/TIDMARSH/Hydro_Pressure/TW_SW_07_2018_03_03.csv", skip=1, row.names=1)
+TW_PZ_05_Mar<-read.csv("file:///C:/Users/erikai94/Documents/TIDMARSH/Hydro_Pressure/TW-PZ-05_2018_03_03.csv", skip=1, row.names=1)
+TW_PZ_06_Mar<-read.csv("file:///C:/Users/erikai94/Documents/TIDMARSH/Hydro_Pressure/TW-PZ-06_2018_03_04.csv", skip=1, row.names=1)
+TW_PZ_07_Nov<-read.csv("file:///C:/Users/erikai94/Documents/TIDMARSH/Hydro_Pressure/TW-PZ-07_2017_11_17.csv", skip=1, row.names=1)
+TW_PZ_07_Mar<-read.csv("file:///C:/Users/erikai94/Documents/TIDMARSH/Hydro_Pressure/TW-PZ-07_2018_03_03.csv", skip=1, row.names=1)
+TW_PZ_07_Mar<-read.csv("file:///C:/Users/erikai94/Documents/TIDMARSH/Hydro_Pressure/TW-PZ-07_2018_03_03.csv", skip=1, row.names=1)
+TW_PZ_08_Mar<-read.csv("file:///C:/Users/erikai94/Documents/TIDMARSH/Hydro_Pressure/TW-PZ-08_2018_03_03.csv", skip=1, row.names=1)
+TE_PZ_AWC1_Mar<-read.csv("file:///C:/Users/erikai94/Documents/TIDMARSH/Hydro_Pressure/TE_PZ_AWC1_2018_03_04.csv", skip=1, row.names=1)
+
+
+
 # Information for the Plymouth station: https://www.ncdc.noaa.gov/homr/#ncdcstnid=20009418&tab=MSHR
 #ncdc_stations(datasetid='GHCND', locationid='FIPS:12017', stationid='GHCND:USC00084289', token="fvDqAprtAssGRLiLzWpbBfBewLSytetM")
 #ncdc_stations(datasetid='GHCND', stationid='GHCND:USW00054769', token="fvDqAprtAssGRLiLzWpbBfBewLSytetM")
@@ -240,9 +271,12 @@ TW_SW_07<-loggerProcess(TW_SW_07)
 #TW_WARM<-loggerProcess(TW_WARM)
 #TW_ICE<-loggerProcess(TW_ICE) 
 
-# MAKE PLOTS  
-    
-# MAKE PLOTS                       
+# MAKE PLOTS  (depth to water below GS)
+ggplot(TW_PZ_AWC1_Mar, aes(Plot_Times, 166.5/100-(59.1/100+TE_PZ_AWC1_Mar[,"m_water"])))+geom_point(color='royalblue3', size=.2)+ ylim(0,0.4) + xlab("Date") + ylab("Depth to Water Below Ground Surface (m)")+ggtitle("TW_PZ_AWC1")+  scale_x_datetime(breaks = seq(Plot_Times[1], Plot_Times[length(Plot_Times)], "7 days"),date_labels="%d %b")+theme(axis.text.x = element_text(angle=45, vjust = 0.5))          
+
+ ggplot(TW_PZ_07_Nov, aes(Plot_Times, 166/100-(28/100+TW_PZ_07_Nov[,"m_water"])))+geom_point(color='royalblue3', size=.2)+ ylim(0.0,0.7) + xlab("Date") + ylab("Depth to Water Below Ground Surface (m)")+ggtitle("TW_PZ_07")+  scale_x_datetime(breaks = seq(Plot_Times[1], Plot_Times[length(Plot_Times)], "7 days"),date_labels="%d %b")+theme(axis.text.x = element_text(angle=45, vjust = 0.5))                        
+                       
+# MAKE PLOTS  (water column height)                         
 Plot_Times<-as.POSIXct(T_PZ_02_May[,"Date_Time"], "%m/%d/%y %I:%M:%S %p", tz="America/New_York")
 ggplot(TE_PZ_02_May, aes(Plot_Times, TE_PZ_02_May[,"m_water"]))+geom_point(color='royalblue3', size=.2)+ ylim(0.5, 1.4) + xlab("Date") + ylab("Water Column above Logger (m)")+ggtitle("TW_PZ_02")+  scale_x_datetime(breaks = seq(Plot_Times[1], Plot_Times[length(Plot_Times)], "7 days"),date_labels="%d %b")+theme(axis.text.x = element_text(angle=45, vjust = 0.5))                         
                        
