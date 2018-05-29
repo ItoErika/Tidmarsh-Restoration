@@ -38,13 +38,13 @@ TW_SW_03<-read.csv("file:///C:/Users/erikai94/Documents/UMass/Tidmarsh/PZ_Logger
 TW_SW_04<-read.csv("file:///C:/Users/erikai94/Documents/UMass/Tidmarsh/PZ_Loggers/Tidmarsh_TW_WL_2017_11_17/TW_SW_04_2017_11_17.csv", skip=1, row.names=1)
 TW_SW_07<-read.csv("file:///C:/Users/erikai94/Documents/UMass/Tidmarsh/PZ_Loggers/Tidmarsh_TW_WL_2017_11_17/TW_SW_07_2017_11_17.csv", skip=1, row.names=1)
 
+# Latest Batch:
 # Load Raw Data:
 TW_PZ_02_May<-read.csv("file:///C:/Users/erikai94/Documents/TIDMARSH/Hydro_Pressure/2018_05_06/TW_PZ_02.csv", skip=1, row.names=1)
 TW_PZ_04_May<-read.csv("file:///C:/Users/erikai94/Documents/TIDMARSH/Hydro_Pressure/2018_05_06/TW_PZ_04.csv", skip=1, row.names=1)
 TW_PZ_09_May<-read.csv("file:///C:/Users/erikai94/Documents/TIDMARSH/Hydro_Pressure/2018_05_06/TW_PZ_09.csv", skip=1, row.names=1)
 TW_SW_03_May<-read.csv("file:///C:/Users/erikai94/Documents/TIDMARSH/Hydro_Pressure/2018_05_06/TW_SW_03.csv", skip=1, row.names=1)
 
-# Latest Batch:
 TW_PZ_01_Mar<-read.csv("file:///C:/Users/erikai94/Documents/TIDMARSH/Hydro_Pressure/TW_PZ_01_2018_03_04.csv", skip=1, row.names=1)
 TW_PZ_02_Nov<-read.csv("file:///C:/Users/erikai94/Documents/TIDMARSH/Hydro_Pressure/TW_PZ_02_2017_11_17.csv", skip=1, row.names=1)
 TW_PZ_03_Nov<-read.csv("file:///C:/Users/erikai94/Documents/TIDMARSH/Hydro_Pressure/TW_PZ_03_2017_11_17.csv", skip=1, row.names=1)
@@ -271,35 +271,31 @@ TW_SW_07<-loggerProcess(TW_SW_07)
 #TW_ICE<-loggerProcess(TW_ICE) 
 
 # MAKE PLOTS  (depth to water below GS)
-ggplot(TW_PZ_AWC1_Mar, aes(Plot_Times, 166.5/100-(59.1/100+TE_PZ_AWC1_Mar[,"m_water"])))+geom_point(color='royalblue3', size=.2)+ ylim(0,0.4) + xlab("Date") + ylab("Depth to Water Below Ground Surface (m)")+ggtitle("TW_PZ_AWC1")+  scale_x_datetime(breaks = seq(Plot_Times[1], Plot_Times[length(Plot_Times)], "7 days"),date_labels="%d %b")+theme(axis.text.x = element_text(angle=45, vjust = 0.5))          
 
- ggplot(TW_PZ_07_Nov, aes(Plot_Times, 166/100-(28/100+TW_PZ_07_Nov[,"m_water"])))+geom_point(color='royalblue3', size=.2)+ ylim(0.0,0.7) + xlab("Date") + ylab("Depth to Water Below Ground Surface (m)")+ggtitle("TW_PZ_07")+  scale_x_datetime(breaks = seq(Plot_Times[1], Plot_Times[length(Plot_Times)], "7 days"),date_labels="%d %b")+theme(axis.text.x = element_text(angle=45, vjust = 0.5))                        
-                       
+#TW_PZ_02_May
+Plot_Times<-as.POSIXct(TW_PZ_02_May[,"Date_Time"], "%m/%d/%y %I:%M:%S %p", tz="America/New_York")
+ggplot(TW_PZ_02_May, aes(Plot_Times, 165/100-(19/100+TW_PZ_02_May[,"m_water"])))+geom_point(color='royalblue3', size=.2)+ ylim(0,1) + xlab("Date") + ylab("Depth to Water Below Ground Surface (m)")+ggtitle("TW_PZ_02")+  scale_x_datetime(breaks = seq(Plot_Times[1], Plot_Times[length(Plot_Times)], "7 days"),date_labels="%d %b")+theme(axis.text.x = element_text(angle=45, vjust = 0.5))  
+#TW_PZ_AWC1_Mar
+Plot_Times<-as.POSIXct(TW_PZ_AWC1_Mar[,"Date_Time"], "%m/%d/%y %I:%M:%S %p", tz="America/New_York")
+ggplot(TW_PZ_AWC1_Mar, aes(Plot_Times, 166.5/100-(59.1/100+TE_PZ_AWC1_Mar[,"m_water"])))+geom_point(color='royalblue3', size=.2)+ ylim(0,0.4) + xlab("Date") + ylab("Depth to Water Below Ground Surface (m)")+ggtitle("TW_PZ_AWC1")+  scale_x_datetime(breaks = seq(Plot_Times[1], Plot_Times[length(Plot_Times)], "7 days"),date_labels="%d %b")+theme(axis.text.x = element_text(angle=45, vjust = 0.5))          
+#TW_PZ_07_Nov
+Plot_Times<-as.POSIXct(TW_PZ_07_Nov[,"Date_Time"], "%m/%d/%y %I:%M:%S %p", tz="America/New_York")
+ggplot(TW_PZ_07_Nov, aes(Plot_Times, 166/100-(28/100+TW_PZ_07_Nov[,"m_water"])))+geom_point(color='royalblue3', size=.2)+ ylim(0.0,0.7) + xlab("Date") + ylab("Depth to Water Below Ground Surface (m)")+ggtitle("TW_PZ_07")+  scale_x_datetime(breaks = seq(Plot_Times[1], Plot_Times[length(Plot_Times)], "7 days"),date_labels="%d %b")+theme(axis.text.x = element_text(angle=45, vjust = 0.5))  
+#TW_PZ_07_Mar
+Plot_Times<-as.POSIXct(TW_PZ_07_Mar[,"Date_Time"], "%m/%d/%y %I:%M:%S %p", tz="America/New_York")
+ggplot(TW_PZ_07_Mar, aes(Plot_Times, 166/100-(28/100+TW_PZ_07_Mar[,"m_water"])))+geom_point(color='royalblue3', size=.2)+ ylim(0.0,0.3) + xlab("Date") + ylab("Depth to Water Below Ground Surface (m)")+ggtitle("TW_PZ_07")+  scale_x_datetime(breaks = seq(Plot_Times[1], Plot_Times[length(Plot_Times)], "7 days"),date_labels="%d %b")+theme(axis.text.x = element_text(angle=45, vjust = 0.5))                       
+#TW_PZ_04_May
+Plot_Times<-as.POSIXct(TW_PZ_04_May[,"Date_Time"], "%m/%d/%y %I:%M:%S %p", tz="America/New_York")
+ggplot(TW_PZ_04_May, aes(Plot_Times, 165.5/100-(59.5/100+TW_PZ_04_May[,"m_water"])))+geom_point(color='royalblue3', size=.2)+ ylim(-0.5,0.2) + xlab("Date") + ylab("Depth to Water Below Ground Surface (m)")+ggtitle("TW_PZ_04")+  scale_x_datetime(breaks = seq(Plot_Times[1], Plot_Times[length(Plot_Times)], "7 days"),date_labels="%d %b")+theme(axis.text.x = element_text(angle=45, vjust = 0.5))      
+#TW_PZ_04_May ABOVE GROUND SURFACE
+Plot_Times<-as.POSIXct(TW_PZ_04_May[,"Date_Time"], "%m/%d/%y %I:%M:%S %p", tz="America/New_York")
+ggplot(TW_PZ_04_May, aes(Plot_Times, -165.5/100+(59.5/100+TW_PZ_04_May[,"m_water"])))+geom_point(color='royalblue3', size=.2)+ ylim(-0.2,0.5) + xlab("Date") + ylab("Water Level Above Ground Surface (m)")+ggtitle("TW_PZ_04")+  scale_x_datetime(breaks = seq(Plot_Times[1], Plot_Times[length(Plot_Times)], "7 days"),date_labels="%d %b")+theme(axis.text.x = element_text(angle=45, vjust = 0.5))                            
+#TW_PZ_09_May
+Plot_Times<-as.POSIXct(TW_PZ_09_May[,"Date_Time"], "%m/%d/%y %I:%M:%S %p", tz="America/New_York")
+ggplot(TW_PZ_09_May, aes(Plot_Times, 166/100-(28.4/100+TW_PZ_09_May[,"m_water"])))+geom_point(color='royalblue3', size=.2)+ ylim(0.2,1.2) + xlab("Date") + ylab("Depth to Water Below Ground Surface (m)")+ggtitle("TW_PZ_09")+  scale_x_datetime(breaks = seq(Plot_Times[1], Plot_Times[length(Plot_Times)], "7 days"),date_labels="%d %b")+theme(axis.text.x = element_text(angle=45, vjust = 0.5))                           
+
+                                          
 # MAKE PLOTS  (water column height)                         
 Plot_Times<-as.POSIXct(T_PZ_02_May[,"Date_Time"], "%m/%d/%y %I:%M:%S %p", tz="America/New_York")
 ggplot(TE_PZ_02_May, aes(Plot_Times, TE_PZ_02_May[,"m_water"]))+geom_point(color='royalblue3', size=.2)+ ylim(0.5, 1.4) + xlab("Date") + ylab("Water Column above Logger (m)")+ggtitle("TW_PZ_02")+  scale_x_datetime(breaks = seq(Plot_Times[1], Plot_Times[length(Plot_Times)], "7 days"),date_labels="%d %b")+theme(axis.text.x = element_text(angle=45, vjust = 0.5))                         
                        
-Plot_Times<-as.POSIXct(TW_PZ_02[,"Date_Time"], "%m/%d/%y %I:%M:%S %p", tz="America/New_York")
-ggplot(TW_PZ_02, aes(Plot_Times, TW_PZ_02[,"m_water"]))+geom_point(color='royalblue3', size=.2)+ ylim(1.135, 1.4) + xlab("Date") + ylab("Water Column above Logger (m)")+ggtitle("TW_PZ_02")+  scale_x_datetime(breaks = seq(Plot_Times[1], Plot_Times[length(Plot_Times)], "7 days"))+theme(axis.text.x = element_text(angle=45, vjust = 0.5))                        
-
-Plot_Times<-as.POSIXct(TW_PZ_03[,"Date_Time"], "%m/%d/%y %I:%M:%S %p", tz="America/New_York")
-ggplot(TW_PZ_03, aes(Plot_Times, TW_PZ_03[,"m_water"]))+geom_point(color='royalblue3', size=.2)+ ylim(-10, 8) + xlab("Date") + ylab("Water Column above Logger (m)")+ggtitle("TW_PZ_03")+  scale_x_datetime(breaks = seq(Plot_Times[1], Plot_Times[length(Plot_Times)], "7 days"))+theme(axis.text.x = element_text(angle=45, vjust = 0.5)) 
-                       
-Plot_Times<-as.POSIXct(TW_PZ_04[,"Date_Time"], "%m/%d/%y %I:%M:%S %p", tz="America/New_York")
-ggplot(TW_PZ_04, aes(Plot_Times, TW_PZ_04[,"m_water"]))+geom_point(color='royalblue3', size=.2)+ ylim(-10, 20) + xlab("Date") + ylab("Water Column above Logger (m)")+ggtitle("TW_PZ_04")+  scale_x_datetime(breaks = seq(Plot_Times[1], Plot_Times[length(Plot_Times)], "7 days"))+theme(axis.text.x = element_text(angle=45, vjust = 0.5))                         
-
-Plot_Times<-as.POSIXct(TW_PZ_07[,"Date_Time"], "%m/%d/%y %I:%M:%S %p", tz="America/New_York")
-ggplot(TW_PZ_07, aes(Plot_Times, TW_PZ_07[,"m_water"]))+geom_point(color='royalblue3', size=.2)+ ylim(1.15, 1.37) + xlab("Date") + ylab("Water Column above Logger (m)")+ggtitle("TW_PZ_07")+  scale_x_datetime(breaks = seq(Plot_Times[1], Plot_Times[length(Plot_Times)], "7 days"))+theme(axis.text.x = element_text(angle=45, vjust = 0.5))  
-
-Plot_Times<-as.POSIXct(TW_SW_02[,"Date_Time"], "%m/%d/%y %I:%M:%S %p", tz="America/New_York")
-ggplot(TW_SW_02, aes(Plot_Times, TW_SW_02[,"m_water"]))+geom_point(color='royalblue3', size=.2)+ ylim(-10, 21) + xlab("Date") + ylab("Water Column above Logger (m)")+ggtitle("TW_SW_02")+  scale_x_datetime(breaks = seq(Plot_Times[1], Plot_Times[length(Plot_Times)], "7 days"))+theme(axis.text.x = element_text(angle=45, vjust = 0.5))  
- 
-Plot_Times<-as.POSIXct(TW_SW_03[,"Date_Time"], "%m/%d/%y %I:%M:%S %p", tz="America/New_York")
-ggplot(TW_SW_03, aes(Plot_Times, TW_SW_03[,"m_water"]))+geom_point(color='royalblue3', size=.2)+ ylim(1.5, 5.3) + xlab("Date") + ylab("Water Column above Logger (m)")+ggtitle("TW_SW_03")+  scale_x_datetime(breaks = seq(Plot_Times[1], Plot_Times[length(Plot_Times)], "7 days"))+theme(axis.text.x = element_text(angle=45, vjust = 0.5))  
-
-Plot_Times<-as.POSIXct(TW_SW_04[,"Date_Time"], "%m/%d/%y %I:%M:%S %p", tz="America/New_York")
-ggplot(TW_SW_04, aes(as.Date(Plot_Times), TW_SW_04[,"m_water"]))+ geom_point(color='royalblue3', size=.2)+ ylim(-10, -2.5) + xlab("Date") + ylab("Water Column above Logger (m)")+ ggtitle("TW_SW_04")+ scale_x_date(date_breaks = "7 days", labels = date_format("%m-%d"))+ theme(axis.text.x = element_text(angle=45, vjust = 0.5)
-
-                      
-Plot_Times<-as.POSIXct(TW_SW_07[,"Date_Time"], "%m/%d/%y %I:%M:%S %p", tz="America/New_York")
-ggplot(TW_SW_07, aes(Plot_Times, TW_SW_07[,"m_water"]))+geom_point(color='royalblue3', size=.2)+ ylim(-10, -2.5) + xlab("Date") + ylab("Water Column above Logger (m)")+ggtitle("TW_SW_07")+  scale_x_datetime(breaks = seq(Plot_Times[1], Plot_Times[length(Plot_Times)], "7 days"))+theme(axis.text.x = element_text(angle=45, vjust = 0.5)) 
