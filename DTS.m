@@ -21,10 +21,10 @@ datetimeshifted=[datetimeshifted;addtodate(datetime(i),-4,'hour')];
 end
 
 figure
-imagesc(plotdist, datetimeshifted(315:456), rot90(plottemp(:,315:456)))
+imagesc(plotdist, datetimeshifted(315:456), flipud(rot90(plottemp(:,315:456))))
 colorbar
 datetick('y', 2, 'keeplimits')
-caxis([0 15])
+caxis([0 10])
 title('Tidmarsh West Soil 10 cm (3/1/18-3/6/18)')
 ylabel('Date')
 xlabel('Distance (m)')
@@ -54,10 +54,10 @@ datetimeshifted=[datetimeshifted;addtodate(datetime(i),-4,'hour')];
 end
 
 figure
-imagesc(plotdist, datetimeshifted(315:456), rot90(plottemp(:,315:456)))
+imagesc(plotdist, datetimeshifted(315:456), flipud(rot90(plottemp(:,315:456))))
 colorbar
 datetick('y', 2, 'keeplimits')
-caxis([0 15])
+caxis([0 10])
 title('Tidmarsh West Soil 20 cm (3/1/18-3/6/18)')
 ylabel('Date')
 xlabel('Distance (m)')
@@ -88,10 +88,10 @@ datetimeshifted=[datetimeshifted;addtodate(datetime(i),-4,'hour')];
 end
 
 figure
-imagesc(plotdist, datetimeshifted(315:456), rot90(plottemp(:,315:456)))
+imagesc(plotdist, datetimeshifted(315:456), flipud(rot90(plottemp(:,315:456))))
 colorbar
 datetick('y', 2, 'keeplimits')
-caxis([0 15])
+caxis([0 10])
 title('Tidmarsh West Soil 30 cm (3/1/18-3/6/18)')
 ylabel('Date')
 xlabel('Distance (m)')
@@ -126,6 +126,7 @@ end
 airtemp=plottemp(length(plottemp),:)
 plot(datetimeshifted(363:408), airtemp(363:408), 'b-','linewidth',2)
 datetick('x', 13, 'keeplimits')
+hold on
 % plot average air temperature
 meanair=mean(airtemp(363:408))*(ones(size(363:408)))
 plot(datetimeshifted(363:408), meanair, 'k--', 'linewidth', 2)
@@ -135,6 +136,7 @@ xlabel('Time')
 title('Field Trip Air Temperature (3/3/18-3/4/18)')
 set(gcf,'PaperOrientation','landscape');
 set(gcf, 'Units', 'inches', 'PaperPosition', [0,0,11.5,7.5]);
+hold off
 print(gcf, '-dpdf', 'TW_DTS_airtemp.pdf');
 
 %%%%%%%%%%%%%%%%%%%%%%% GW Temp %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
