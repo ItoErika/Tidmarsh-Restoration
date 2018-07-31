@@ -1,13 +1,26 @@
-# Load required libraries
+############################################# Load required libraries ################################################################
 library('R.matlab')
 library('matlab')
 library('ggplot2')
 library('graphics')
 
-# Load DTS data
-TW_10<-readMat('file:///C:/Users/erikai94/Documents/UMass/Tidmarsh/TW_DTS_Soil/TW_10cm.mat')
-TW_20<-readMat('file:///C:/Users/erikai94/Documents/UMass/Tidmarsh/TW_DTS_Soil/TW_20cm.mat')
-TW_30<-readMat('file:///C:/Users/erikai94/Documents/UMass/Tidmarsh/TW_DTS_Soil/TW_30cm.mat')
+#################################################### Load DTS data ###################################################################
+
+#TW_10<-readMat('file:///C:/Users/erikai94/Documents/UMass/Tidmarsh/TW_DTS_Soil/TW_10cm.mat')
+#TW_20<-readMat('file:///C:/Users/erikai94/Documents/UMass/Tidmarsh/TW_DTS_Soil/TW_20cm.mat')
+#TW_30<-readMat('file:///C:/Users/erikai94/Documents/UMass/Tidmarsh/TW_DTS_Soil/TW_30cm.mat')
+
+# JANUARY DATA
+#TW_10<-readMat('file:///C:/Users/erikai94/Documents/TIDMARSH/TW_2018_01_05_to_15/TW_10cm.mat')
+#TW_20<-readMat('file:///C:/Users/erikai94/Documents/TIDMARSH/TW_2018_01_05_to_15/TW_20cm.mat')
+#TW_30<-readMat('file:///C:/Users/erikai94/Documents/TIDMARSH/TW_2018_01_05_to_15/TW_30cm.mat')
+
+# SEPTEMBER DATA
+TW_10<-readMat('file:///C:/Users/erikai94/Documents/TIDMARSH/TW_2017_09_19_to_29/TW_10cm.mat')
+TW_20<-readMat('file:///C:/Users/erikai94/Documents/TIDMARSH/TW_2017_09_19_to_29/TW_20cm.mat')
+TW_30<-readMat('file:///C:/Users/erikai94/Documents/TIDMARSH/TW_2017_09_19_to_29/TW_30cm.mat')
+
+#################################################### Organize / manipulate data ######################################################
 
 # Extract temperatures
 Temp10<-TW_10$tempC
@@ -36,31 +49,184 @@ datetext30<-datetext30-3600*4
 
 # Remove the mirrored portion of the data
 # Note: the negative distances are NOT mirrored in the data, so you cannot split the data evenly in half
+# 10 cm
 half10<-length(which(Dist10>=0))/2+length(which(Dist10<0))
 Temp10half<-Temp10[1:half10,]
 Dist10half<-Dist10[1:half10]
-
+# 20 cm
 half20<-length(which(Dist20>=0))/2+length(which(Dist20<0))
 Temp20half<-Temp20[1:half20,]
 Dist20half<-Dist20[1:half20]
-
+# 30 cm
 half30<-length(which(Dist30>=0))/2+length(which(Dist30<0))
 Temp30half<-Temp30[1:half30,]
 Dist30half<-Dist30[1:half30]
 
+################################################# Coldest/Warmest times JANUARY 7TH ###############################################
+# 10 cm
 # Coldest time of the day (3AM)
 datetext10[55]
-#[1] "2018-01-07 02:48:55 UTC"
+# "2018-01-07 02:48:55 UTC"
 Coldest10Jan<-Temp10half[,55]
 # Warmest time of the day (3PM)
 datetext10[67]
-#[1] "2018-01-07 14:49:19 UTC"
+# "2018-01-07 14:49:19 UTC"
 Warmest10Jan<-Temp10half[,67]
 
-pdf("
-plot(Dist10half,Coldest10Jan,type="l", lwd=2, col="blue", xlab='Distance (m)', ylab='Temperature (C)')
+# 20 cm
+# Coldest time of the day (3AM)
+datetext20[55]
+# "2018-01-07 02:53:57 UTC"
+Coldest20Jan<-Temp20half[,55]
+# Warmest time of the day (3PM)
+datetext20[67]
+# "2018-01-07 14:54:21 UTC"
+Warmest20Jan<-Temp20half[,67]
+
+# 30 cm
+# Coldest time of the day (3AM)
+datetext30[55]
+# "2018-01-07 02:58:58 UTC"
+Coldest30Jan<-Temp30half[,55]
+# Warmest time of the day (3PM)
+datetext30[67]
+# "2018-01-07 14:59:22 UTC"
+Warmest30Jan<-Temp30half[,67]
+
+################################################# Coldest/Warmest times JANUARY 13TH ###############################################
+
+# 10 cm
+# Coldest time of the day (3AM) JANUARY 13TH
+datetext10[199]
+# "2018-01-13 02:53:35 UTC"
+Coldest10Jan_2<-Temp10half[,199]
+# Warmest time of the day (3PM)
+datetext10[211]
+# "2018-01-13 14:53:59 UTC"
+Warmest10Jan_2<-Temp10half[,211]
+
+# 20 cm
+# Coldest time of the day (3AM) JANUARY 13TH
+datetext20[199]
+#"2018-01-13 02:58:37 UTC"
+Coldest20Jan_2<-Temp20half[,199]
+# Warmest time of the day (3PM)
+datetext20[211]
+#"2018-01-13 14:59:00 UTC"
+Warmest20Jan_2<-Temp20half[,211]
+
+# 30 cm
+# Coldest time of the day (3AM) JANUARY 13TH
+datetext30[199]
+# "2018-01-13 03:03:38 UTC"
+Coldest30Jan_2<-Temp30half[,199]
+# Warmest time of the day (3PM)
+datetext30[211]
+# "2018-01-13 15:04:00 UTC"
+Warmest30Jan_2<-Temp30half[,211]
+
+################################################# Coldest/Warmest times SEPTEMBER 28TH ###############################################
+
+# 10 cm
+# Coldest time of the day (3AM) SEPTEMBER 28TH
+datetext10[210]
+# "2017-09-28 03:20:06 UTC"
+Coldest10Sept<-Temp10half[,210]
+# Warmest time of the day (3PM)
+datetext10[222]
+# "2017-09-28 15:20:30 UTC"
+Warmest10Sept<-Temp10half[,222]
+
+# 20 cm
+# Coldest time of the day (3AM) SEPTEMBER 28TH
+datetext20[210]
+# "2017-09-28 03:25:07 UTC"
+Coldest20Sept<-Temp20half[,210]
+# Warmest time of the day (3PM)
+datetext20[222]
+# "2017-09-28 15:25:31 UTC"
+Warmest20Sept<-Temp20half[,222]
+
+# 30 cm
+# Coldest time of the day (3AM) SEPTEMBER 28TH
+datetext30[210]
+# "2017-09-28 03:30:07 UTC"
+Coldest30Sept<-Temp30half[,210]
+# Warmest time of the day (3PM)
+datetext30[222]
+# "2017-09-28 15:25:31 UTC"
+Warmest30Sept<-Temp30half[,222]
+
+################################################# MAKE PLOTS ###############################################
+
+# Set working directory to save plots to 
+setwd('C:/Users/erikai94/Documents/UMass/Tidmarsh/R_Plots')
+
+
+# JANUARY 7TH
+# 10 cm
+pdf("Jan_10_WarmCold.pdf", width=15, height=7)
+plot(Dist10half,Coldest10Jan,type="l", lwd=2, col="blue", main='10 cm Cable 01/07/18', xlab='Distance (m)', ylab='Temperature (C)')
 lines(Dist10half,Warmest10Jan,col="red", lwd=2)
-legend(598,-12, c("01/07/18 2:49 AM", "01/07/18 2:49 PM"), ,col=c("blue","red"), lty=c(1,1), lwd=c(2.5,2.5))
+legend(840,5.5, c("2:49 AM", "2:49 PM"), ,col=c("blue","red"), lty=c(1,1), lwd=c(2.5,2.5))
+dev.off()
+# 20 cm
+pdf("Jan_20_WarmCold.pdf", width=15, height=7)
+plot(Dist20half,Coldest20Jan,type="l", lwd=2, col="blue", main='20 cm Cable 01/07/18', xlab='Distance (m)', ylab='Temperature (C)')
+lines(Dist20half,Warmest20Jan,col="red", lwd=2)
+legend(840,5.5, c("2:54 AM", "2:54 PM"), ,col=c("blue","red"), lty=c(1,1), lwd=c(2.5,2.5))
+dev.off()
+# 30 cm
+pdf("Jan_30_WarmCold.pdf", width=15, height=7)
+plot(Dist30half,Coldest30Jan,type="l", lwd=2, col="blue", main='30 cm Cable 01/07/18', xlab='Distance (m)', ylab='Temperature (C)')
+lines(Dist30half,Warmest30Jan,col="red", lwd=2)
+legend(840,5.5, c("2:59 AM", "2:59 PM"), ,col=c("blue","red"), lty=c(1,1), lwd=c(2.5,2.5))
+dev.off()
+
+# JANUARY 13TH
+# 10 cm
+pdf("Jan_10_WarmCold_2.pdf", width=15, height=7)
+plot(Dist10half,Coldest10Jan_2,type="l", lwd=2, col="blue", main='10 cm Cable 01/13/18', xlab='Distance (m)', ylab='Temperature (C)')
+lines(Dist10half,Warmest10Jan_2,col="red", lwd=2)
+legend(840,24, c("2:54 AM", "2:54 PM"), ,col=c("blue","red"), lty=c(1,1), lwd=c(2.5,2.5))
+dev.off()
+# 20 cm
+pdf("Jan_20_WarmCold_2.pdf", width=15, height=7)
+plot(Dist20half,Coldest20Jan_2,type="l", lwd=2, col="blue", main='20 cm Cable 01/13/18', xlab='Distance (m)', ylab='Temperature (C)')
+lines(Dist20half,Warmest20Jan_2,col="red", lwd=2)
+legend(840,24, c("2:59 AM", "2:59 PM"), ,col=c("blue","red"), lty=c(1,1), lwd=c(2.5,2.5))
+dev.off()
+# 30 cm
+pdf("Jan_30_WarmCold_2.pdf", width=15, height=7)
+plot(Dist30half,Coldest30Jan_2,type="l", lwd=2, col="blue", main='30 cm Cable 01/13/18', xlab='Distance (m)', ylab='Temperature (C)')
+lines(Dist30half,Warmest30Jan_2,col="red", lwd=2)
+legend(840,24, c("3:04 AM", "3:04 PM"), ,col=c("blue","red"), lty=c(1,1), lwd=c(2.5,2.5))
+dev.off()
+
+# SEPTEMBER 28TH
+# 10 cm
+pdf("Sept_10_WarmCold.pdf", width=15, height=7)
+plot(Dist10half,Coldest10Sept,type="l", lwd=2, col="blue", main='10 cm Cable 09/28/18', xlab='Distance (m)', ylab='Temperature (C)', ylim=c(10,38))
+lines(Dist10half,Warmest10Sept,col="red", lwd=2)
+legend(840,37, c("3:20 AM", "3:20 PM"), ,col=c("blue","red"), lty=c(1,1), lwd=c(2.5,2.5))
+dev.off()
+
+pdf("Sept_20_WarmCold.pdf", width=15, height=7)
+plot(Dist20half,Coldest20Sept,type="l", lwd=2, col="blue", main='20 cm Cable 09/28/18', xlab='Distance (m)', ylab='Temperature (C)', ylim=c(10,38))
+lines(Dist20half,Warmest20Sept,col="red", lwd=2)
+legend(840,37, c("3:25 AM", "3:25 PM"), ,col=c("blue","red"), lty=c(1,1), lwd=c(2.5,2.5))
+dev.off()
+
+pdf("Sept_30_WarmCold.pdf", width=15, height=7)
+plot(Dist30half,Coldest30Sept,type="l", lwd=2, col="blue", main='30 cm Cable 09/28/18', xlab='Distance (m)', ylab='Temperature (C)', ylim=c(10,38))
+lines(Dist30half,Warmest30Sept,col="red", lwd=2)
+legend(840,37, c("3:30 AM", "3:30 PM"), ,col=c("blue","red"), lty=c(1,1), lwd=c(2.5,2.5))
+dev.off()
+
+
+
+
+
 
 tref1_10<-TW_10$tref.1
 tref2_10<-TW_10$tref.2
