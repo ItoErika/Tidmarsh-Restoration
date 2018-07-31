@@ -157,6 +157,27 @@ datetext30[222]
 # "2017-09-28 15:25:31 UTC"
 Warmest30Sept<-Temp30half[,222]
 
+# Plotting to locate the coil under the main ditch
+
+# Enter Channel
+plot(Dist10[3110:3250], Warmest10Sept[3110:3250], main='Coil Under Channel 9/28/18 3:20 PM', type='l', col='red', lwd='2', ylab='Temperature (C)', xlab='Distance (m)', xlim=c(742,750), ylim=c(13,15)) 
+lines(Dist20[3110:3250], Warmest20Sept[3110:3250], lwd=2, col='green')
+lines(Dist30[3110:3250], Warmest30Sept[3110:3250], col='blue', lwd=2)
+legend(764,27, c("10 cm", "20 cm", "30 cm"), col=c("red","green", "blue"), lty=c(1,1), lwd=c(2.5,2.5))
+# Exit Channel
+plot(Dist10[3110:3250], Warmest10Sept[3110:3250], main='Coil Under Channel 9/28/18 3:20 PM', type='l', col='red', lwd='2', ylab='Temperature (C)', xlab='Distance (m)', xlim=c(762,769), ylim=c(13,15)) 
+lines(Dist20[3110:3250], Warmest20Sept[3110:3250], lwd=2, col='green')
+lines(Dist30[3110:3250], Warmest30Sept[3110:3250], col='blue', lwd=2)
+legend(764,27, c("10 cm", "20 cm", "30 cm"), col=c("red","green", "blue"), lty=c(1,1), lwd=c(2.5,2.5))
+
+plot(Dist10half, Warmest10Sept, main='9/28 3:20 PM', type='l', col='red', lwd='2', ylab='Temperature (C)', xlab='Distance (m)') 
+lines(Dist20half, Warmest20Sept, lwd=2, col='green')
+lines(Dist30half, Warmest30Sept, col='blue', lwd=2)
+legend(764,27, c("10 cm", "20 cm", "30 cm"), col=c("red","green", "blue"), lty=c(1,1), lwd=c(2.5,2.5))
+
+
+
+
 ################################################# MAKE PLOTS ###############################################
 
 # Set working directory to save plots to 
