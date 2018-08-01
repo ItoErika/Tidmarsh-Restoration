@@ -176,8 +176,6 @@ lines(Dist30half, Warmest30Sept, col='blue', lwd=2)
 legend(764,27, c("10 cm", "20 cm", "30 cm"), col=c("red","green", "blue"), lty=c(1,1), lwd=c(2.5,2.5))
 
 
-
-
 ################################################# MAKE PLOTS ###############################################
 
 # Set working directory to save plots to 
@@ -244,10 +242,19 @@ lines(Dist30half,Warmest30Sept,col="red", lwd=2)
 legend(840,37, c("3:30 AM", "3:30 PM"), ,col=c("blue","red"), lty=c(1,1), lwd=c(2.5,2.5))
 dev.off()
 
+################################################# LOCATING BENCHMARK INDICES ###############################################
 
 
+Marks10<-c(0,14,34,35,58.5,59.75,62,84,99,111.25,136,141,164,169,254,264,349.25,365.25, 399.25, 411.5,525.75, 561, 594, 597.5, 639.25, 645, 733.5, 746, 764, 834, 850.25, 853.5, 859, 862, 866, 882, 910, 918, 940.75, 942.5)
+Indices10<-sapply(Marks10, function (x) which.min(abs(Dist10-x)))
 
+Marks20<-c(0, 14.25, 34, 35, 58.5, 59.75, 62, 83.5, 98.5, 110.75, 135.5, 140.5, 165.5, 170.5, 255.5, 265.5, 350.75, 366.75,400.75,412.75,526.75,562.25,595,598.75,640.5,646.25,734,746.5,767.5, 834,853.75,857,862.5,865.5,865.5,881.5,909.5,917.5,936.25,938)
+Indices20<-sapply(Marks20, function (x) which.min(abs(Dist20-x)))
 
+Marks30<-c(0, 14, 34, 35, 58.5, 59.75, 62, 85, 99.75, 112.25, 136.75, 141.75, 162.25, 167.25, 254, 264, 348.75, 364.75,398.75,411,524.75,560,593,597,638.5,644.5,732,745,765, 834,851,854.5,860,863,863,879,907,915,936,938.5)
+Indices30<-sapply(Marks30, function (x) which.min(abs(Dist30-x)))
+                  
+                  
 
 tref1_10<-TW_10$tref.1
 tref2_10<-TW_10$tref.2
@@ -264,3 +271,9 @@ g<-ggplot()+ geom_point(data=df, aes(x=datetime, y=trefint, color='trefint'))+ g
 ggplot(data = df, aes(x = metrics, y = teams)) +
   geom_tile(aes(fill = performance)) 
 plot(Dist_10, Temp_10[,1])
+
+
+
+which.min(abs(Dist10-Marks10))
+
+
