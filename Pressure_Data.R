@@ -287,12 +287,82 @@ TW_SW_04<-loggerProcess(TW_SW_04)
 TW_SW_07<-loggerProcess(TW_SW_07)
 #TW_WARM<-loggerProcess(TW_WARM)
 #TW_ICE<-loggerProcess(TW_ICE) 
+                       
+                       
+TW_PZ_01_Nov<-read.csv("file:///C:/Users/erikai94/Documents/Umass/Tidmarsh/PZ_Loggers/Tidmarsh_TW_WL_2018_11_20/TW-PZ-01_sn10499234_2018_11_20.csv", skip=1, row.names=1)
+TW_PZ_02_Nov<-read.csv("file:///C:/Users/erikai94/Documents/Umass/Tidmarsh/PZ_Loggers/Tidmarsh_TW_WL_2018_11_20/TW_PZ_02_2018_11_20.csv", skip=1, row.names=1)
+TW_PZ_03_Nov<-read.csv("file:///C:/Users/erikai94/Documents/Umass/Tidmarsh/PZ_Loggers/Tidmarsh_TW_WL_2018_11_20/TW-PZ-03_sn10499228_2018_11_20.csv", skip=1, row.names=1)
+TW_PZ_04_Nov<-read.csv("file:///C:/Users/erikai94/Documents/Umass/Tidmarsh/PZ_Loggers/Tidmarsh_TW_WL_2018_11_20/TW_PZ_04_2018_11_20.csv", skip=1, row.names=1)
+TW_PZ_05_Nov<-read.csv("file:///C:/Users/erikai94/Documents/Umass/Tidmarsh/PZ_Loggers/Tidmarsh_TW_WL_2018_11_20/TW-PZ-05_2018_11_19.csv", skip=1, row.names=1)
+TW_PZ_06_Nov<-read.csv("file:///C:/Users/erikai94/Documents/Umass/Tidmarsh/PZ_Loggers/Tidmarsh_TW_WL_2018_11_20/TW-PZ-06_sn10499244_2018_11_19.csv", skip=1, row.names=1)
+TW_PZ_07_Nov<-read.csv("file:///C:/Users/erikai94/Documents/Umass/Tidmarsh/PZ_Loggers/Tidmarsh_TW_WL_2018_11_20/TW-PZ-07_sn10499240_2018_11_19.csv", skip=1, row.names=1)
+TW_PZ_08_Nov<-read.csv("file:///C:/Users/erikai94/Documents/Umass/Tidmarsh/PZ_Loggers/Tidmarsh_TW_WL_2018_11_20/TW-PZ-08_sn10499239_2018_11_19.csv", skip=1, row.names=1)
+TW_PZ_09_Nov<-read.csv("file:///C:/Users/erikai94/Documents/Umass/Tidmarsh/PZ_Loggers/Tidmarsh_TW_WL_2018_11_20/TW-PZ-09_2018_11_19.csv", skip=1, row.names=1)
+TW_SW_02_Nov<-read.csv("file:///C:/Users/erikai94/Documents/Umass/Tidmarsh/PZ_Loggers/Tidmarsh_TW_WL_2018_11_20/TW-SW-02_sn10499246_2018_11_20.csv", skip=1, row.names=1)
+TW_SW_03_Nov<-read.csv("file:///C:/Users/erikai94/Documents/Umass/Tidmarsh/PZ_Loggers/Tidmarsh_TW_WL_2018_11_20/TW_SW_03_2018_11_20.csv", skip=1, row.names=1)
+TW_SW_04_Nov<-read.csv("file:///C:/Users/erikai94/Documents/Umass/Tidmarsh/PZ_Loggers/Tidmarsh_TW_WL_2018_11_20/TW-SW-04_sn10499238_2018_11_20.csv", skip=1, row.names=1)
+TW_SW_10_Nov<-read.csv("file:///C:/Users/erikai94/Documents/Umass/Tidmarsh/PZ_Loggers/Tidmarsh_TW_WL_2018_11_20/TW-SW-10_2018_11_19_sn_10499233.csv", skip=1, row.names=1)
+TW_PZ_05_SAND_Nov<-read.csv("file:///C:/Users/erikai94/Documents/Umass/Tidmarsh/PZ_Loggers/Tidmarsh_TW_WL_2018_11_20/TW-PZ-05-SAND_sn10499236_2018_11_19.csv", skip=1, row.names=1)
+TW_PZ_06_SAND_Nov<-read.csv("file:///C:/Users/erikai94/Documents/Umass/Tidmarsh/PZ_Loggers/Tidmarsh_TW_WL_2018_11_20/TW-PZ-06-SAND_sn10499231_2018_11_19.csv", skip=1, row.names=1)
+
+TW_PZ_01_Nov<-loggerProcess(TW_PZ_01_Nov)
+TW_PZ_02_Nov<-loggerProcess(TW_PZ_02_Nov)
+TW_PZ_03_Nov<-loggerProcess(TW_PZ_03_Nov)
+TW_PZ_04_Nov<-loggerProcess(TW_PZ_04_Nov)
+TW_PZ_05_Nov<-loggerProcess(TW_PZ_05_Nov)
+TW_PZ_06_Nov<-loggerProcess(TW_PZ_06_Nov)
+TW_PZ_07_Nov<-loggerProcess(TW_PZ_07_Nov)
+TW_PZ_08_Nov<-loggerProcess(TW_PZ_08_Nov)
+TW_PZ_09_Nov<-loggerProcess(TW_PZ_09_Nov)
+TW_SW_02_Nov<-loggerProcess(TW_SW_02_Nov)
+TW_SW_03_Nov<-loggerProcess(TW_SW_03_Nov)
+TW_SW_04_Nov<-loggerProcess(TW_SW_04_Nov)
+TW_SW_10_Nov<-loggerProcess(TW_SW_10_Nov)
+TW_PZ_05_SAND_Nov<-loggerProcess(TW_PZ_05_SAND_Nov)
+TW_PZ_06_SAND_Nov<-loggerProcess(TW_PZ_06_SAND_Nov)
+                       
+#TW_WARM<-loggerProcess(TW_WARM)
 
 # MAKE PLOTS  (depth to water below GS)
 
 #TW_PZ_02_May
 Plot_Times<-as.POSIXct(TW_PZ_02_May[,"Date_Time"], "%m/%d/%y %I:%M:%S %p", tz="America/New_York")
 ggplot(TW_PZ_02_May, aes(Plot_Times, 165/100-(19/100+TW_PZ_02_May[,"m_water"])))+geom_point(color='royalblue3', size=.2)+ ylim(0,1) + xlab("Date") + ylab("Depth to Water Below Ground Surface (m)")+ggtitle("TW_PZ_02")+  scale_x_datetime(breaks = seq(Plot_Times[1], Plot_Times[length(Plot_Times)], "7 days"),date_labels="%d %b")+theme(axis.text.x = element_text(angle=45, vjust = 0.5))  
+                        
+#TW_PZ_01_Nov                       
+Plot_Times<-as.POSIXct(TW_PZ_01_Nov[,"Date_Time"], "%m/%d/%y %I:%M:%S %p", tz="America/New_York")
+ggplot(TW_PZ_01_Nov, aes(Plot_Times, 166.3/100-(25.8/100+TW_PZ_01_Nov[,"m_water"])))+geom_line(color='royalblue3', size=.5)+ ylim(.2,.6) + xlab("Date") + ylab("Depth to Water Below Ground Surface (m)")+ggtitle("TW_PZ_01")+  scale_x_datetime(breaks = seq(Plot_Times[1], Plot_Times[length(Plot_Times)], "7 days"),date_labels="%d %b")+theme(axis.text.x = element_text(angle=45, vjust = 0.5))  
+#TW_PZ_02_Nov
+Plot_Times<-as.POSIXct(TW_PZ_02_Nov[,"Date_Time"], "%m/%d/%y %I:%M:%S %p", tz="America/New_York")
+ggplot(TW_PZ_02_Nov, aes(Plot_Times, 165/100-(19/100+TW_PZ_02_Nov[,"m_water"])))+geom_line(color='royalblue3', size=.5)+ ylim(.2,.6) + xlab("Date") + ylab("Depth to Water Below Ground Surface (m)")+ggtitle("TW_PZ_02")+  scale_x_datetime(breaks = seq(Plot_Times[1], Plot_Times[length(Plot_Times)], "7 days"),date_labels="%d %b")+theme(axis.text.x = element_text(angle=45, vjust = 0.5))  
+#TW_PZ_03_Nov 
+Plot_Times<-as.POSIXct(TW_PZ_03_Nov[,"Date_Time"], "%m/%d/%y %I:%M:%S %p", tz="America/New_York")
+ggplot(TW_PZ_03_ggplot(TW_PZ_03_Nov, aes(Plot_Times, (166/100-(57.8/100+TW_PZ_03_Nov[,"m_water"]))*-1))+geom_line(color='royalblue3', size=.5)+ ylim(0,.5) + xlab("Date") + ylab("Height of Water Above Ground Surface (m)")+ggtitle("TW_PZ_03")+  scale_x_datetime(breaks = seq(Plot_Times[1], Plot_Times[length(Plot_Times)], "7 days"),date_labels="%d %b")+theme(axis.text.x = element_text(angle=45, vjust = 0.5)) Nov, aes(Plot_Times, (166/100-(57.8/100+TW_PZ_03_Nov[,"m_water"]))*-1))+geom_line(color='royalblue3', size=.5)+ ylim(-.5,.5) + xlab("Date") + ylab("Height of Water Above Ground Surface (m)")+ggtitle("TW_PZ_03")+  scale_x_datetime(breaks = seq(Plot_Times[1], Plot_Times[length(Plot_Times)], "7 days"),date_labels="%d %b")+theme(axis.text.x = element_text(angle=45, vjust = 0.5))                      
+#TW_PZ_04_Nov  
+Plot_Times<-as.POSIXct(TW_PZ_04_Nov[,"Date_Time"], "%m/%d/%y %I:%M:%S %p", tz="America/New_York")
+ggplot(TW_PZ_04_Nov, aes(Plot_Times, (165.5/100-(59.5/100+TW_PZ_04_Nov[,"m_water"]))*-1))+geom_line(color='royalblue3', size=.5)+ ylim(0,.6) + xlab("Date") + ylab("Height of Water Above Ground Surface (m)")+ggtitle("TW_PZ_04")+  scale_x_datetime(breaks = seq(Plot_Times[1], Plot_Times[length(Plot_Times)], "7 days"),date_labels="%d %b")+theme(axis.text.x = element_text(angle=45, vjust = 0.5))                      
+#TW_PZ_05_Nov 
+Plot_Times<-as.POSIXct(TW_PZ_05_Nov[,"Date_Time"], "%m/%d/%y %I:%M:%S %p", tz="America/New_York")
+ggplot(TW_PZ_05_Nov, aes(Plot_Times, 165/100-(19/100+TW_PZ_05_Nov[,"m_water"])))+geom_line(color='royalblue3', size=.5)+ ylim(.2,.6) + xlab("Date") + ylab("Depth to Water Below Ground Surface (m)")+ggtitle("TW_PZ_02")+  scale_x_datetime(breaks = seq(Plot_Times[1], Plot_Times[length(Plot_Times)], "7 days"),date_labels="%d %b")+theme(axis.text.x = element_text(angle=45, vjust = 0.5))  
+
+#TW_PZ_06_Nov
+#TW_PZ_07_Nov          
+#TW_PZ_08_Nov
+#TW_PZ_09_Nov    
+#TW_SW_02_Nov   
+#TW_SW_03_Nov  
+#TW_SW_04_Nov
+#TW_SW_10_Nov
+#TW_PZ_05_SAND_Nov
+#TW_PZ_06_SAND_Nov
+                     
+                       
+               
+              
+                  
+        
+                  
+                       
 #TW_PZ_AWC1_Mar
 Plot_Times<-as.POSIXct(TW_PZ_AWC1_Mar[,"Date_Time"], "%m/%d/%y %I:%M:%S %p", tz="America/New_York")
 ggplot(TW_PZ_AWC1_Mar, aes(Plot_Times, 166.5/100-(59.1/100+TE_PZ_AWC1_Mar[,"m_water"])))+geom_point(color='royalblue3', size=.2)+ ylim(0,0.4) + xlab("Date") + ylab("Depth to Water Below Ground Surface (m)")+ggtitle("TW_PZ_AWC1")+  scale_x_datetime(breaks = seq(Plot_Times[1], Plot_Times[length(Plot_Times)], "7 days"),date_labels="%d %b")+theme(axis.text.x = element_text(angle=45, vjust = 0.5))          
