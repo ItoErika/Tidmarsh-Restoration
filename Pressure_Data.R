@@ -331,31 +331,50 @@ ggplot(TW_PZ_02_May, aes(Plot_Times, 165/100-(19/100+TW_PZ_02_May[,"m_water"])))
                         
 #TW_PZ_01_Nov                       
 Plot_Times<-as.POSIXct(TW_PZ_01_Nov[,"Date_Time"], "%m/%d/%y %I:%M:%S %p", tz="America/New_York")
-ggplot(TW_PZ_01_Nov, aes(Plot_Times, 166.3/100-(25.8/100+TW_PZ_01_Nov[,"m_water"])))+geom_line(color='royalblue3', size=.5)+ ylim(.2,.6) + xlab("Date") + ylab("Depth to Water Below Ground Surface (m)")+ggtitle("TW_PZ_01")+  scale_x_datetime(breaks = seq(Plot_Times[1], Plot_Times[length(Plot_Times)], "7 days"),date_labels="%d %b")+theme(axis.text.x = element_text(angle=45, vjust = 0.5))  
+ggplot(TW_PZ_01_Nov, aes(Plot_Times, 166.3/100-(25.8/100+TW_PZ_01_Nov[,"m_water"])))+geom_line(color='royalblue3', size=.5)+ ylim(.2,.6) + xlab("Date") + ylab("Depth to Water Below Ground Surface (m)")+ggtitle("TW_PZ_01")+  scale_x_datetime(breaks = seq(Plot_Times[1], Plot_Times[length(Plot_Times)], "7 days"),date_labels="%d %b")+theme(axis.text.x = element_text(angle=45, vjust = 0.5)+ scale_y_reverse())  
 #TW_PZ_02_Nov
 Plot_Times<-as.POSIXct(TW_PZ_02_Nov[,"Date_Time"], "%m/%d/%y %I:%M:%S %p", tz="America/New_York")
 ggplot(TW_PZ_02_Nov, aes(Plot_Times, 165/100-(19/100+TW_PZ_02_Nov[,"m_water"])))+geom_line(color='royalblue3', size=.5)+ ylim(.2,.6) + xlab("Date") + ylab("Depth to Water Below Ground Surface (m)")+ggtitle("TW_PZ_02")+  scale_x_datetime(breaks = seq(Plot_Times[1], Plot_Times[length(Plot_Times)], "7 days"),date_labels="%d %b")+theme(axis.text.x = element_text(angle=45, vjust = 0.5))  
 #TW_PZ_03_Nov 
 Plot_Times<-as.POSIXct(TW_PZ_03_Nov[,"Date_Time"], "%m/%d/%y %I:%M:%S %p", tz="America/New_York")
-ggplot(TW_PZ_03_ggplot(TW_PZ_03_Nov, aes(Plot_Times, (166/100-(57.8/100+TW_PZ_03_Nov[,"m_water"]))*-1))+geom_line(color='royalblue3', size=.5)+ ylim(0,.5) + xlab("Date") + ylab("Height of Water Above Ground Surface (m)")+ggtitle("TW_PZ_03")+  scale_x_datetime(breaks = seq(Plot_Times[1], Plot_Times[length(Plot_Times)], "7 days"),date_labels="%d %b")+theme(axis.text.x = element_text(angle=45, vjust = 0.5)) Nov, aes(Plot_Times, (166/100-(57.8/100+TW_PZ_03_Nov[,"m_water"]))*-1))+geom_line(color='royalblue3', size=.5)+ ylim(-.5,.5) + xlab("Date") + ylab("Height of Water Above Ground Surface (m)")+ggtitle("TW_PZ_03")+  scale_x_datetime(breaks = seq(Plot_Times[1], Plot_Times[length(Plot_Times)], "7 days"),date_labels="%d %b")+theme(axis.text.x = element_text(angle=45, vjust = 0.5))                      
-#TW_PZ_04_Nov  
+ggplot(TW_PZ_03_Nov, aes(Plot_Times, (166/100-(57.8/100+TW_PZ_03_Nov[,"m_water"]))*-1))+geom_line(color='royalblue3', size=.5)+ ylim(0,.5) + xlab("Date") + ylab("Height of Water Above Ground Surface (m)")+ggtitle("TW_PZ_03")+  scale_x_datetime(breaks = seq(Plot_Times[1], Plot_Times[length(Plot_Times)], "7 days"),date_labels="%d %b")+theme(axis.text.x = element_text(angle=45, vjust = 0.5)) #TW_PZ_04_Nov  
+#TW_PZ_04_Nov 
 Plot_Times<-as.POSIXct(TW_PZ_04_Nov[,"Date_Time"], "%m/%d/%y %I:%M:%S %p", tz="America/New_York")
 ggplot(TW_PZ_04_Nov, aes(Plot_Times, (165.5/100-(59.5/100+TW_PZ_04_Nov[,"m_water"]))*-1))+geom_line(color='royalblue3', size=.5)+ ylim(0,.6) + xlab("Date") + ylab("Height of Water Above Ground Surface (m)")+ggtitle("TW_PZ_04")+  scale_x_datetime(breaks = seq(Plot_Times[1], Plot_Times[length(Plot_Times)], "7 days"),date_labels="%d %b")+theme(axis.text.x = element_text(angle=45, vjust = 0.5))                      
 #TW_PZ_05_Nov 
 Plot_Times<-as.POSIXct(TW_PZ_05_Nov[,"Date_Time"], "%m/%d/%y %I:%M:%S %p", tz="America/New_York")
-ggplot(TW_PZ_05_Nov, aes(Plot_Times, 165/100-(19/100+TW_PZ_05_Nov[,"m_water"])))+geom_line(color='royalblue3', size=.5)+ ylim(.2,.6) + xlab("Date") + ylab("Depth to Water Below Ground Surface (m)")+ggtitle("TW_PZ_02")+  scale_x_datetime(breaks = seq(Plot_Times[1], Plot_Times[length(Plot_Times)], "7 days"),date_labels="%d %b")+theme(axis.text.x = element_text(angle=45, vjust = 0.5))  
-
+ggplot(TW_PZ_05_Nov, aes(Plot_Times, 166.3/100-(30.9/100+TW_PZ_05_Nov[,"m_water"])))+geom_line(color='royalblue3', size=.5)+ ylim(.2,.6) + xlab("Date") + ylab("Depth to Water Below Ground Surface (m)")+ggtitle("TW_PZ_05")+  scale_x_datetime(breaks = seq(Plot_Times[1], Plot_Times[length(Plot_Times)], "7 days"),date_labels="%d %b")+theme(axis.text.x = element_text(angle=45, vjust = 0.5))  
 #TW_PZ_06_Nov
-#TW_PZ_07_Nov          
+Plot_Times<-as.POSIXct(TW_PZ_06_Nov[,"Date_Time"], "%m/%d/%y %I:%M:%S %p", tz="America/New_York")
+ggplot(TW_PZ_06_Nov, aes(Plot_Times, 166.1/100-(33.8/100+TW_PZ_06_Nov[,"m_water"])))+geom_line(color='royalblue3', size=.5)+ ylim(.2,.6) + xlab("Date") + ylab("Depth to Water Below Ground Surface (m)")+ggtitle("TW_PZ_06")+  scale_x_datetime(breaks = seq(Plot_Times[1], Plot_Times[length(Plot_Times)], "7 days"),date_labels="%d %b")+theme(axis.text.x = element_text(angle=45, vjust = 0.5))                    
+#TW_PZ_07_Nov      
+Plot_Times<-as.POSIXct(TW_PZ_07_Nov[,"Date_Time"], "%m/%d/%y %I:%M:%S %p", tz="America/New_York")
+ggplot(TW_PZ_07_Nov, aes(Plot_Times, (166/100-(28/100+TW_PZ_07_Nov[,"m_water"]))*-1))+geom_line(color='royalblue3', size=.5)+ ylim(-.2,.1) + xlab("Date") + ylab("Height of Water Above Ground Surface (m)")+ggtitle("TW_PZ_07")+  scale_x_datetime(breaks = seq(Plot_Times[1], Plot_Times[length(Plot_Times)], "7 days"),date_labels="%d %b")+theme(axis.text.x = element_text(angle=45, vjust = 0.5))                        
 #TW_PZ_08_Nov
+Plot_Times<-as.POSIXct(TW_PZ_08_Nov[,"Date_Time"], "%m/%d/%y %I:%M:%S %p", tz="America/New_York")
+ggplot(TW_PZ_08_Nov, aes(Plot_Times, 167/100-(28/100+TW_PZ_08_Nov[,"m_water"])))+geom_line(color='royalblue3', size=.5)+ ylim(-.2,.1) + xlab("Date") + ylab("Depth to Water Below Ground Surface (m)")+ggtitle("TW_PZ_08")+  scale_x_datetime(breaks = seq(Plot_Times[1], Plot_Times[length(Plot_Times)], "7 days"),date_labels="%d %b")+theme(axis.text.x = element_text(angle=45, vjust = 0.5))                        
 #TW_PZ_09_Nov    
-#TW_SW_02_Nov   
+Plot_Times<-as.POSIXct(TW_PZ_09_Nov[,"Date_Time"], "%m/%d/%y %I:%M:%S %p", tz="America/New_York")
+ggplot(TW_PZ_09_Nov, aes(Plot_Times, 166/100-(28.4/100+TW_PZ_09_Nov[,"m_water"])))+geom_line(color='royalblue3', size=.5)+ ylim(-.2,.1) + xlab("Date") + ylab("Depth to Water Below Ground Surface (m)")+ggtitle("TW_PZ_09")+  scale_x_datetime(breaks = seq(Plot_Times[1], Plot_Times[length(Plot_Times)], "7 days"),date_labels="%d %b")+theme(axis.text.x = element_text(angle=45, vjust = 0.5))                                               
+#TW_SW_02_Nov  
+Plot_Times<-as.POSIXct(TW_SW_02_Nov[,"Date_Time"], "%m/%d/%y %I:%M:%S %p", tz="America/New_York")
+ggplot(TW_SW_02_Nov, aes(Plot_Times, TW_SW_02_Nov[,"m_water"]))+geom_line(color='royalblue3', size=.5)+ ylim(-.2,.1) + xlab("Date") + ylab("Stream Stage (m)")+ggtitle("TW_SW_02")+  scale_x_datetime(breaks = seq(Plot_Times[1], Plot_Times[length(Plot_Times)], "7 days"),date_labels="%d %b")+theme(axis.text.x = element_text(angle=45, vjust = 0.5))                                               
 #TW_SW_03_Nov  
+Plot_Times<-as.POSIXct(TW_SW_03_Nov[,"Date_Time"], "%m/%d/%y %I:%M:%S %p", tz="America/New_York")
+ggplot(TW_SW_03_Nov, aes(Plot_Times, TW_SW_03_Nov[,"m_water"]))+geom_line(color='royalblue3', size=.5)+ ylim(0,3) + xlab("Date") + ylab("Stream Stage (m)")+ggtitle("TW_SW_03")+  scale_x_datetime(breaks = seq(Plot_Times[1], Plot_Times[length(Plot_Times)], "7 days"),date_labels="%d %b")+theme(axis.text.x = element_text(angle=45, vjust = 0.5))                                                                      
 #TW_SW_04_Nov
+Plot_Times<-as.POSIXct(TW_SW_04_Nov[,"Date_Time"], "%m/%d/%y %I:%M:%S %p", tz="America/New_York")
+ggplot(TW_SW_04_Nov, aes(Plot_Times, TW_SW_04_Nov[,"m_water"]))+geom_line(color='royalblue3', size=.5)+ ylim(-.2,.1) + xlab("Date") + ylab("Stream Stage (m)")+ggtitle("TW_SW_04")+  scale_x_datetime(breaks = seq(Plot_Times[1], Plot_Times[length(Plot_Times)], "7 days"),date_labels="%d %b")+theme(axis.text.x = element_text(angle=45, vjust = 0.5))                                                                      
 #TW_SW_10_Nov
+Plot_Times<-as.POSIXct(TW_SW_10_Nov[,"Date_Time"], "%m/%d/%y %I:%M:%S %p", tz="America/New_York")
+ggplot(TW_SW_10_Nov, aes(Plot_Times, TW_SW_10_Nov[,"m_water"]))+geom_line(color='royalblue3', size=.5)+ ylim(-.2,.1) + xlab("Date") + ylab("Stream Stage (m)")+ggtitle("TW_SW_10")+  scale_x_datetime(breaks = seq(Plot_Times[1], Plot_Times[length(Plot_Times)], "7 days"),date_labels="%d %b")+theme(axis.text.x = element_text(angle=45, vjust = 0.5))                                                                                             
 #TW_PZ_05_SAND_Nov
+Plot_Times<-as.POSIXct(TW_PZ_05_SAND_Nov[,"Date_Time"], "%m/%d/%y %I:%M:%S %p", tz="America/New_York")
+ggplot(TW_PZ_05_SAND_Nov, aes(Plot_Times, 154.8/100-(92/100+TW_PZ_05_SAND_Nov[,"m_water"])))+geom_line(color='royalblue3', size=.5)+ ylim(-.2,.1) + xlab("Date") + ylab("Depth to Water Below Ground Surface (m)")+ggtitle("TW_PZ_05 SAND")+  scale_x_datetime(breaks = seq(Plot_Times[1], Plot_Times[length(Plot_Times)], "7 days"),date_labels="%d %b")+theme(axis.text.x = element_text(angle=45, vjust = 0.5))                                               
 #TW_PZ_06_SAND_Nov
-                     
+Plot_Times<-as.POSIXct(TW_PZ_06_SAND_Nov[,"Date_Time"], "%m/%d/%y %I:%M:%S %p", tz="America/New_York")
+ggplot(TW_PZ_06_SAND_Nov, aes(Plot_Times, 155.3/100-(103.5/100+TW_PZ_06_SAND_Nov[,"m_water"])))+geom_line(color='royalblue3', size=.5)+ ylim(-.2,.1) + xlab("Date") + ylab("Depth to Water Below Ground Surface (m)")+ggtitle("TW_PZ_06 SAND")+  scale_x_datetime(breaks = seq(Plot_Times[1], Plot_Times[length(Plot_Times)], "7 days"),date_labels="%d %b")+theme(axis.text.x = element_text(angle=45, vjust = 0.5))                                               
+                    
                        
                
               
