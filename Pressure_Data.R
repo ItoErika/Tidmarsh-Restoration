@@ -78,6 +78,7 @@ TW_PZ_09_Nov<-read.csv("file:///C:/Users/erikai94/Documents/Umass/Tidmarsh/PZ_Lo
 TW_SW_02_Nov<-read.csv("file:///C:/Users/erikai94/Documents/Umass/Tidmarsh/PZ_Loggers/Tidmarsh_TW_WL_2018_11_20/TW-SW-02_sn10499246_2018_11_20.csv", skip=1, row.names=1)
 TW_SW_03_Nov<-read.csv("file:///C:/Users/erikai94/Documents/Umass/Tidmarsh/PZ_Loggers/Tidmarsh_TW_WL_2018_11_20/TW_SW_03_2018_11_20.csv", skip=1, row.names=1)
 TW_SW_04_Nov<-read.csv("file:///C:/Users/erikai94/Documents/Umass/Tidmarsh/PZ_Loggers/Tidmarsh_TW_WL_2018_11_20/TW-SW-04_sn10499238_2018_11_20.csv", skip=1, row.names=1)
+TW_SW_07_Nov<-read.csv("file:///C:/Users/erikai94/Documents/Umass/Tidmarsh/PZ_Loggers/Tidmarsh_TW_WL_2018_11_20/TW-SW-07_sn10744415_2018_11_19.csv", skip=1, row.names=1)
 TW_SW_10_Nov<-read.csv("file:///C:/Users/erikai94/Documents/Umass/Tidmarsh/PZ_Loggers/Tidmarsh_TW_WL_2018_11_20/TW-SW-10_2018_11_19_sn_10499233.csv", skip=1, row.names=1)
 TW_PZ_05_SAND_Nov<-read.csv("file:///C:/Users/erikai94/Documents/Umass/Tidmarsh/PZ_Loggers/Tidmarsh_TW_WL_2018_11_20/TW-PZ-05-SAND_sn10499236_2018_11_19.csv", skip=1, row.names=1)
 TW_PZ_06_SAND_Nov<-read.csv("file:///C:/Users/erikai94/Documents/Umass/Tidmarsh/PZ_Loggers/Tidmarsh_TW_WL_2018_11_20/TW-PZ-06-SAND_sn10499231_2018_11_19.csv", skip=1, row.names=1)
@@ -317,6 +318,7 @@ TW_PZ_09_Nov<-loggerProcess(TW_PZ_09_Nov)
 TW_SW_02_Nov<-loggerProcess(TW_SW_02_Nov)
 TW_SW_03_Nov<-loggerProcess(TW_SW_03_Nov)
 TW_SW_04_Nov<-loggerProcess(TW_SW_04_Nov)
+TW_SW_07_Nov<-loggerProcess(TW_SW_07_Nov)
 TW_SW_10_Nov<-loggerProcess(TW_SW_10_Nov)
 TW_PZ_05_SAND_Nov<-loggerProcess(TW_PZ_05_SAND_Nov)
 TW_PZ_06_SAND_Nov<-loggerProcess(TW_PZ_06_SAND_Nov)
@@ -343,7 +345,7 @@ Plot_Times<-as.POSIXct(TW_PZ_04_Nov[,"Date_Time"], "%m/%d/%y %I:%M:%S %p", tz="A
 ggplot(TW_PZ_04_Nov, aes(Plot_Times, (165.5/100-(59.5/100+TW_PZ_04_Nov[,"m_water"]))*-1))+geom_line(color='royalblue3', size=.5)+ ylim(0,.6) + xlab("Date") + ylab("Height of Water Above Ground Surface (m)")+ggtitle("TW_PZ_04")+  scale_x_datetime(breaks = seq(Plot_Times[1], Plot_Times[length(Plot_Times)], "7 days"),date_labels="%d %b")+theme(axis.text.x = element_text(angle=45, vjust = 0.5))                      
 #TW_PZ_05_Nov 
 Plot_Times<-as.POSIXct(TW_PZ_05_Nov[,"Date_Time"], "%m/%d/%y %I:%M:%S %p", tz="America/New_York")
-ggplot(TW_PZ_05_Nov, aes(Plot_Times, 166.3/100-(30.9/100+TW_PZ_05_Nov[,"m_water"])))+geom_line(color='royalblue3', size=.5)+ ylim(.2,.6) + xlab("Date") + ylab("Depth to Water Below Ground Surface (m)")+ggtitle("TW_PZ_05")+  scale_x_datetime(breaks = seq(Plot_Times[1], Plot_Times[length(Plot_Times)], "7 days"),date_labels="%d %b")+theme(axis.text.x = element_text(angle=45, vjust = 0.5))  
+ggplot(TW_PZ_05_Nov, aes(Plot_Times, 166.3/100-(30.9/100+TW_PZ_05_Nov[,"m_water"])))+geom_line(color='royalblue3', size=.5)+ scale_y_reverse(limits =c(.7,0)) + xlab("Date") + ylab("Depth to Water Below Ground Surface (m)")+ggtitle("TW_PZ_05")+  scale_x_datetime(breaks = seq(Plot_Times[1], Plot_Times[length(Plot_Times)], "7 days"),date_labels="%d %b")+theme(axis.text.x = element_text(angle=45, vjust = 0.5))  
 #TW_PZ_06_Nov
 Plot_Times<-as.POSIXct(TW_PZ_06_Nov[,"Date_Time"], "%m/%d/%y %I:%M:%S %p", tz="America/New_York")
 ggplot(TW_PZ_06_Nov, aes(Plot_Times, 166.1/100-(33.8/100+TW_PZ_06_Nov[,"m_water"])))+geom_line(color='royalblue3', size=.5)+ scale_y_reverse(limits =c(.7,0)) + xlab("Date") + ylab("Depth to Water Below Ground Surface (m)")+ggtitle("TW_PZ_06")+  scale_x_datetime(breaks = seq(Plot_Times[1], Plot_Times[length(Plot_Times)], "7 days"),date_labels="%d %b")+theme(axis.text.x = element_text(angle=45, vjust = 0.5))                    
@@ -355,10 +357,17 @@ Plot_Times<-as.POSIXct(TW_PZ_08_Nov[,"Date_Time"], "%m/%d/%y %I:%M:%S %p", tz="A
 ggplot(TW_PZ_08_Nov, aes(Plot_Times, 167/100-(28/100+TW_PZ_08_Nov[,"m_water"])))+geom_line(color='royalblue3', size=.5)+ ylim(-.2,.1) + xlab("Date") + ylab("Depth to Water Below Ground Surface (m)")+ggtitle("TW_PZ_08")+  scale_x_datetime(breaks = seq(Plot_Times[1], Plot_Times[length(Plot_Times)], "7 days"),date_labels="%d %b")+theme(axis.text.x = element_text(angle=45, vjust = 0.5))                        
 #TW_PZ_09_Nov    
 Plot_Times<-as.POSIXct(TW_PZ_09_Nov[,"Date_Time"], "%m/%d/%y %I:%M:%S %p", tz="America/New_York")
-ggplot(TW_PZ_09_Nov, aes(Plot_Times, 166/100-(28.4/100+TW_PZ_09_Nov[,"m_water"])))+geom_line(color='royalblue3', size=.5)+ ylim(-.2,.1) + xlab("Date") + ylab("Depth to Water Below Ground Surface (m)")+ggtitle("TW_PZ_09")+  scale_x_datetime(breaks = seq(Plot_Times[1], Plot_Times[length(Plot_Times)], "7 days"),date_labels="%d %b")+theme(axis.text.x = element_text(angle=45, vjust = 0.5))                                               
+# Correct for the jump on 7/11
+TW_PZ_09_Nov[,"m_water_shifted"]<-TW_PZ_09_Nov[,"m_water"]
+SHIFT<-TW_PZ_09_Nov[2215,"m_water"]-TW_PZ_09_Nov[2220,"m_water"]
+TW_PZ_09_Nov[2219:nrow(TW_PZ_09_Nov),"m_water_shifted"]<-TW_PZ_09_Nov[2219:nrow(TW_PZ_09_Nov),"m_water_shifted"]+SHIFT
+                       
+ggplot(TW_PZ_09_Nov, aes(Plot_Times, 166/100-(28.4/100+TW_PZ_09_Nov[,"m_water_shifted"])))+geom_line(color='royalblue3', size=.5) +scale_y_reverse(limits =c(.7,0)) + xlab("Date") + ylab("Depth to Water Below Ground Surface (m)")+ggtitle("TW_PZ_09")+  scale_x_datetime(breaks = seq(Plot_Times[1], Plot_Times[length(Plot_Times)], "7 days"),date_labels="%d %b")+theme(axis.text.x = element_text(angle=45, vjust = 0.5))                                               
+
+
 #TW_SW_02_Nov  
 Plot_Times<-as.POSIXct(TW_SW_02_Nov[,"Date_Time"], "%m/%d/%y %I:%M:%S %p", tz="America/New_York")
-ggplot(TW_SW_02_Nov, aes(Plot_Times, TW_SW_02_Nov[,"m_water"]))+geom_line(color='royalblue3', size=.5)+ ylim(-.2,.1) + xlab("Date") + ylab("Stream Stage (m)")+ggtitle("TW_SW_02")+  scale_x_datetime(breaks = seq(Plot_Times[1], Plot_Times[length(Plot_Times)], "7 days"),date_labels="%d %b")+theme(axis.text.x = element_text(angle=45, vjust = 0.5))                                               
+ggplot(TW_SW_02_Nov, aes(Plot_Times, TW_SW_02_Nov[,"m_water"]))+geom_line(color='royalblue3', size=.5)+ ylim(0,.6) + xlab("Date") + ylab("Stream Stage (m)")+ggtitle("TW_SW_02")+  scale_x_datetime(breaks = seq(Plot_Times[1], Plot_Times[length(Plot_Times)], "7 days"),date_labels="%d %b")+theme(axis.text.x = element_text(angle=45, vjust = 0.5))                                               
 #TW_SW_03_Nov  
 Plot_Times<-as.POSIXct(TW_SW_03_Nov[,"Date_Time"], "%m/%d/%y %I:%M:%S %p", tz="America/New_York")
 ggplot(TW_SW_03_Nov, aes(Plot_Times, TW_SW_03_Nov[,"m_water"]))+geom_line(color='royalblue3', size=.5)+ ylim(0,3) + xlab("Date") + ylab("Stream Stage (m)")+ggtitle("TW_SW_03")+  scale_x_datetime(breaks = seq(Plot_Times[1], Plot_Times[length(Plot_Times)], "7 days"),date_labels="%d %b")+theme(axis.text.x = element_text(angle=45, vjust = 0.5))                                                                      
@@ -376,11 +385,82 @@ Plot_Times<-as.POSIXct(TW_PZ_06_SAND_Nov[2:nrow(TW_PZ_06_SAND_Nov),"Date_Time"],
 ggplot(TW_PZ_06_SAND_Nov[2:nrow(TW_PZ_06_SAND_Nov),], aes(Plot_Times, 155.3/100-(103.5/100+TW_PZ_06_SAND_Nov[2:nrow(TW_PZ_06_SAND_Nov),"m_water"])))+geom_line(color='royalblue3', size=.5)+ scale_y_reverse(limits =c(.7,0)) + xlab("Date") + ylab("Depth to Water Below Ground Surface (m)")+ggtitle("TW_PZ_06 SAND")+  scale_x_datetime(breaks = seq(Plot_Times[1], Plot_Times[length(Plot_Times)], "7 days"),date_labels="%d %b")+theme(axis.text.x = element_text(angle=45, vjust = 0.5))                                               
                     
                        
-               
-              
-                  
-        
-                  
+# 2, 3 4, 7
+#Gradient_02<-merge(TW_SW_02_Nov, TW_PZ_02_Nov[,c("m_water","Date_Time")], by="Date_Time")                      
+#colnames(Gradient_02)<-c("Date_Time", "Abs_Pres_Pa","Temp_C","NA","NA.1","NA.2","NA,3", "NA.4", "order", "STP", "water_density", "SW_m_water","PZ_m_water")                       
+# Calculate dz (SW is embedded in streambed, so dz= TD - (TOC to GS) for the piezometer
+#dz_02<-(165-19)/100
+# Calculate dh 
+#Gradient_02[,"dh"]<-Gradient_02[,"SW_m_water"]-(Gradient_02[,"PZ_m_water"]-dz_02)                          
+#Plot_Times<-as.POSIXct(Gradient_02[,"Date_Time"], "%m/%d/%y %I:%M:%S %p", tz="America/New_York")
+#ggplot(Gradient_02, aes(Plot_Times, Gradient_02[,"SW_m_water"]-(168/100+TW_PZ_06_SAND_Nov[2:nrow(TW_PZ_06_SAND_Nov),"m_water"])))+geom_line(color='royalblue3', size=.5)+ scale_y_reverse(limits =c(.7,0)) + xlab("Date") + ylab("Depth to Water Below Ground Surface (m)")+ggtitle("TW_PZ_06 SAND")+  scale_x_datetime(breaks = seq(Plot_Times[1], Plot_Times[length(Plot_Times)], "7 days"),date_labels="%d %b")+theme(axis.text.x = element_text(angle=45, vjust = 0.5))                                               
+                                  
+# PW/SW_03       
+Gradient_03<-merge(TW_SW_03_Nov, TW_PZ_03_Nov[,c("m_water","Date_Time")], by="Date_Time")                       
+colnames(Gradient_03)<-c("Date_Time", "Abs_Pres_Pa","Temp_C","NA","NA.1","NA.2","NA,3", "NA.4", "order", "STP", "water_density", "SW_m_water","PZ_m_water")                       
+# dz for the piezometer (from installation notes)
+dz_03<-87.5 
+# Correct the SW_m_water column based on manual measurements from 7/12/18
+# Logger data says column above logger is 1.982473 @ 11 AM on 7/12, manual measurements say H20 depth should be 39 cm. 
+Gradient_03[,"SW_WL"]<-Gradient_03[,"SW_m_water"]-(1.982473-(39/100))
+# Calculate PZ water level above streambed
+Gradient_03[,"PZ_WL"]<-Gradient_03[,"PZ_m_water"]-((166-57)/100)
+# Calculate dh 
+Gradient_03[,"dh"]<-Gradient_03[,"PZ_WL"]-Gradient_03[,"SW_WL"]
+Plot_Times<-as.POSIXct(Gradient_03[,"Date_Time"], "%m/%d/%y %I:%M:%S %p", tz="America/New_York")
+ggplot(Gradient_03, aes(Plot_Times, Gradient_03[,"dh"]/(87.5/100)))+geom_line(color='darkolivegreen4', size=.2)+ ylim(-4,2) + xlab("Date") + ylab("dh/dz")+ggtitle("TW_PZ/SW_03")+  scale_x_datetime(breaks = seq(Plot_Times[1], Plot_Times[length(Plot_Times)], "7 days"),date_labels="%d %b")+theme(axis.text.x = element_text(angle=45, vjust = 0.5))   
+
+# PW/SW_04      
+Gradient_04<-merge(TW_SW_04_Nov, TW_PZ_04_Nov[,c("m_water","Date_Time")], by="Date_Time", sort=FALSE)                       
+colnames(Gradient_04)<-c("Date_Time", "Abs_Pres_Pa","Temp_C","NA","NA.1","NA.2","NA,3", "NA.4", "order", "STP", "water_density", "SW_m_water","PZ_m_water")                       
+# dz for the piezometer (from installation notes)
+dz_04<-88.65                 
+# Correct the SW_m_water column based on manual measurements from 7/12/18
+# Logger data says column above logger is 0.4181244 @ 12:15 AM on 7/12, manual measurements say H20 depth should be 32 cm. 
+Gradient_04[,"SW_WL"]<-Gradient_04[,"SW_m_water"]-(0.4181244-(32/100))
+# Calculate PZ water level above streambed
+#Gradient_04[,"PZ_WL"]<-Gradient_04[,"PZ_m_water"]-((165.5-48.8)/100)
+# Logger data says column above logger is 1.06885100 @ 12:45 AM on 7/12, manual measurements say WL should be 48.8-(20-9.1)=37.9 cm. 
+Gradient_04[,"PZ_WL"]<-Gradient_04[,"PZ_m_water"]-(1.06885100-(37.9/100))
+# Calculate dh 
+Gradient_04[,"dh"]<-Gradient_04[,"PZ_WL"]-Gradient_04[,"SW_WL"]
+Gradient_04<-Gradient_04[-1,]
+Gradient_04<-Gradient_04[-12567,]
+Plot_Times<-as.POSIXct(Gradient_04[,"Date_Time"], "%m/%d/%y %I:%M:%S %p", tz="America/New_York")
+ggplot(Gradient_04, aes(Plot_Times, Gradient_04[,"dh"]/(88.65/100)))+geom_line(color='darkolivegreen4', size=.2)+ ylim(0,.75) + xlab("Date") + ylab("dh/dz")+ggtitle("TW_PZ/SW_04")+  scale_x_datetime(breaks = seq(Plot_Times[1], Plot_Times[length(Plot_Times)], "7 days"),date_labels="%d %b")+theme(axis.text.x = element_text(angle=45, vjust = 0.5))   
+                       
+# PW/SW_07      
+Gradient_07<-merge(TW_SW_07_Nov, TW_PZ_07_Nov[,c("m_water","Date_Time")], by="Date_Time", sort=FALSE)                       
+colnames(Gradient_07)<-c("Date_Time", "Abs_Pres_Pa","Temp_C","NA","NA.1","NA.2","NA,3", "NA.4", "order", "STP", "water_density", "SW_m_water","PZ_m_water")                       
+# dz for the piezometer (from installation notes)
+dz_07<-120.75                
+# Correct the SW_m_water column based on manual measurements from 7/12/18
+# Logger data says column above logger is 0.3477646 @ 12 PM on 6/18, manual measurements say WL should be 33.2-6.7=26.5 cm. 
+Gradient_07[,"SW_WL"]<-Gradient_07[,"SW_m_water"]-(0.3477646-(26.5/100))
+# Calculate PZ water level above streambed
+#Gradient_04[,"PZ_WL"]<-Gradient_04[,"PZ_m_water"]-((165.5-48.8)/100)
+# Logger data says column above logger is 1.438818 @ 12 PM on 6/18, manual measurements say WL should be 29.2-7=22.2 cm. 
+Gradient_07[,"PZ_WL"]<-Gradient_07[,"PZ_m_water"]-(1.438818-(22.2/100))
+# Calculate dh 
+Gradient_07[,"dh"]<-Gradient_07[,"PZ_WL"]-Gradient_07[,"SW_WL"]
+Gradient_07<-Gradient_04[-14806,]
+Plot_Times<-as.POSIXct(Gradient_07[,"Date_Time"], "%m/%d/%y %I:%M:%S %p", tz="America/New_York")
+ggplot(Gradient_07, aes(Plot_Times, Gradient_07[,"dh"]/(120.75/100)))+geom_line(color='darkolivegreen4', size=.2)+ ylim(0,.4) + xlab("Date") + ylab("dh/dz")+ggtitle("TW_PZ/SW_07")+  scale_x_datetime(breaks = seq(Plot_Times[1], Plot_Times[length(Plot_Times)], "7 days"),date_labels="%d %b")+theme(axis.text.x = element_text(angle=45, vjust = 0.5))   
+                       
+                        
+                       
+                       
+                       
+                       
+                       
+                       
+                       
+                       
+                       
+                       
+                       
+                       
+                       
                        
 #TW_PZ_AWC1_Mar
 Plot_Times<-as.POSIXct(TW_PZ_AWC1_Mar[,"Date_Time"], "%m/%d/%y %I:%M:%S %p", tz="America/New_York")
