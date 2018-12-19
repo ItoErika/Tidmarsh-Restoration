@@ -9,6 +9,7 @@ library('forecast')
 library('sf')
 library('rgdal')
 library('raster')
+library('gstat')
 
 ####################################################### LOAD DATA ######################################################################################
 
@@ -509,60 +510,56 @@ TW_PZ_06_SAND_Nov[,"coordsx2"]<-PZ_position[SND6,"coordsx2"]
 TW_PZ_06_SAND_Nov[,"PZ_Elev_m"]<-PZ_position[SND6,"Elev_m"]                    
 TW_PZ_06_SAND_Nov[,"WL_Elev_m"]<-TW_PZ_06_SAND_Nov[,"PZ_Elev_m"]-TW_PZ_06_SAND_Nov[,"denoised"]                                         
                        
-# Write a function to merge STP from NOAA to logger data, and calculate m of water above loggers
-loggerProcess<-function(LoggerData) {
-        # Change column names for logger files
-        colnames(LoggerData)<-c("Date_Time","Abs_Pres_Pa","Temp_C")                
-                # Change date time column from logger files to characters
-        LoggerData[,"Date_Time"]<-as.character(LoggerData[,"Date_Time"]) 
-        # Add a column to sort the data back to original order                       
-        LoggerData[,"order"]<-1:nrow(LoggerData)                      
-        LoggerData<-merge(LoggerData, NOAA_STP[,c("STP","DATE_TIME")], by.x="Date_Time", by.y="DATE_TIME", all.x=TRUE)
-        # re-order matrix
-        LoggerData<-LoggerData[order(LoggerData[,"order"]),]                       
 
-        # Add column for water density
-        LoggerData[,"water_density"]<-1000*(1-(LoggerData[,"Temp_C"]+2.889414)/(508929.2*(LoggerData[,"Temp_C"]+68.12963))*(LoggerData[,"Temp_C"]-3.9863)^2)      
-        # Convert mb to Pa              
-        LoggerData[,"STP"]<-LoggerData[,"STP"]*100
-        # Convert KPa to Pa
-        LoggerData[,"Abs_Pres_Pa"]<-LoggerData[,"Abs_Pres_Pa"]*1000
-        # Create a column for m of water above each logger             
-        LoggerData[,"m_water"]<-(LoggerData[,"Abs_Pres_Pa"]-LoggerData[,"STP"])/(9.81*LoggerData[,"water_density"])
-        return(LoggerData)
-        }
 
 # Set the same start and end dates for all piezometers                                          
 TW_PZ_01_Nov<-TW_PZ_01_Nov[which(TW_PZ_01_Nov[,"Date_Time"]=="08/05/18 02:00:00 PM"):which(TW_PZ_01_Nov[,"Date_Time"]=="11/15/18 02:00:00 PM"),]
 TW_PZ_02_Nov<-TW_PZ_02_Nov[which(TW_PZ_02_Nov[,"Date_Time"]=="08/05/18 02:00:00 PM"):which(TW_PZ_02_Nov[,"Date_Time"]=="11/15/18 02:00:00 PM"),]
-TW_PZ_03_Nov<-TW_PZ_01_Nov[which(TW_PZ_03_Nov[,"Date_Time"]=="08/05/18 02:00:00 PM"):which(TW_PZ_03_Nov[,"Date_Time"]=="11/15/18 02:00:00 PM"),]
-TW_PZ_04_Nov<-TW_PZ_01_Nov[which(TW_PZ_04_Nov[,"Date_Time"]=="08/05/18 02:00:00 PM"):which(TW_PZ_04_Nov[,"Date_Time"]=="11/15/18 02:00:00 PM"),]
-TW_PZ_05_Nov<-TW_PZ_01_Nov[which(TW_PZ_05_Nov[,"Date_Time"]=="08/05/18 02:00:00 PM"):which(TW_PZ_05_Nov[,"Date_Time"]=="11/15/18 02:00:00 PM"),]
-TW_PZ_06_Nov<-TW_PZ_01_Nov[which(TW_PZ_06_Nov[,"Date_Time"]=="08/05/18 02:00:00 PM"):which(TW_PZ_06_Nov[,"Date_Time"]=="11/15/18 02:00:00 PM"),]
-TW_PZ_07_Nov<-TW_PZ_01_Nov[which(TW_PZ_07_Nov[,"Date_Time"]=="08/05/18 02:00:00 PM"):which(TW_PZ_07_Nov[,"Date_Time"]=="11/15/18 02:00:00 PM"),]
-TW_PZ_08_Nov<-TW_PZ_01_Nov[which(TW_PZ_08_Nov[,"Date_Time"]=="08/05/18 02:00:00 PM"):which(TW_PZ_08_Nov[,"Date_Time"]=="11/15/18 02:00:00 PM"),]
-TW_PZ_09_Nov<-TW_PZ_01_Nov[which(TW_PZ_09_Nov[,"Date_Time"]=="08/05/18 02:00:00 PM"):which(TW_PZ_09_Nov[,"Date_Time"]=="11/15/18 02:00:00 PM"),]
-TW_SW_02_Nov<-TW_PZ_01_Nov[which(TW_SW_02_Nov[,"Date_Time"]=="08/05/18 02:00:00 PM"):which(TW_SW_02_Nov[,"Date_Time"]=="11/15/18 02:00:00 PM"),]
-TW_SW_03_Nov<-TW_PZ_01_Nov[which(TW_SW_03_Nov[,"Date_Time"]=="08/05/18 02:00:00 PM"):which(TW_SW_03_Nov[,"Date_Time"]=="11/15/18 02:00:00 PM"),]
-TW_SW_04_Nov<-TW_PZ_01_Nov[which(TW_SW_04_Nov[,"Date_Time"]=="08/05/18 02:00:00 PM"):which(TW_SW_04_Nov[,"Date_Time"]=="11/15/18 02:00:00 PM"),]
-TW_SW_07_Nov<-TW_PZ_01_Nov[which(TW_SW_07_Nov[,"Date_Time"]=="08/05/18 02:00:00 PM"):which(TW_SW_07_Nov[,"Date_Time"]=="11/15/18 02:00:00 PM"),]
-TW_PZ_05_SAND_Nov<-TW_PZ_01_Nov[which(TW_PZ_05_SAND_Nov[,"Date_Time"]=="08/05/18 02:00:00 PM"):which(TW_PZ_05_SAND_Nov[,"Date_Time"]=="11/15/18 02:00:00 PM"),]
-TW_PZ_06_SAND_Nov<-TW_PZ_01_Nov[which(TW_PZ_06_SAND_Nov[,"Date_Time"]=="08/05/18 02:00:00 PM"):which(TW_PZ_06_SAND_Nov[,"Date_Time"]=="11/15/18 02:00:00 PM"),]       
-                       
+TW_PZ_03_Nov<-TW_PZ_03_Nov[which(TW_PZ_03_Nov[,"Date_Time"]=="08/05/18 02:00:00 PM"):which(TW_PZ_03_Nov[,"Date_Time"]=="11/15/18 02:00:00 PM"),]
+TW_PZ_04_Nov<-TW_PZ_04_Nov[which(TW_PZ_04_Nov[,"Date_Time"]=="08/05/18 02:00:00 PM"):which(TW_PZ_04_Nov[,"Date_Time"]=="11/15/18 02:00:00 PM"),]
+TW_PZ_05_Nov<-TW_PZ_05_Nov[which(TW_PZ_05_Nov[,"Date_Time"]=="08/05/18 02:00:00 PM"):which(TW_PZ_05_Nov[,"Date_Time"]=="11/15/18 02:00:00 PM"),]
+TW_PZ_06_Nov<-TW_PZ_06_Nov[which(TW_PZ_06_Nov[,"Date_Time"]=="08/05/18 02:00:00 PM"):which(TW_PZ_06_Nov[,"Date_Time"]=="11/15/18 02:00:00 PM"),]
+TW_PZ_07_Nov<-TW_PZ_07_Nov[which(TW_PZ_07_Nov[,"Date_Time"]=="08/05/18 02:00:00 PM"):which(TW_PZ_07_Nov[,"Date_Time"]=="11/15/18 02:00:00 PM"),]
+TW_PZ_08_Nov<-TW_PZ_08_Nov[which(TW_PZ_08_Nov[,"Date_Time"]=="08/05/18 02:00:00 PM"):which(TW_PZ_08_Nov[,"Date_Time"]=="11/15/18 02:00:00 PM"),]
+TW_PZ_09_Nov<-TW_PZ_09_Nov[which(TW_PZ_09_Nov[,"Date_Time"]=="08/05/18 02:00:00 PM"):which(TW_PZ_09_Nov[,"Date_Time"]=="11/15/18 02:00:00 PM"),]
+TW_SW_02_Nov<-TW_SW_02_Nov[which(TW_SW_02_Nov[,"Date_Time"]=="08/05/18 02:00:00 PM"):which(TW_SW_02_Nov[,"Date_Time"]=="11/15/18 02:00:00 PM"),]
+TW_SW_03_Nov<-TW_SW_03_Nov[which(TW_SW_03_Nov[,"Date_Time"]=="08/05/18 02:00:00 PM"):which(TW_SW_03_Nov[,"Date_Time"]=="11/15/18 02:00:00 PM"),]
+TW_SW_04_Nov<-TW_SW_04_Nov[which(TW_SW_04_Nov[,"Date_Time"]=="08/05/18 02:00:00 PM"):which(TW_SW_04_Nov[,"Date_Time"]=="11/15/18 02:00:00 PM"),]
+TW_SW_07_Nov<-TW_SW_07_Nov[which(TW_SW_07_Nov[,"Date_Time"]=="08/05/18 02:00:00 PM"):which(TW_SW_07_Nov[,"Date_Time"]=="11/15/18 02:00:00 PM"),]
+TW_PZ_05_SAND_Nov<-TW_PZ_05_SAND_Nov[which(TW_PZ_05_SAND_Nov[,"Date_Time"]=="08/05/18 02:00:00 PM"):which(TW_PZ_05_SAND_Nov[,"Date_Time"]=="11/15/18 02:00:00 PM"),]
+TW_PZ_06_SAND_Nov<-TW_PZ_06_SAND_Nov[which(TW_PZ_06_SAND_Nov[,"Date_Time"]=="08/05/18 02:00:00 PM"):which(TW_PZ_06_SAND_Nov[,"Date_Time"]=="11/15/18 02:00:00 PM"),]       
+  
+# Subset matrices to only sample every other hour 
+# Deep piezometers                    
 TW_PZ_01_Nov<-TW_PZ_01_Nov[seq(1,9793,8),]
 TW_PZ_02_Nov<-TW_PZ_02_Nov[seq(1,9793,8),]
-TW_PZ_03_Nov<-TW_PZ_01_Nov[seq(1,9793,8),]
-TW_PZ_04_Nov<-TW_PZ_01_Nov[seq(1,9793,8),]
-TW_PZ_05_Nov<-TW_PZ_01_Nov[seq(1,9793,8),]
-TW_PZ_06_Nov<-TW_PZ_01_Nov[seq(1,9793,8),]
-TW_PZ_07_Nov<-TW_PZ_01_Nov[seq(1,9793,8),]
-TW_PZ_08_Nov<-TW_PZ_01_Nov[seq(1,9793,8),]
-TW_PZ_09_Nov<-TW_PZ_01_Nov[seq(1,9793,8),]
-TW_SW_02_Nov<-TW_PZ_01_Nov[seq(1,9793,8),]
-TW_SW_03_Nov<-TW_PZ_01_Nov[seq(1,9793,8),]
-TW_SW_04_Nov<-TW_PZ_01_Nov[seq(1,9793,8),]
-TW_SW_07_Nov<-TW_PZ_01_Nov[seq(1,9793,8),]
-TW_PZ_05_SAND_Nov<-TW_PZ_01_Nov[seq(1,9793,8),]
-TW_PZ_06_SAND_Nov<-TW_PZ_01_Nov[seq(1,9793,8),]       
+TW_PZ_03_Nov<-TW_PZ_03_Nov[seq(1,9793,8),]
+TW_PZ_04_Nov<-TW_PZ_04_Nov[seq(1,9793,8),]
+TW_PZ_05_Nov<-TW_PZ_05_Nov[seq(1,9793,8),]
+TW_PZ_06_Nov<-TW_PZ_06_Nov[seq(1,9793,8),]
+TW_PZ_07_Nov<-TW_PZ_07_Nov[seq(1,9793,8),]
+TW_PZ_08_Nov<-TW_PZ_08_Nov[seq(1,9793,8),]
+TW_PZ_09_Nov<-TW_PZ_09_Nov[seq(1,9793,8),]
+
+# Shallow piezometers
+TW_SW_02_Nov<-TW_SW_02_Nov[seq(1,9793,8),]
+TW_SW_03_Nov<-TW_SW_03_Nov[seq(1,9793,8),]
+TW_SW_04_Nov<-TW_SW_04_Nov[seq(1,9793,8),]
+TW_SW_07_Nov<-TW_SW_07_Nov[seq(1,9793,8),]
+TW_PZ_05_SAND_Nov<-TW_PZ_05_SAND_Nov[seq(1,9793,8),]
+TW_PZ_06_SAND_Nov<-TW_PZ_06_SAND_Nov[seq(1,9793,8),]       
+
+# Bind all of the water elevation columns from each well into a single time series matrix
+PZ_Surface<-as.data.frame(cbind(TW_PZ_01_Nov[,"Date_Time"], TW_PZ_01_Nov[,"WL_Elev_m"], TW_PZ_03_Nov[,"WL_Elev_m"], TW_PZ_05_Nov[,"WL_Elev_m"], TW_PZ_06_Nov[,"WL_Elev_m"], TW_PZ_07_Nov[,"WL_Elev_m"], TW_PZ_08_Nov[,"WL_Elev_m"], TW_PZ_09_Nov[,"WL_Elev_m"]))
+colnames(PZ_Surface)<-c("Date_Time", "01_WL_Elev_m", "03_WL_Elev_m", "05_WL_Elev_m", "06_WL_Elev_m", "07_WL_Elev_m", "08_WL_Elev_m", "09_WL_Elev_m")
+WT_Surface<-as.data.frame(cbind(TW_SW_02_Nov[,"Date_Time"], TW_SW_02_Nov[,"WL_Elev_m"], TW_SW_04_Nov[,"WL_Elev_m"], TW_SW_07_Nov[,"WL_Elev_m"], TW_PZ_05_SAND_Nov[,"WL_Elev_m"], TW_PZ_06_SAND_Nov[,"WL_Elev_m"]))
+colnames(WT_Surface)<-c("Date_Time", "02_WT_Elev_m", "04_WT_Elev_m", "07_WT_Elev_m", "05_WT_Elev_m", "06_WT_Elev_m")
+
                             
+setwd('C:/Users/erikai94/Documents/UMass/Tidmarsh/elevations/elevations')
+# Load 100 random points distributed within the raster space of interest 
+rand_pts<-read.csv('random_points.csv')
+                       
+                       
+                       
                        
