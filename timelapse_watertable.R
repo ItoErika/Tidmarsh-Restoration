@@ -7,7 +7,8 @@ library('ggplot2')
 library('scales')
 library('forecast')
 library('sf')
-library('rdgal')
+library('rgdal')
+library('raster')
 
 ####################################################### LOAD DATA ######################################################################################
 
@@ -403,10 +404,108 @@ Plot_Times<-as.POSIXct(TW_PZ_06_SAND_Nov[,"Date_Time"], "%m/%d/%y %I:%M:%S %p", 
 ggplot(TW_PZ_06_SAND_Nov, aes(Plot_Times, TW_PZ_06_SAND_Nov[,"m_below_GS"]))+geom_line(color='royalblue3', size=.6) + xlab("Date") + ylab("Depth to Water Below Ground Surface (m)")+ggtitle("TW_PZ_06_SAND_Nov")+  scale_x_datetime(breaks = seq(Plot_Times[1], Plot_Times[length(Plot_Times)], "7 days"),date_labels="%b %d")+ scale_y_reverse(limits =c(.6,-.1)) +theme(axis.text.x = element_text(angle=45, vjust = 0.5)) + geom_line(aes(x=Plot_Times, y=TW_PZ_06_SAND_Nov[,"denoised"]), color="orange3", size=.6)                                       
 ggsave("TW_PZ_06_SAND_Nov.pdf", width = 12, height = 6)                       
                                          
+##################################################### GET SPATIAL DATA ####################################################################################
+
+# Load Lidar data from mass gis for the Tidmarsh site region:
+# https://docs.digital.mass.gov/dataset/massgis-data-digital-elevation-model-15000                                         
+setwd('C:/Users/erikai94/Desktop/19TCG690410.img') 
+Ground_Surface<-raster('19TCG690410.img')
+# Tighten the border around the bog
+TW_border <- extent(369000, 369600, 4641200, 4642000)
+Ground_Surface<-crop(Ground_Surface, TW_border)
+
+# Load spatial data for the piezometers 
+setwd('C:/Users/erikai94/Desktop') 
+PZ_latlong<- readOGR(dsn = ".", layer = "TESt2")
+plot(Ground_Surface, zlim=c(0,12))
+plot(PZ_latlong, add=TRUE) 
+# Extract the elevation data for each piezometer point
+PZ_position<-as.data.frame(cbind(PZ_latlong[,c("Piezometer", "Lat","Long")], extract(Ground_Surface, PZ_latlong)))   
+colnames(PZ_position)<-c("PZ", "Lat","Long", "Elev_m", "coordsx1", "coordsx2")
+      
+##################################################### CONVERT WATER LEVEL DATA TO WATER ELEVATION DATA ####################################################################################
+                     
+# TW_PZ_01
+PZ1<-which(PZ_position[,"PZ"]=="TW_PZ_01")
+TW_PZ_01_Nov[,"coordsx1"]<-PZ_position[PZ1,"coordsx1"]
+TW_PZ_01_Nov[,"coordsx2"]<-PZ_position[PZ1,"coordsx2"]
+TW_PZ_01_Nov[,"PZ_Elev_m"]<-PZ_position[PZ1,"Elev_m"]                    
+TW_PZ_01_Nov[,"WL_Elev_m"]<-TW_PZ_01_Nov[,"PZ_Elev_m"]-TW_PZ_01_Nov[,"m_below_GS"] 
+
+# TW_PZ_05
+PZ5<-which(PZ_position[,"PZ"]=="TW_PZ_05")
+TW_PZ_05_Nov[,"coordsx1"]<-PZ_position[PZ5,"coordsx1"]
+TW_PZ_05_Nov[,"coordsx2"]<-PZ_position[PZ5,"coordsx2"]
+TW_PZ_05_Nov[,"PZ_Elev_m"]<-PZ_position[PZ5,"Elev_m"]                    
+TW_PZ_05_Nov[,"WL_Elev_m"]<-TW_PZ_05_Nov[,"PZ_Elev_m"]-TW_PZ_05_Nov[,"m_below_GS"]    
+
+# TW_PZ_06
+PZ6<-which(PZ_position[,"PZ"]=="TW_PZ_06")
+TW_PZ_06_Nov[,"coordsx1"]<-PZ_position[PZ6,"coordsx1"]
+TW_PZ_06_Nov[,"coordsx2"]<-PZ_position[PZ6,"coordsx2"]
+TW_PZ_06_Nov[,"PZ_Elev_m"]<-PZ_position[PZ6,"Elev_m"]                    
+TW_PZ_06_Nov[,"WL_Elev_m"]<-TW_PZ_06_Nov[,"PZ_Elev_m"]-TW_PZ_06_Nov[,"m_below_GS"]       
+
+# TW_PZ_08
+PZ8<-which(PZ_position[,"PZ"]=="TW_PZ_08")
+TW_PZ_08_Nov[,"coordsx1"]<-PZ_position[PZ8,"coordsx1"]
+TW_PZ_08_Nov[,"coordsx2"]<-PZ_position[PZ8,"coordsx2"]
+TW_PZ_08_Nov[,"PZ_Elev_m"]<-PZ_position[PZ8,"Elev_m"]                    
+TW_PZ_08_Nov[,"WL_Elev_m"]<-TW_PZ_08_Nov[,"PZ_Elev_m"]-TW_PZ_08_Nov[,"denoised"]              
+                   
+# TW_PZ_09
+PZ9<-which(PZ_position[,"PZ"]=="TW_PZ_09")
+TW_PZ_09_Nov[,"coordsx1"]<-PZ_position[PZ9,"coordsx1"]
+TW_PZ_09_Nov[,"coordsx2"]<-PZ_position[PZ9,"coordsx2"]
+TW_PZ_09_Nov[,"PZ_Elev_m"]<-PZ_position[PZ9,"Elev_m"]                    
+TW_PZ_09_Nov[,"WL_Elev_m"]<-TW_PZ_09_Nov[,"PZ_Elev_m"]-TW_PZ_09_Nov[,"m_below_GS"]  
+
+# TW_PZ_03
+PZ3<-which(PZ_position[,"PZ"]=="TW_PZ_03")
+TW_PZ_03_Nov[,"coordsx1"]<-PZ_position[PZ3,"coordsx1"]
+TW_PZ_03_Nov[,"coordsx2"]<-PZ_position[PZ3,"coordsx2"]
+TW_PZ_03_Nov[,"PZ_Elev_m"]<-PZ_position[PZ3,"Elev_m"]                    
+TW_PZ_03_Nov[,"WL_Elev_m"]<-TW_PZ_03_Nov[,"PZ_Elev_m"]+TW_PZ_03_Nov[,"m_stage"]  
+
+# TW_PZ_07
+PZ7<-which(PZ_position[,"PZ"]=="TW_PZ_07")
+TW_PZ_07_Nov[,"coordsx1"]<-PZ_position[PZ7,"coordsx1"]
+TW_PZ_07_Nov[,"coordsx2"]<-PZ_position[PZ7,"coordsx2"]
+TW_PZ_07_Nov[,"PZ_Elev_m"]<-PZ_position[PZ7,"Elev_m"]                    
+TW_PZ_07_Nov[,"WL_Elev_m"]<-TW_PZ_07_Nov[,"PZ_Elev_m"]+TW_PZ_07_Nov[,"m_stage"]       
+
+# TW_SW_02
+SW2<-which(PZ_position[,"PZ"]=="TW_SW_02")
+TW_SW_02_Nov[,"coordsx1"]<-PZ_position[SW2,"coordsx1"]
+TW_SW_02_Nov[,"coordsx2"]<-PZ_position[SW2,"coordsx2"]
+TW_SW_02_Nov[,"PZ_Elev_m"]<-PZ_position[SW2,"Elev_m"]                    
+TW_SW_02_Nov[,"WL_Elev_m"]<-TW_SW_02_Nov[,"PZ_Elev_m"]+TW_SW_02_Nov[,"m_water"]    
+
+# TW_SW_04
+SW4<-which(PZ_position[,"PZ"]=="TW_SW_04")
+TW_SW_04_Nov[,"coordsx1"]<-PZ_position[SW4,"coordsx1"]
+TW_SW_04_Nov[,"coordsx2"]<-PZ_position[SW4,"coordsx2"]
+TW_SW_04_Nov[,"PZ_Elev_m"]<-PZ_position[SW4,"Elev_m"]                    
+TW_SW_04_Nov[,"WL_Elev_m"]<-TW_SW_04_Nov[,"PZ_Elev_m"]+TW_SW_04_Nov[,"m_water"] 
                        
+# TW_SW_07
+SW7<-which(PZ_position[,"PZ"]=="TW_SW_07")
+TW_SW_07_Nov[,"coordsx1"]<-PZ_position[SW7,"coordsx1"]
+TW_SW_07_Nov[,"coordsx2"]<-PZ_position[SW7,"coordsx2"]
+TW_SW_07_Nov[,"PZ_Elev_m"]<-PZ_position[SW7,"Elev_m"]                    
+TW_SW_07_Nov[,"WL_Elev_m"]<-TW_SW_07_Nov[,"PZ_Elev_m"]+TW_SW_07_Nov[,"m_water"]    
                        
-setwd('C:/Users/erikai94/Documents/UMass/Tidmarsh/elevations/elevations/Data')  
-allpts<-readOGR(dsn = ".", layer="allpts")     
-ditches<-readOGR(dsn = ".", layer="Ditches")                       
-                  
+# TW_PZ_05_SAND
+SND5<-which(PZ_position[,"PZ"]=="TW_PZ_05_SAND")
+TW_PZ_05_SAND_Nov[,"coordsx1"]<-PZ_position[SND5,"coordsx1"]
+TW_PZ_05_SAND_Nov[,"coordsx2"]<-PZ_position[SND5,"coordsx2"]
+TW_PZ_05_SAND_Nov[,"PZ_Elev_m"]<-PZ_position[SND5,"Elev_m"]                    
+TW_PZ_05_SAND_Nov[,"WL_Elev_m"]<-TW_PZ_05_SAND_Nov[,"PZ_Elev_m"]-TW_PZ_05_SAND_Nov[,"m_below_GS"]                                         
+                         
+# TW_PZ_06_SAND
+SND6<-which(PZ_position[,"PZ"]=="TW_PZ_06_SAND")
+TW_PZ_06_SAND_Nov[,"coordsx1"]<-PZ_position[SND6,"coordsx1"]
+TW_PZ_06_SAND_Nov[,"coordsx2"]<-PZ_position[SND6,"coordsx2"]
+TW_PZ_06_SAND_Nov[,"PZ_Elev_m"]<-PZ_position[SND6,"Elev_m"]                    
+TW_PZ_06_SAND_Nov[,"WL_Elev_m"]<-TW_PZ_06_SAND_Nov[,"PZ_Elev_m"]-TW_PZ_06_SAND_Nov[,"denoised"]                                         
                        
