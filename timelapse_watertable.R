@@ -10,6 +10,9 @@ library('sf')
 library('rgdal')
 library('raster')
 library('gstat')
+library('geosphere')
+library('plotly')
+
 
 ####################################################### LOAD DATA ######################################################################################
 
@@ -423,6 +426,16 @@ plot(PZ_latlong, add=TRUE)
 # Extract the elevation data for each piezometer point
 PZ_position<-as.data.frame(cbind(PZ_latlong[,c("Piezometer", "Lat","Long")], extract(Ground_Surface, PZ_latlong)))   
 colnames(PZ_position)<-c("PZ", "Lat","Long", "Elev_m", "coordsx1", "coordsx2")
+
+# Load spatial data for peat depth 
+setwd('C:/Users/erikai94/Documents/UMass/Tidmarsh/elevations/elevations/Data') 
+peat<- readOGR(dsn = ".", layer = "DEPTH_TO_PEAT")
+plot(Ground_Surface, zlim=c(0,12))
+plot(peat, add=TRUE) 
+# Extract the elevation data for each peat depth point
+Peat<-as.data.frame(cbind(peat, extract(Ground_Surface, peat)))  
+colnames(Peat)<-c("Depth","Elev","x","y")
+Peat[,"m_below_GS"]<-as.numeric(as.character(Peat[,"Elev"]))-(as.numeric(as.character(Peat[,"Depth"]))*0.3048)
       
 ##################################################### CONVERT WATER LEVEL DATA TO WATER ELEVATION DATA ####################################################################################
                      
@@ -529,25 +542,25 @@ TW_SW_07_Nov<-TW_SW_07_Nov[which(TW_SW_07_Nov[,"Date_Time"]=="08/05/18 02:00:00 
 TW_PZ_05_SAND_Nov<-TW_PZ_05_SAND_Nov[which(TW_PZ_05_SAND_Nov[,"Date_Time"]=="08/05/18 02:00:00 PM"):which(TW_PZ_05_SAND_Nov[,"Date_Time"]=="11/15/18 02:00:00 PM"),]
 TW_PZ_06_SAND_Nov<-TW_PZ_06_SAND_Nov[which(TW_PZ_06_SAND_Nov[,"Date_Time"]=="08/05/18 02:00:00 PM"):which(TW_PZ_06_SAND_Nov[,"Date_Time"]=="11/15/18 02:00:00 PM"),]       
   
-# Subset matrices to only sample every other hour 
+# Subset matrices to only sample every fourth hour 
 # Deep piezometers                    
-TW_PZ_01_Nov<-TW_PZ_01_Nov[seq(1,9793,8),]
-TW_PZ_02_Nov<-TW_PZ_02_Nov[seq(1,9793,8),]
-TW_PZ_03_Nov<-TW_PZ_03_Nov[seq(1,9793,8),]
-TW_PZ_04_Nov<-TW_PZ_04_Nov[seq(1,9793,8),]
-TW_PZ_05_Nov<-TW_PZ_05_Nov[seq(1,9793,8),]
-TW_PZ_06_Nov<-TW_PZ_06_Nov[seq(1,9793,8),]
-TW_PZ_07_Nov<-TW_PZ_07_Nov[seq(1,9793,8),]
-TW_PZ_08_Nov<-TW_PZ_08_Nov[seq(1,9793,8),]
-TW_PZ_09_Nov<-TW_PZ_09_Nov[seq(1,9793,8),]
+TW_PZ_01_Nov<-TW_PZ_01_Nov[seq(1,9793,16),]
+TW_PZ_02_Nov<-TW_PZ_02_Nov[seq(1,9793,16),]
+TW_PZ_03_Nov<-TW_PZ_03_Nov[seq(1,9793,16),]
+TW_PZ_04_Nov<-TW_PZ_04_Nov[seq(1,9793,16),]
+TW_PZ_05_Nov<-TW_PZ_05_Nov[seq(1,9793,16),]
+TW_PZ_06_Nov<-TW_PZ_06_Nov[seq(1,9793,16),]
+TW_PZ_07_Nov<-TW_PZ_07_Nov[seq(1,9793,16),]
+TW_PZ_08_Nov<-TW_PZ_08_Nov[seq(1,9793,16),]
+TW_PZ_09_Nov<-TW_PZ_09_Nov[seq(1,9793,16),]
 
 # Shallow piezometers
-TW_SW_02_Nov<-TW_SW_02_Nov[seq(1,9793,8),]
-TW_SW_03_Nov<-TW_SW_03_Nov[seq(1,9793,8),]
-TW_SW_04_Nov<-TW_SW_04_Nov[seq(1,9793,8),]
-TW_SW_07_Nov<-TW_SW_07_Nov[seq(1,9793,8),]
-TW_PZ_05_SAND_Nov<-TW_PZ_05_SAND_Nov[seq(1,9793,8),]
-TW_PZ_06_SAND_Nov<-TW_PZ_06_SAND_Nov[seq(1,9793,8),]       
+TW_SW_02_Nov<-TW_SW_02_Nov[seq(1,9793,16),]
+TW_SW_03_Nov<-TW_SW_03_Nov[seq(1,9793,16),]
+TW_SW_04_Nov<-TW_SW_04_Nov[seq(1,9793,16),]
+TW_SW_07_Nov<-TW_SW_07_Nov[seq(1,9793,16),]
+TW_PZ_05_SAND_Nov<-TW_PZ_05_SAND_Nov[seq(1,9793,16),]
+TW_PZ_06_SAND_Nov<-TW_PZ_06_SAND_Nov[seq(1,9793,16),]       
 
 # Bind all of the water elevation columns from each well into a single time series matrix
 PZ_Surface<-as.data.frame(cbind(TW_PZ_01_Nov[,"Date_Time"], TW_PZ_01_Nov[,"WL_Elev_m"], TW_PZ_03_Nov[,"WL_Elev_m"], TW_PZ_05_Nov[,"WL_Elev_m"], TW_PZ_06_Nov[,"WL_Elev_m"], TW_PZ_07_Nov[,"WL_Elev_m"], TW_PZ_08_Nov[,"WL_Elev_m"], TW_PZ_09_Nov[,"WL_Elev_m"]))
@@ -555,11 +568,81 @@ colnames(PZ_Surface)<-c("Date_Time", "01_WL_Elev_m", "03_WL_Elev_m", "05_WL_Elev
 WT_Surface<-as.data.frame(cbind(TW_SW_02_Nov[,"Date_Time"], TW_SW_02_Nov[,"WL_Elev_m"], TW_SW_04_Nov[,"WL_Elev_m"], TW_SW_07_Nov[,"WL_Elev_m"], TW_PZ_05_SAND_Nov[,"WL_Elev_m"], TW_PZ_06_SAND_Nov[,"WL_Elev_m"]))
 colnames(WT_Surface)<-c("Date_Time", "02_WT_Elev_m", "04_WT_Elev_m", "07_WT_Elev_m", "05_WT_Elev_m", "06_WT_Elev_m")
 
-                            
-setwd('C:/Users/erikai94/Documents/UMass/Tidmarsh/elevations/elevations')
-# Load 100 random points distributed within the raster space of interest 
-rand_pts<-read.csv('random_points.csv')
+setwd('C:/Users/erikai94/Documents/UMass/Tidmarsh/elevations/elevations')   
+# Transpose PZ_Surface in excel and add lat/long data
+PZ_Surface2<-read.csv('PZ_Surface2.csv')
+WT_Surface2<-read.csv('WT_Surface_2.csv')
+
+                    
+YValues<-seq(41.913,41.918,0.001)
+XValues<-seq(-70.58,-70.57,0.001)
+
+
+# PZ GRID
+Grid1<-expand.grid(XValues,YValues)
+Grid1<-cbind(Grid1,matrix(NA,nrow=nrow(Grid1),ncol=length(3:ncol(PZ_Surface2))))
+colnames(Grid1)<-c("x","y",colnames(PZ_Surface2)[3:ncol(PZ_Surface2)])
+
+for (i in 1:ncol(PZ_Surface2)) {
+        print(i)
+        Surface<-vector("numeric",length=nrow(Grid1))
+        for(j in 1:nrow(Grid1)) {
+                Weights<-vector("numeric",length=nrow(PZ_Surface2))
+                for (q in 1:nrow(PZ_Surface2)) {
+                        Weights[q]<-1/(geosphere::distGeo(Grid1[j,1:2],PZ_Surface2[q,c("x","y")])^2)
+                        }
+                Percentages<-Weights/sum(Weights)
+                Surface[j]<-sum(Percentages*PZ_Surface2[,i])
+                }
+        Grid1[,i]<-Surface
+        }
+
+vals <- unique(scales::rescale(c(volcano)))
+o <- order(vals, decreasing = FALSE)
+cols <- scales::col_numeric("Blues", domain = NULL)(vals)
+colz <- setNames(data.frame(vals[o], cols[o]), NULL)
+
+for (i in 3:ncol(Grid1)){
+     p<-plot_ly(x = Grid1$x, y = Grid1$y, z = Grid1[,i], type="contour", colorscale=colz)  %>% layout(title=TW_PZ_01_Nov[i-2,"Date_Time"])
+    orca(p, paste("C:/Users/erikai94/Documents/UMass/Tidmarsh/elevations/elevations/PZ_Plots/surface-plot", i-2,".png",sep=""))
+}
+
+
+for (i in 3:ncol(Grid)){
+p<-plot_ly(x = Grid$x, y = Grid$y, z = Grid[,i], type="contour", colorscale=colz)  %>% layout(title=TW_PZ_01_Nov[i-2,"Date_Time"])
+plotly_IMAGE(p, format = "png", out_file = paste("C:/Users/erikai94/Documents/UMass/Tidmarsh/elevations/elevations/PZ_Plots/surface-plot.png",i-1,sep=""))
+ }
+  
+
+YValues<-seq(41.913,41.918,0.001)
+XValues<-seq(-70.58,-70.57,0.001)
+
+
+# PZ GRID
+Grid<-expand.grid(XValues,YValues)
+Grid<-cbind(Grid,matrix(NA,nrow=nrow(Grid),ncol=length(3:ncol(WT_Surface2))))
+colnames(Grid)<-c("x","y",colnames(WT_Surface2)[3:ncol(WT_Surface2)])
+
+for (i in 1:ncol(WT_Surface2)) {
+        print(i)
+        Surface<-vector("numeric",length=nrow(Grid))
+        for(j in 1:nrow(Grid)) {
+                Weights<-vector("numeric",length=nrow(WT_Surface2))
+                for (q in 1:nrow(WT_Surface2)) {
+                        Weights[q]<-1/(geosphere::distGeo(Grid[j,1:2],WT_Surface2[q,c("x","y")])^2)
+                        }
+                Percentages<-Weights/sum(Weights)
+                Surface[j]<-sum(Percentages*WT_Surface2[,i])
+                }
+        Grid[,i]<-Surface
+        }
+
+for (i in 3:ncol(Grid)){
+     p<-plot_ly(x = Grid$x, y = Grid$y, z = Grid[,i], type="contour", colorscale=colz)  %>% layout(title=TW_PZ_01_Nov[i-2,"Date_Time"])
+    orca(p, paste("C:/Users/erikai94/Documents/UMass/Tidmarsh/elevations/elevations/PZ_Plots/surface-plot", i-2,".png",sep=""))
+}
+
+which(TW_PZ_01_Nov[,"Date_Time"]=="08/11/18 02:00:00 AM")                       
+plot_ly(x = Grid$y, y = Grid$x, z = Grid[,34+2], type="contour", colorscale=colz)  %>% layout(title=TW_PZ_01_Nov[34,"Date_Time"])                       
                        
-                       
-                       
-                       
+Grid3<-Grid1-Grid
