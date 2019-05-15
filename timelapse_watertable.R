@@ -171,7 +171,7 @@ loggerProcess<-function(LoggerData) {
         LoggerData<-LoggerData[order(LoggerData[,"order"]),]                       
 
         # Add column for water density
-        LoggerData[,"water_density"]<-1000*(1-(LoggerData[,"Temp_C"]+2.889414)/(508929.2*(LoggerData[,"Temp_C"]+68.12963))*(LoggerData[,"Temp_C"]-3.9863)^2)      
+        LoggerData[,"water_density"]<-1000*(1-(LoggerData[,"Temp_C"]+288.9414)/(508929.2*(LoggerData[,"Temp_C"]+68.12963))*(LoggerData[,"Temp_C"]-3.9863)^2)      
         # Convert mb to Pa              
         LoggerData[,"STP"]<-LoggerData[,"STP"]*100
         # Convert KPa to Pa
