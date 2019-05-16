@@ -19,6 +19,8 @@ library('plotly')
 # Load raw data (downloaded from pressure transducers)
 
 TW_PZ_05_3_3<-read.csv("file:///C:/Users/erikai94/Documents/UMass/Tidmarsh/PZ_Loggers/TW_WL_2018_03_04/TW-PZ-05_2018_03_03.csv", skip=1, row.names=1)
+TW_PZ_08_3_3<-read.csv("file:///C:/Users/erikai94/Documents/UMass/Tidmarsh/PZ_Loggers/TW_WL_2018_03_04/TW-PZ-08_2018_03_03.csv", skip=1, row.names=1)
+
 TW_SW_07_3_3<-read.csv("file:///C:/Users/erikai94/Documents/UMass/Tidmarsh/PZ_Loggers/TW_WL_2018_03_04/TW_SW_07_2018_03_03.csv", skip=1, row.names=1)
 
 TW_PZ_01_3_19<-read.csv("file:///C:/Users/erikai94/Documents/UMass/Tidmarsh/PZ_Loggers/TW_WL_2018_03_19/TW_PZ_01_2018_03_19.csv", skip=1, row.names=1)
@@ -195,6 +197,7 @@ loggerProcess<-function(LoggerData) {
 
 # Run this function on the logger file with pressure as kPa    
 TW_PZ_05_3_3<-loggerProcess(TW_PZ_05_3_3)
+TW_PZ_08_3_3<-loggerProcess(TW_PZ_08_3_3)
 TW_SW_07_3_3<-loggerProcess(TW_SW_07_3_3)
                                           
 TW_PZ_01_3_19<-loggerProcess(TW_PZ_01_3_19)
@@ -384,6 +387,14 @@ write.csv(TW_PZ_07_3_19, file="TWPZ07_8-29-17_to_3-19-18.csv", row.names=FALSE)
 ############## TW_PZ_08 ##############     
 # Create a column for the depth to water below ground surface
 # The top of piezometer casing to ground surface = 28 cm
+TW_PZ_08_3_3[,"m_below_GS"]<-131.9/100-(28/100+TW_PZ_08_3_3[,"m_water"])                       
+# Remove the last rows of the data set where the logger was not submerged (after 3/19)
+Logger_not_Submerged<-which(TW_PZ_08_3_3[,"Date_Time"]=="03/03/18 04:15:00 PM")
+TW_PZ_08_3_3<-TW_PZ_08_3_3[-(Logger_not_Submerged:nrow(TW_PZ_08_3_3)),]  
+write.csv(TW_PZ_07_3_19, file="TWPZ08_8-29-17_to_3-3-18_MALFUNC.csv", row.names=FALSE)                        
+
+# Create a column for the depth to water below ground surface
+# The top of piezometer casing to ground surface = 28 cm
 TW_PZ_08_Nov[,"m_below_GS"]<-116/100-(28/100+TW_PZ_08_Nov[,"m_water"])                       
 # Remove the beginning of the dataset (where logger was not submerged) 
 TW_PZ_08_Nov<-TW_PZ_08_Nov[-1,]
@@ -570,6 +581,11 @@ ggplot(TW_PZ_07_3_19, aes(Plot_Times, TW_PZ_07_3_19[,"m_above_GS"]))+geom_line(c
 ggsave("TW_PZ_07_3_19.pdf", width = 12, height = 6)  
 
 # TW_PZ_08
+Plot_Times<-as.POSIXct(TW_PZ_08_3_3[,"Date_Time"], "%m/%d/%y %I:%M:%S %p", tz="America/New_York")
+ggplot(TW_PZ_08_3_3, aes(Plot_Times, TW_PZ_08_3_3[,"m_below_GS"]))+geom_line(color='royalblue3', size=.6) + xlab("Date") + ylab("Depth to Water Below Ground Surface (m)")+ggtitle("TW_PZ_08")+  scale_x_datetime(breaks = seq(Plot_Times[1], Plot_Times[length(Plot_Times)], "7 days"),date_labels="%b %d")+ scale_y_reverse(limits =c(0.8,-.2)) +theme(axis.text.x = element_text(angle=45, vjust = 0.5))              
+ggsave("TW_PZ_08_3_3.pdf", width = 12, height = 6)
+
+
 Plot_Times<-as.POSIXct(TW_PZ_08_Nov[,"Date_Time"], "%m/%d/%y %I:%M:%S %p", tz="America/New_York")
 ggplot(TW_PZ_08_Nov, aes(Plot_Times, TW_PZ_08_Nov[,"m_below_GS"]))+geom_line(color='royalblue3', size=.6) + xlab("Date") + ylab("Depth to Water Below Ground Surface (m)")+ggtitle("TW_PZ_08")+  scale_x_datetime(breaks = seq(Plot_Times[1], Plot_Times[length(Plot_Times)], "7 days"),date_labels="%b %d")+ scale_y_reverse(limits =c(.6,-.1)) +theme(axis.text.x = element_text(angle=45, vjust = 0.5))+ geom_line(aes(x=Plot_Times, y=TW_PZ_08_Nov[,"denoised"]), color="orange3", size=.6)                       
 ggsave("TW_PZ_08_Nov.pdf", width = 12, height = 6)
