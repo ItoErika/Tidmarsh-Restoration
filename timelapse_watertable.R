@@ -20,6 +20,7 @@ library('plotly')
 TW_PZ_01_Nov<-read.csv("file:///C:/Users/erikai94/Documents/Umass/Tidmarsh/PZ_Loggers/Tidmarsh_TW_WL_2018_11_20/TW-PZ-01_sn10499234_2018_11_20.csv", skip=1, row.names=1)
 TW_PZ_02_Nov<-read.csv("file:///C:/Users/erikai94/Documents/Umass/Tidmarsh/PZ_Loggers/Tidmarsh_TW_WL_2018_11_20/TW_PZ_02_2018_11_20.csv", skip=1, row.names=1)
 TW_PZ_03_Nov<-read.csv("file:///C:/Users/erikai94/Documents/Umass/Tidmarsh/PZ_Loggers/Tidmarsh_TW_WL_2018_11_20/TW-PZ-03_sn10499228_2018_11_20.csv", skip=1, row.names=1)
+TW_PZ_03_8_17<-read.csv("file:///C:/Users/erikai94/Documents/UMass/Tidmarsh/PZ_Loggers/Tidmarsh_TW_WL_2017_08_29/TW_PZ_03.csv", skip=1, row.names=1)
 TW_PZ_04_Nov<-read.csv("file:///C:/Users/erikai94/Documents/Umass/Tidmarsh/PZ_Loggers/Tidmarsh_TW_WL_2018_11_20/TW_PZ_04_2018_11_20.csv", skip=1, row.names=1)
 TW_PZ_05_Nov<-read.csv("file:///C:/Users/erikai94/Documents/Umass/Tidmarsh/PZ_Loggers/Tidmarsh_TW_WL_2018_11_20/TW-PZ-05_2018_11_19.csv", skip=1, row.names=1)
 TW_PZ_06_Nov<-read.csv("file:///C:/Users/erikai94/Documents/Umass/Tidmarsh/PZ_Loggers/Tidmarsh_TW_WL_2018_11_20/TW-PZ-06_sn10499244_2018_11_19.csv", skip=1, row.names=1)
@@ -36,7 +37,7 @@ TW_PZ_06_SAND_Nov<-read.csv("file:///C:/Users/erikai94/Documents/Umass/Tidmarsh/
 
 # Load data from Plymouth Municipal Airport from NOAA
 # This includes barometric pressure data (use to correct logger data) 
-NOAA_Plymouth_Data<-read.table("file:///C:/Users/erikai94/Documents/UMass/Tidmarsh/PZ_Loggers/NOAA/11_18/4200927813436dat.txt", fill=TRUE, header=TRUE)
+NOAA_Plymouth_Data<-read.table("file:///C:/Users/erikai94/Documents/UMass/Tidmarsh/PZ_Loggers/NOAA/full/9414367922965dat.txt", fill=TRUE, header=TRUE)
 
 ####################################################### REFORMAT NOAA DATA ##################################################################################
 
@@ -185,6 +186,7 @@ loggerProcess<-function(LoggerData) {
 TW_PZ_01_Nov<-loggerProcess(TW_PZ_01_Nov)
 TW_PZ_02_Nov<-loggerProcess(TW_PZ_02_Nov)
 TW_PZ_03_Nov<-loggerProcess(TW_PZ_03_Nov)
+TW_PZ_03_8_17<-loggerProcess(TW_PZ_03_8_17)                      
 TW_PZ_04_Nov<-loggerProcess(TW_PZ_04_Nov)
 TW_PZ_05_Nov<-loggerProcess(TW_PZ_05_Nov)
 TW_PZ_06_Nov<-loggerProcess(TW_PZ_06_Nov)
