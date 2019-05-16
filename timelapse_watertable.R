@@ -17,11 +17,17 @@ library('plotly')
 ####################################################### LOAD DATA ######################################################################################
 
 # Load raw data (downloaded from pressure transducers)
-TW_PZ_01_Nov<-read.csv("file:///C:/Users/erikai94/Documents/Umass/Tidmarsh/PZ_Loggers/Tidmarsh_TW_WL_2018_11_20/TW-PZ-01_sn10499234_2018_11_20.csv", skip=1, row.names=1)
+
+TW_SW_07_3_3<-read.csv("file:///C:/Users/erikai94/Documents/UMass/Tidmarsh/PZ_Loggers/TW_WL_2018_03_04/TW_SW_07_2018_03_03.csv", skip=1, row.names=1)
+
 TW_PZ_01_3_19<-read.csv("file:///C:/Users/erikai94/Documents/UMass/Tidmarsh/PZ_Loggers/TW_WL_2018_03_19/TW_PZ_01_2018_03_19.csv", skip=1, row.names=1)
 TW_PZ_06_3_19<-read.csv("file:///C:/Users/erikai94/Documents/UMass/Tidmarsh/PZ_Loggers/TW_WL_2018_03_19/TW_PZ_06_2018_03_19.csv", skip=1, row.names=1)
 TW_PZ_07_3_19<-read.csv("file:///C:/Users/erikai94/Documents/UMass/Tidmarsh/PZ_Loggers/TW_WL_2018_03_19/TW_PZ_07_2018_03_19.csv", skip=1, row.names=1)
 
+TW_PZ_09_5_6<-read.csv("file:///C:/Users/erikai94/Documents/UMass/Tidmarsh/PZ_Loggers/TW_WL_2018_05_06/TW-PZ-09.csv", skip=1, row.names=1)
+
+
+TW_PZ_01_Nov<-read.csv("file:///C:/Users/erikai94/Documents/Umass/Tidmarsh/PZ_Loggers/Tidmarsh_TW_WL_2018_11_20/TW-PZ-01_sn10499234_2018_11_20.csv", skip=1, row.names=1)
 TW_PZ_02_Nov<-read.csv("file:///C:/Users/erikai94/Documents/Umass/Tidmarsh/PZ_Loggers/Tidmarsh_TW_WL_2018_11_20/TW_PZ_02_2018_11_20.csv", skip=1, row.names=1)
 TW_PZ_03_Nov<-read.csv("file:///C:/Users/erikai94/Documents/Umass/Tidmarsh/PZ_Loggers/Tidmarsh_TW_WL_2018_11_20/TW-PZ-03_sn10499228_2018_11_20.csv", skip=1, row.names=1)
 TW_PZ_03_8_17<-read.csv("file:///C:/Users/erikai94/Documents/UMass/Tidmarsh/PZ_Loggers/Tidmarsh_TW_WL_2017_08_29/TW_PZ_03.csv", skip=1, row.names=1)
@@ -186,12 +192,17 @@ loggerProcess<-function(LoggerData) {
         return(LoggerData)
         }
 
-# Run this function on the logger file with pressure as kPa                                              
-TW_PZ_01_Nov<-loggerProcess(TW_PZ_01_Nov)
+# Run this function on the logger file with pressure as kPa    
+TW_SW_07_3_3<-loggerProcess(TW_SW_07_3_3)
+                                          
 TW_PZ_01_3_19<-loggerProcess(TW_PZ_01_3_19)
 TW_PZ_06_3_19<-loggerProcess(TW_PZ_06_3_19)  
-TW_PZ_07_3_19<-loggerProcess(TW_PZ_07_3_19)                      
+TW_PZ_07_3_19<-loggerProcess(TW_PZ_07_3_19) 
+ 
+TW_PZ_09_5_6<-loggerProcess(TW_PZ_09_5_6)  
+
                     
+TW_PZ_01_Nov<-loggerProcess(TW_PZ_01_Nov)
 TW_PZ_02_Nov<-loggerProcess(TW_PZ_02_Nov)
 TW_PZ_03_Nov<-loggerProcess(TW_PZ_03_Nov)
 TW_PZ_03_8_17<-loggerProcess(TW_PZ_03_8_17)                      
@@ -340,7 +351,9 @@ TW_PZ_07_3_19<-TW_PZ_07_3_19[-(Logger_not_Submerged:nrow(TW_PZ_07_3_19)),]
 # Add manual data
 TW_PZ_07_3_19[which(TW_PZ_07_3_19[,"Date_Time"]=="11/17/17 05:45:00 PM"),"m_manual"]<-0.239                       
 TW_PZ_07_3_19[which(TW_PZ_07_3_19[,"Date_Time"]=="03/03/18 05:45:00 PM"),"m_manual"]<-0.181
-TW_PZ_07_3_19[which(TW_PZ_07_3_19[,"Date_Time"]=="03/19/18 10:15:00 AM"),"m_manual"]<-0.155                     
+TW_PZ_07_3_19[which(TW_PZ_07_3_19[,"Date_Time"]=="03/19/18 10:15:00 AM"),"m_manual"]<-0.155 
+# Save as CSV  
+write.csv(TW_PZ_07_3_19, file="TWPZ07_8-29-17_to_33-19-18.csv", row.names=FALSE)                        
 
 ############## TW_PZ_08 ##############     
 # Create a column for the depth to water below ground surface
@@ -356,7 +369,24 @@ TW_PZ_08_Nov<-TW_PZ_08_Nov[-which(is.na(TW_PZ_08_Nov[,"denoised"])),]
 TW_PZ_08_Nov[,"lat"]<-41.91744444
 TW_PZ_08_Nov[,"long"]<---70.57794444
 
-############## TW_PZ_09 ##############     
+############## TW_PZ_09 ##############    
+# Create a column for the depth to water below ground surface
+# The top of piezometer casing to ground surface = 28.4 cm
+TW_PZ_09_5_6[,"m_below_GS"]<-140.3/100-(28.4/100+TW_PZ_09_5_6[,"m_water"]) 
+# Remove the first two rows before the logger was submerged
+TW_PZ_09_5_6<-TW_PZ_09_5_6[which(TW_PZ_09_5_6[,"Date_Time"]=="08/29/17 03:30:00 PM"):nrow(TW_PZ_09_5_6),]
+# Correct the vertical jump in data on 3/19 (date of logger retrieval); logger was in slightly different vertical position upon reinstallation
+vert_shift_start<-which(TW_PZ_09_5_6[,"Date_Time"]=="03/19/18 10:45:00 AM")
+TW_PZ_09_5_6[vert_shift_start:nrow(TW_PZ_09_5_6),"m_below_GS"]<-TW_PZ_09_5_6[vert_shift_start:nrow(TW_PZ_09_5_6),"m_below_GS"]+ 0.209547                      
+# Interpolate between the 3/19 spike
+Start_Spike<-which(TW_PZ_09_5_6[,"Date_Time"]=="03/19/18 10:00:00 AM")                     
+Stop_Spike<-which(TW_PZ_09_5_6[,"Date_Time"]=="03/19/18 10:45:00 AM")     
+Smoothed_Spike<-seq(TW_PZ_09_5_6[Start_Spike,"m_below_GS"], TW_PZ_09_5_6[Stop_Spike,"m_below_GS"], length=Stop_Spike-Start_Spike+1)  
+# Replace the spike with the smoothed interpolated data
+TW_PZ_09_5_6[Start_Spike:Stop_Spike,"m_below_GS"]<-Smoothed_Spike   
+TW_PZ_09_5_6[which(TW_PZ_09_5_6[,"Date_Time"]=="03/19/18 10:00:00 AM"),"m_manual"]<-0.198 
+write.csv(TW_PZ_09_5_6, file="TWPZ09_8-29-17_to_4-12-18.csv", row.names=FALSE)                           
+ 
 # Create a column for the depth to water below ground surface
 # The top of piezometer casing to ground surface = 28 cm
 TW_PZ_09_Nov[,"m_below_GS"]<-156/100-(28/100+TW_PZ_09_Nov[,"m_water"])                       
@@ -398,6 +428,10 @@ TW_SW_02_Nov<-TW_SW_02_Nov[1:which(TW_SW_02_Nov[,"Date_Time"]=="11/20/18 10:30:0
 TW_SW_02_Nov[,"lat"]<-41.91389722
 TW_SW_02_Nov[,"long"]<--70.57706944
 
+############## TW_SW_03 ##############     
+
+
+
 ############## TW_SW_04 ##############     
 # Correct based on manual stream measurements
 TW_SW_04_Nov[,"m_water"]<-TW_SW_04_Nov[,"m_water"]-(11/100)  
@@ -408,6 +442,43 @@ TW_SW_04_Nov[,"long"]<--70.57670833
 
 ############## TW_SW_07 ##############     
 # Correct based on manual stream measurements
+# Create a column for height of water above stream bed
+TW_SW_07_3_3[,"m_above_GS"]<-TW_SW_07_3_3[,"m_water"]-.10
+# Remove the first rows of the data set where the logger was not submerged 
+Logger_not_Submerged<-which(TW_SW_07_3_3[,"Date_Time"]=="08/10/17 03:00:00 PM")
+TW_SW_07_3_3<-TW_SW_07_3_3[-(1:Logger_not_Submerged),] 
+# Add manual data
+TW_SW_07_3_3[which(TW_SW_07_3_3[,"Date_Time"]=="03/03/18 05:45:00 PM"),"m_manual"]<-0.105
+# Save as CSV  
+write.csv(TW_SW_07_3_3, file="TWSW07_8-10-17_to_3-3-18.csv", row.names=FALSE)         
+
+# Remove blank rows from logger extractions
+TW_PZ_07_3_19<-TW_PZ_07_3_19[-which(is.na(TW_PZ_07_3_19[,"m_above_GS"])),] 
+# Interpolate between the 10/23 spike
+Start_Spike<-which(TW_PZ_07_3_19[,"Date_Time"]=="10/23/17 11:15:00 AM")                     
+Stop_Spike<-which(TW_PZ_07_3_19[,"Date_Time"]=="10/23/17 11:45:00 AM")     
+Smoothed_Spike<-seq(TW_PZ_07_3_19[Start_Spike,"m_above_GS"], TW_PZ_07_3_19[Stop_Spike,"m_above_GS"], length=Stop_Spike-Start_Spike+1)  
+# Replace the spike with the smoothed interpolated data
+TW_PZ_07_3_19[Start_Spike:Stop_Spike,"m_above_GS"]<-Smoothed_Spike  
+# Interpolate between the 3/3 spike
+Start_Spike<-which(TW_PZ_07_3_19[,"Date_Time"]=="03/03/18 05:45:00 PM")                     
+Stop_Spike<-which(TW_PZ_07_3_19[,"Date_Time"]=="03/03/18 06:15:00 PM")     
+Smoothed_Spike<-seq(TW_PZ_07_3_19[Start_Spike,"m_above_GS"], TW_PZ_07_3_19[Stop_Spike,"m_above_GS"], length=Stop_Spike-Start_Spike+1)  
+# Replace the spike with the smoothed interpolated data
+TW_PZ_07_3_19[Start_Spike:Stop_Spike,"m_above_GS"]<-Smoothed_Spike  
+# Remove the first rows of the data set where the logger was not submerged 
+Logger_not_Submerged<-which(TW_PZ_07_3_19[,"Date_Time"]=="08/29/17 03:30:00 PM")
+TW_PZ_07_3_19<-TW_PZ_07_3_19[-(1:Logger_not_Submerged),]          
+# Remove the last rows of the data set where the logger was not submerged (after 3/19)
+Logger_not_Submerged<-which(TW_PZ_07_3_19[,"Date_Time"]=="03/19/18 10:30:00 AM")
+TW_PZ_07_3_19<-TW_PZ_07_3_19[-(Logger_not_Submerged:nrow(TW_PZ_07_3_19)),]  
+# Add manual data
+TW_PZ_07_3_19[which(TW_PZ_07_3_19[,"Date_Time"]=="11/17/17 05:45:00 PM"),"m_manual"]<-0.239                       
+TW_PZ_07_3_19[which(TW_PZ_07_3_19[,"Date_Time"]=="03/03/18 05:45:00 PM"),"m_manual"]<-0.181
+TW_PZ_07_3_19[which(TW_PZ_07_3_19[,"Date_Time"]=="03/19/18 10:15:00 AM"),"m_manual"]<-0.155 
+# Save as CSV  
+write.csv(TW_PZ_07_3_19, file="TWPZ07_8-29-17_to_33-19-18.csv", row.names=FALSE)           
+
 TW_SW_07_Nov[,"m_water"]<-TW_SW_07_Nov[,"m_water"]-(13/100)  
 # Remove last few rows of data 
 TW_SW_07_Nov<-TW_SW_07_Nov[1:which(TW_SW_07_Nov[,"Date_Time"]=="11/19/18 05:00:00 PM"),] 
@@ -440,11 +511,11 @@ Plot_Times<-as.POSIXct(TW_PZ_01_3_19[,"Date_Time"], "%m/%d/%y %I:%M:%S %p", tz="
 ggplot(TW_PZ_01_3_19, aes(Plot_Times, TW_PZ_01_3_19[,"m_below_GS"]))+geom_line(color='royalblue3', size=.6) + xlab("Date") + ylab("Depth to Water Below Ground Surface (m)")+ggtitle("TW_PZ_01")+  scale_x_datetime(breaks = seq(Plot_Times[1], Plot_Times[length(Plot_Times)], "7 days"),date_labels="%b %d")+ scale_y_reverse(limits =c(1.2,-.1)) +theme(axis.text.x = element_text(angle=45, vjust = 0.5))
 ggsave("TW_PZ_01_3_19.pdf", width = 12, height = 6)  
   
+# cut off slow rise
 Plot_Times<-as.POSIXct(TW_PZ_01_3_19[which(TW_PZ_01_3_19[,"Date_Time"]=="08/24/17 12:00:00 AM"):nrow(TW_PZ_01_3_19)    ,"Date_Time"], "%m/%d/%y %I:%M:%S %p", tz="America/New_York")
 ggplot(TW_PZ_01_3_19[which(TW_PZ_01_3_19[,"Date_Time"]=="08/24/17 12:00:00 AM"):nrow(TW_PZ_01_3_19),], aes(Plot_Times, TW_PZ_01_3_19[which(TW_PZ_01_3_19[,"Date_Time"]=="08/24/17 12:00:00 AM"):nrow(TW_PZ_01_3_19),"m_below_GS"]))+geom_line(color='royalblue3', size=.6) + xlab("Date") + ylab("Depth to Water Below Ground Surface (m)")+ggtitle("TW_PZ_01")+  scale_x_datetime(breaks = seq(Plot_Times[1], Plot_Times[length(Plot_Times)], "7 days"),date_labels="%b %d")+ scale_y_reverse(limits =c(0.4,-.1)) +theme(axis.text.x = element_text(angle=45, vjust = 0.5))
 ggsave("TW_PZ_01_3_19_2.pdf", width = 12, height = 6)                         
                    
-
 Plot_Times<-as.POSIXct(TW_PZ_01_Nov[,"Date_Time"], "%m/%d/%y %I:%M:%S %p", tz="America/New_York")
 ggplot(TW_PZ_01_Nov, aes(Plot_Times, TW_PZ_01_Nov[,"m_below_GS"]))+geom_line(color='royalblue3', size=.6) + xlab("Date") + ylab("Depth to Water Below Ground Surface (m)")+ggtitle("TW_PZ_01")+  scale_x_datetime(breaks = seq(Plot_Times[1], Plot_Times[length(Plot_Times)], "7 days"),date_labels="%b %d")+ scale_y_reverse(limits =c(.2,-.1)) +theme(axis.text.x = element_text(angle=45, vjust = 0.5))
 ggsave("TW_PZ_01_Nov.pdf", width = 12, height = 6)
@@ -474,6 +545,10 @@ ggplot(TW_PZ_08_Nov, aes(Plot_Times, TW_PZ_08_Nov[,"m_below_GS"]))+geom_line(col
 ggsave("TW_PZ_08_Nov.pdf", width = 12, height = 6)
 
 # TW_PZ_09
+Plot_Times<-as.POSIXct(TW_PZ_09_5_6[,"Date_Time"], "%m/%d/%y %I:%M:%S %p", tz="America/New_York")
+ggplot(TW_PZ_09_5_6, aes(Plot_Times, TW_PZ_09_5_6[,"m_below_GS"]))+geom_line(color='royalblue3', size=.6) + xlab("Date") + ylab("Depth to Water Below Ground Surface (m)")+ggtitle("TW_PZ_09")+  scale_x_datetime(breaks = seq(Plot_Times[1], Plot_Times[length(Plot_Times)], "7 days"),date_labels="%b %d")+ scale_y_reverse(limits =c(1,0)) +theme(axis.text.x = element_text(angle=45, vjust = 0.5))
+ggsave("TW_PZ_09_5_6.pdf", width = 12, height = 6)
+
 Plot_Times<-as.POSIXct(TW_PZ_09_Nov[,"Date_Time"], "%m/%d/%y %I:%M:%S %p", tz="America/New_York")
 ggplot(TW_PZ_09_Nov, aes(Plot_Times, TW_PZ_09_Nov[,"m_below_GS"]))+geom_line(color='royalblue3', size=.6) + xlab("Date") + ylab("Depth to Water Below Ground Surface (m)")+ggtitle("TW_PZ_09")+  scale_x_datetime(breaks = seq(Plot_Times[1], Plot_Times[length(Plot_Times)], "7 days"),date_labels="%b %d")+ scale_y_reverse(limits =c(.6,-.1)) +theme(axis.text.x = element_text(angle=45, vjust = 0.5))                       
 ggsave("TW_PZ_09_Nov.pdf", width = 12, height = 6)
@@ -499,6 +574,10 @@ ggplot(TW_SW_04_Nov, aes(Plot_Times, TW_SW_04_Nov[,"m_water"]))+geom_line(color=
 ggsave("TW_SW_04_Nov.pdf", width = 12, height = 6)
                                             
 # TW_SW_07
+Plot_Times<-as.POSIXct(TW_SW_07_3_3[,"Date_Time"], "%m/%d/%y %I:%M:%S %p", tz="America/New_York")
+ggplot(TW_SW_07_3_3, aes(Plot_Times, TW_SW_07_3_3[,"m_above_GS"]))+geom_line(color='royalblue3', size=.6)+ ylim(0,.4) + xlab("Date") + ylab("Stream Stage (m)")+ggtitle("TW_SW_07")+  scale_x_datetime(breaks = seq(Plot_Times[1], Plot_Times[length(Plot_Times)], "7 days"),date_labels="%b %d")+theme(axis.text.x = element_text(angle=45, vjust = 0.5))                                               
+ggsave("TW_SW_07_3_3.pdf", width = 12, height = 6)       
+
 Plot_Times<-as.POSIXct(TW_SW_07_Nov[,"Date_Time"], "%m/%d/%y %I:%M:%S %p", tz="America/New_York")
 ggplot(TW_SW_07_Nov, aes(Plot_Times, TW_SW_07_Nov[,"m_water"]))+geom_line(color='royalblue3', size=.6)+ ylim(0,.5) + xlab("Date") + ylab("Stream Stage (m)")+ggtitle("TW_SW_07")+  scale_x_datetime(breaks = seq(Plot_Times[1], Plot_Times[length(Plot_Times)], "7 days"),date_labels="%b %d")+theme(axis.text.x = element_text(angle=45, vjust = 0.5))                                               
 ggsave("TW_SW_07_Nov.pdf", width = 12, height = 6)                       
