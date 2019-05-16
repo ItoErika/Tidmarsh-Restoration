@@ -19,7 +19,7 @@ library('plotly')
 # Load raw data (downloaded from pressure transducers)
 TW_PZ_01_Nov<-read.csv("file:///C:/Users/erikai94/Documents/Umass/Tidmarsh/PZ_Loggers/Tidmarsh_TW_WL_2018_11_20/TW-PZ-01_sn10499234_2018_11_20.csv", skip=1, row.names=1)
 TW_PZ_01_3_19<-read.csv("file:///C:/Users/erikai94/Documents/UMass/Tidmarsh/PZ_Loggers/TW_WL_2018_03_19/TW_PZ_01_2018_03_19.csv", skip=1, row.names=1)
-
+TW_PZ_06_3_19<-read.csv("file:///C:/Users/erikai94/Documents/UMass/Tidmarsh/PZ_Loggers/TW_WL_2018_03_19/TW_PZ_06_2018_03_19.csv", skip=1, row.names=1)
 
 TW_PZ_02_Nov<-read.csv("file:///C:/Users/erikai94/Documents/Umass/Tidmarsh/PZ_Loggers/Tidmarsh_TW_WL_2018_11_20/TW_PZ_02_2018_11_20.csv", skip=1, row.names=1)
 TW_PZ_03_Nov<-read.csv("file:///C:/Users/erikai94/Documents/Umass/Tidmarsh/PZ_Loggers/Tidmarsh_TW_WL_2018_11_20/TW-PZ-03_sn10499228_2018_11_20.csv", skip=1, row.names=1)
@@ -188,6 +188,7 @@ loggerProcess<-function(LoggerData) {
 # Run this function on the logger file with pressure as kPa                                              
 TW_PZ_01_Nov<-loggerProcess(TW_PZ_01_Nov)
 TW_PZ_01_3_19<-loggerProcess(TW_PZ_01_3_19)
+TW_PZ_06_3_19<-loggerProcess(TW_PZ_06_3_19)                      
                     
 TW_PZ_02_Nov<-loggerProcess(TW_PZ_02_Nov)
 TW_PZ_03_Nov<-loggerProcess(TW_PZ_03_Nov)
@@ -276,6 +277,24 @@ TW_PZ_05_Nov[,"lat"]<-41.91594
 TW_PZ_05_Nov[,"long"]<--70.57631
  
 ############## TW_PZ_06 ##############     
+# Create a column for the depth to water below ground surface
+# The top of piezometer casing to ground surface = 32 cm
+TW_PZ_06_3_19[,"m_below_GS"]<-151.9/100-(32/100+TW_PZ_06_3_19[,"m_water"])  
+# Remove blank rows from logger extractions                    
+TW_PZ_06_3_19<-TW_PZ_06_3_19[-which(is.na(TW_PZ_06_3_19[,"m_below_GS"])),]   
+# Interpolate between the 10/23 spike
+Start_Spike<-which(TW_PZ_06_3_19[,"Date_Time"]=="10/23/17 11:45:00 AM")                     
+Stop_Spike<-which(TW_PZ_06_3_19[,"Date_Time"]=="10/23/17 12:15:00 PM")     
+Smoothed_Spike<-seq(TW_PZ_06_3_19[Start_Spike,"m_below_GS"], TW_PZ_06_3_19[Stop_Spike,"m_below_GS"], length=Stop_Spike-Start_Spike+1)  
+# Replace the spike with the smoothed interpolated data
+TW_PZ_06_3_19[Start_Spike:Stop_Spike,"m_below_GS"]<-Smoothed_Spike                       
+# Remove the last rows of the data set where the logger was not submerged (after 3/19)
+Logger_not_Submerged<-which(TW_PZ_06_3_19[,"Date_Time"]=="03/19/18 10:00:00 AM")
+TW_PZ_06_3_19<-TW_PZ_06_3_19[-(Logger_not_Submerged:nrow(TW_PZ_06_3_19)),]                                           
+# Save as CSV  
+write.csv(TW_PZ_06_3_19, file="TWPZ06_8-19-17_to_33-19-18.csv", row.names=FALSE)                          
+                       
+                       
 # Create a column for the depth to water below ground surface
 # The top of piezometer casing to ground surface = 32 cm
 TW_PZ_06_Nov[,"m_below_GS"]<-152/100-(32/100+TW_PZ_06_Nov[,"m_water"])  
@@ -404,6 +423,10 @@ ggplot(TW_PZ_05_Nov, aes(Plot_Times, TW_PZ_05_Nov[,"m_below_GS"]))+geom_line(col
 ggsave("TW_PZ_05_Nov.pdf", width = 12, height = 6)
 
 # TW_PZ_06
+Plot_Times<-as.POSIXct(TW_PZ_06_3_19[,"Date_Time"], "%m/%d/%y %I:%M:%S %p", tz="America/New_York")
+ggplot(TW_PZ_06_3_19, aes(Plot_Times, TW_PZ_06_3_19[,"m_below_GS"]))+geom_line(color='royalblue3', size=.6) + xlab("Date") + ylab("Depth to Water Below Ground Surface (m)")+ggtitle("TW_PZ_06")+  scale_x_datetime(breaks = seq(Plot_Times[1], Plot_Times[length(Plot_Times)], "7 days"),date_labels="%b %d")+ scale_y_reverse(limits =c(.6,-.1)) +theme(axis.text.x = element_text(angle=45, vjust = 0.5))
+ggsave("TW_PZ_06_3_19.pdf", width = 12, height = 6) 
+                                        
 Plot_Times<-as.POSIXct(TW_PZ_06_Nov[,"Date_Time"], "%m/%d/%y %I:%M:%S %p", tz="America/New_York")
 ggplot(TW_PZ_06_Nov, aes(Plot_Times, TW_PZ_06_Nov[,"m_below_GS"]))+geom_line(color='royalblue3', size=.6) + xlab("Date") + ylab("Depth to Water Below Ground Surface (m)")+ggtitle("TW_PZ_06")+  scale_x_datetime(breaks = seq(Plot_Times[1], Plot_Times[length(Plot_Times)], "7 days"),date_labels="%b %d")+ scale_y_reverse(limits =c(.6,-.1)) +theme(axis.text.x = element_text(angle=45, vjust = 0.5))
 ggsave("TW_PZ_06_Nov.pdf", width = 12, height = 6)
