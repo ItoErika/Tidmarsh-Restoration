@@ -477,20 +477,30 @@ write.csv(TW_PZ_09_Nov, file="TWPZ09_6-18-18_to_11-19-18.csv", row.names=FALSE)
 ############## TW_PZ_03 ##############    
 # Create a column for the depth to water below ground surface
 # The top of piezometer casing to ground surface = 58 cm
-TW_PZ_03_Nov[,"m_stage"]<-(150/100-(58/100+TW_PZ_03_Nov[,"m_water"]) )*-1 
+TW_PZ_03_Nov[,"m_above_GS"]<-(151/100-(58/100+TW_PZ_03_Nov[,"m_water"]) )*-1 
 # Remove last few rows of data 
-TW_PZ_03_Nov<-TW_PZ_03_Nov[1:which(TW_PZ_03_Nov[,"Date_Time"]=="11/20/18 10:15:00 AM"),] 
+TW_PZ_03_Nov<-TW_PZ_03_Nov[1:which(TW_PZ_03_Nov[,"Date_Time"]=="11/20/18 10:15:00 AM"),]
+# Add manual data
+TW_PZ_03_Nov[which(TW_PZ_03_Nov[,"Date_Time"]=="07/12/18 11:30:00 AM"),"m_manual"]<-0.383
+TW_PZ_03_Nov[which(TW_PZ_03_Nov[,"Date_Time"]=="11/20/18 09:15:00 AM"),"m_manual"]<-0.382                    
 TW_PZ_03_Nov[,"lat"]<-41.91499167
 TW_PZ_03_Nov[,"long"]<--70.57736111   
+write.csv(TW_PZ_03_Nov, file="TWPZ03_7-12-18_to_11-20-18.csv", row.names=FALSE)    
 
 ############## TW_PZ_07 ##############    
 # Create a column for the depth to water below ground surface
 # The top of piezometer casing to ground surface = 31 cm
-TW_PZ_07_Nov[,"m_stage"]<-(153/100-(31/100+TW_PZ_07_Nov[,"m_water"]) )*-1 
+TW_PZ_07_Nov[,"m_above_GS"]<-(153/100-(31/100+TW_PZ_07_Nov[,"m_water"]) )*-1 
 # Remove last few rows of data 
 TW_PZ_07_Nov<-TW_PZ_07_Nov[1:which(TW_PZ_07_Nov[,"Date_Time"]=="11/19/18 05:00:00 PM"),] 
+# Remove blank rows from logger extractions                    
+TW_PZ_07_Nov<-TW_PZ_07_Nov[-which(is.na(TW_PZ_07_Nov[,"m_above_GS"])),]   
+# Add manual data
+TW_PZ_07_Nov[which(TW_PZ_07_Nov[,"Date_Time"]=="11/19/18 04:15:00 PM"),"m_manual"]<-0.228
+TW_PZ_07_Nov[which(TW_PZ_07_Nov[,"Date_Time"]=="07/12/18 12:30:00 PM"),"m_manual"]<-0.26
 TW_PZ_07_Nov[,"lat"]<-41.91708333
 TW_PZ_07_Nov[,"long"]<--70.57833333
+write.csv(TW_PZ_07_Nov, file="TWPZ07_6-18-18_to_11-19-18.csv", row.names=FALSE) 
 
 ############## TW_SW_02 ##############     
 # Remove last few rows of data 
@@ -611,11 +621,7 @@ ggsave("TW_PZ_06_3_19.pdf", width = 12, height = 6)
 Plot_Times<-as.POSIXct(TW_PZ_06_Nov[,"Date_Time"], "%m/%d/%y %I:%M:%S %p", tz="America/New_York")
 ggplot(TW_PZ_06_Nov, aes(Plot_Times, TW_PZ_06_Nov[,"m_below_GS"]))+geom_line(color='royalblue3', size=.6) + xlab("Date") + ylab("Depth to Water Below Ground Surface (m)")+ggtitle("TW_PZ_06")+  scale_x_datetime(breaks = seq(Plot_Times[1], Plot_Times[length(Plot_Times)], "7 days"),date_labels="%b %d")+ scale_y_reverse(limits =c(.6,-.1)) +theme(axis.text.x = element_text(angle=45, vjust = 0.5))
 ggsave("TW_PZ_06_Nov.pdf", width = 12, height = 6)
-
-# TW_PZ_07
-Plot_Times<-as.POSIXct(TW_PZ_07_3_19[,"Date_Time"], "%m/%d/%y %I:%M:%S %p", tz="America/New_York")
-ggplot(TW_PZ_07_3_19, aes(Plot_Times, TW_PZ_07_3_19[,"m_above_GS"]))+geom_line(color='royalblue3', size=.6) + xlab("Date") + ylab("Water Above Streambed (m)")+ggtitle("TW_PZ_07")+  scale_x_datetime(breaks = seq(Plot_Times[1], Plot_Times[length(Plot_Times)], "7 days"),date_labels="%b %d")+ ylim(0,.3) +theme(axis.text.x = element_text(angle=45, vjust = 0.5))
-ggsave("TW_PZ_07_3_19.pdf", width = 12, height = 6)  
+ 
 
 # TW_PZ_08
 Plot_Times<-as.POSIXct(TW_PZ_08_3_3[,"Date_Time"], "%m/%d/%y %I:%M:%S %p", tz="America/New_York")
@@ -641,13 +647,21 @@ ggsave("TW_PZ_09_Nov.pdf", width = 12, height = 6)
 
 # TW_PZ_03
 Plot_Times<-as.POSIXct(TW_PZ_03_Nov[,"Date_Time"], "%m/%d/%y %I:%M:%S %p", tz="America/New_York")
-ggplot(TW_PZ_03_Nov, aes(Plot_Times, TW_PZ_03_Nov[,"m_stage"]))+geom_line(color='royalblue3', size=.6)+ ylim(0,.6) + xlab("Date") + ylab("Stream Stage (m)")+ggtitle("TW_PZ_03")+  scale_x_datetime(breaks = seq(Plot_Times[1], Plot_Times[length(Plot_Times)], "7 days"),date_labels="%b %d")+theme(axis.text.x = element_text(angle=45, vjust = 0.5))                                               
+ggplot(TW_PZ_03_Nov, aes(Plot_Times, TW_PZ_03_Nov[,"m_above_GS"]))+geom_line(color='royalblue3', size=.6)+ ylim(0,.6) + xlab("Date") + ylab("Water Above Streambed (m)")+ggtitle("TW_PZ_03")+  scale_x_datetime(breaks = seq(Plot_Times[1], Plot_Times[length(Plot_Times)], "7 days"),date_labels="%b %d")+theme(axis.text.x = element_text(angle=45, vjust = 0.5))                                               
 ggsave("TW_PZ_03_Nov.pdf", width = 12, height = 6)
 
 # TW_PZ_07
+Plot_Times<-as.POSIXct(TW_PZ_07_3_19[,"Date_Time"], "%m/%d/%y %I:%M:%S %p", tz="America/New_York")
+ggplot(TW_PZ_07_3_19, aes(Plot_Times, TW_PZ_07_3_19[,"m_above_GS"]))+geom_line(color='royalblue3', size=.6) + xlab("Date") + ylab("Water Above Streambed (m)")+ggtitle("TW_PZ_07")+  scale_x_datetime(breaks = seq(Plot_Times[1], Plot_Times[length(Plot_Times)], "7 days"),date_labels="%b %d")+ ylim(0,.3) +theme(axis.text.x = element_text(angle=45, vjust = 0.5))
+ggsave("TW_PZ_07_3_19.pdf", width = 12, height = 6)  
+
 Plot_Times<-as.POSIXct(TW_PZ_07_Nov[,"Date_Time"], "%m/%d/%y %I:%M:%S %p", tz="America/New_York")
-ggplot(TW_PZ_07_Nov, aes(Plot_Times, TW_PZ_07_Nov[,"m_stage"]))+geom_line(color='royalblue3', size=.6)+ ylim(0,.5) + xlab("Date") + ylab("Stream Stage (m)")+ggtitle("TW_PZ_07")+  scale_x_datetime(breaks = seq(Plot_Times[1], Plot_Times[length(Plot_Times)], "7 days"),date_labels="%b %d")+theme(axis.text.x = element_text(angle=45, vjust = 0.5))                                               
+ggplot(TW_PZ_07_Nov, aes(Plot_Times, TW_PZ_07_Nov[,"m_above_GS"]))+geom_line(color='royalblue3', size=.6)+ ylim(0,.5) + xlab("Date") + ylab("Water Above Streambed (m)")+ggtitle("TW_PZ_07")+  scale_x_datetime(breaks = seq(Plot_Times[1], Plot_Times[length(Plot_Times)], "7 days"),date_labels="%b %d")+theme(axis.text.x = element_text(angle=45, vjust = 0.5))                                               
 ggsave("TW_PZ_07_Nov.pdf", width = 12, height = 6)
+
+#Plot_Times<-as.POSIXct(TW_PZ_07_Nov[,"Date_Time"], "%m/%d/%y %I:%M:%S %p", tz="America/New_York")
+#ggplot(TW_PZ_07_Nov, aes(Plot_Times, TW_PZ_07_Nov[,"m_stage"]))+geom_line(color='royalblue3', size=.6)+ ylim(0,.5) + xlab("Date") + ylab("Stream Stage (m)")+ggtitle("TW_PZ_07")+  scale_x_datetime(breaks = seq(Plot_Times[1], Plot_Times[length(Plot_Times)], "7 days"),date_labels="%b %d")+theme(axis.text.x = element_text(angle=45, vjust = 0.5))                                               
+#ggsave("TW_PZ_07_Nov.pdf", width = 12, height = 6)
 
 # TW_SW_02
 Plot_Times<-as.POSIXct(TW_SW_02_Nov[,"Date_Time"], "%m/%d/%y %I:%M:%S %p", tz="America/New_York")
