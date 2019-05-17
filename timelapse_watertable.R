@@ -260,7 +260,7 @@ write.csv(TW_PZ_01_3_19, file="TWPZ01_8-10-17_to_33-19-18.csv", row.names=FALSE)
                        
 # Create a column for the depth to water below ground surface
 # The top of piezometer casing to ground surface = 25.8 cm
-TW_PZ_01_Nov[,"m_below_GS"]<-130/100-(25.8/100+TW_PZ_01_Nov[,"m_water"])
+TW_PZ_01_Nov[,"m_below_GS"]<-131/100-(25.8/100+TW_PZ_01_Nov[,"m_water"])
 # Smooth the spikes in the data caused by logger removal during data downloading
 # Interpolate between the 6/19 spike
 Start_Spike<-which(TW_PZ_01_Nov[,"Date_Time"]=="06/19/18 01:00:00 PM")                     
@@ -276,6 +276,12 @@ Smoothed_Spike<-seq(TW_PZ_01_Nov[Start_Spike,"m_below_GS"], TW_PZ_01_Nov[Stop_Sp
 TW_PZ_01_Nov[Start_Spike:Stop_Spike,"m_below_GS"]<-Smoothed_Spike  
 # Remove the first row of the dataset (the logger was not submerged)
 TW_PZ_01_Nov<-TW_PZ_01_Nov[-1,]   
+# Save as CSV  
+write.csv(TW_PZ_01_Nov, file="TWPZ01_6-18-18_to_11-20-18.csv", row.names=FALSE)    
+# Add manual data
+TW_PZ_01_Nov[which(TW_PZ_01_Nov[,"Date_Time"]=="06/19/18 01:00:00 PM"),"m_manual"]<-0.158                       
+TW_PZ_01_Nov[which(TW_PZ_01_Nov[,"Date_Time"]=="07/11/18 09:00:00 AM"),"m_manual"]<-0.06
+TW_PZ_01_Nov[which(TW_PZ_01_Nov[,"Date_Time"]=="11/20/18 10:00:00 AM"),"m_manual"]<-0.037 
 TW_PZ_01_Nov[,"lat"]<-41.91347222 
 TW_PZ_01_Nov[,"long"]<--70.57844444    
 
@@ -315,19 +321,6 @@ TW_PZ_05_3_3<-TW_PZ_05_3_3[-(Logger_not_Submerged:nrow(TW_PZ_05_3_3)),]
 write.csv(TW_PZ_05_3_3, file="TWPZ05_8-29-17_to_3-3-18.csv", row.names=FALSE)    
  
            
-# Smooth the spikes in the data caused by logger removal during data downloading
-# Interpolate between the 7/11 spike
-Start_Spike<-which(TW_PZ_05_Nov[,"Date_Time"]=="07/11/18 02:30:00 PM")                     
-Stop_Spike<-which(TW_PZ_05_Nov[,"Date_Time"]=="07/11/18 03:00:00 PM")     
-Smoothed_Spike<-seq(TW_PZ_05_Nov[Start_Spike,"m_below_GS"], TW_PZ_05_Nov[Stop_Spike,"m_below_GS"], length=Stop_Spike-Start_Spike+1)
-# Replace the spike with the smoothed interpolated data
-TW_PZ_05_Nov[Start_Spike:Stop_Spike,"m_below_GS"]<-Smoothed_Spike
-# Remove the beginning of the dataset (where logger was not submerged) 
-TW_PZ_05_Nov<-TW_PZ_05_Nov[which(TW_PZ_05_Nov[,"Date_Time"]=="06/19/18 03:15:00 PM"):nrow(TW_PZ_05_Nov),]
-TW_PZ_05_Nov[,"lat"]<-41.91594
-TW_PZ_05_Nov[,"long"]<--70.57631
-
-
 # Create a column for the depth to water below ground surface
 # The top of piezometer casing to ground surface = 25.75 cm
 TW_PZ_05_Nov[,"m_below_GS"]<-157/100-(25.75/100+TW_PZ_05_Nov[,"m_water"])             
@@ -340,6 +333,11 @@ Smoothed_Spike<-seq(TW_PZ_05_Nov[Start_Spike,"m_below_GS"], TW_PZ_05_Nov[Stop_Sp
 TW_PZ_05_Nov[Start_Spike:Stop_Spike,"m_below_GS"]<-Smoothed_Spike
 # Remove the beginning of the dataset (where logger was not submerged) 
 TW_PZ_05_Nov<-TW_PZ_05_Nov[which(TW_PZ_05_Nov[,"Date_Time"]=="06/19/18 03:15:00 PM"):nrow(TW_PZ_05_Nov),]
+# Add manual data
+TW_PZ_05_Nov[which(TW_PZ_05_Nov[,"Date_Time"]=="07/11/18 02:30:00 PM"),"m_manual"]<-0.298
+TW_PZ_05_Nov[which(TW_PZ_05_Nov[,"Date_Time"]=="11/19/18 03:00:00 PM"),"m_manual"]<-0.114
+# Save as CSV  
+write.csv(TW_PZ_05_Nov, file="TWPZ05_6-19-18_to_11-19-18.csv", row.names=FALSE)    
 TW_PZ_05_Nov[,"lat"]<-41.91594
 TW_PZ_05_Nov[,"long"]<--70.57631
  
@@ -364,7 +362,7 @@ write.csv(TW_PZ_06_3_19, file="TWPZ06_8-19-17_to_33-19-18.csv", row.names=FALSE)
                        
 # Create a column for the depth to water below ground surface
 # The top of piezometer casing to ground surface = 32 cm
-TW_PZ_06_Nov[,"m_below_GS"]<-152/100-(32/100+TW_PZ_06_Nov[,"m_water"])  
+TW_PZ_06_Nov[,"m_below_GS"]<-153/100-(32/100+TW_PZ_06_Nov[,"m_water"])  
 # Smooth the spikes in the data caused by logger removal during data downloading
 # Interpolate between the 7/11 spike
 Start_Spike<-which(TW_PZ_06_Nov[,"Date_Time"]=="07/11/18 01:30:00 PM")                     
@@ -374,9 +372,14 @@ Smoothed_Spike<-seq(TW_PZ_06_Nov[Start_Spike,"m_below_GS"], TW_PZ_06_Nov[Stop_Sp
 TW_PZ_06_Nov[Start_Spike:Stop_Spike,"m_below_GS"]<-Smoothed_Spike
 # Remove the end of the dataset (where logger was not submerged) 
 TW_PZ_06_Nov<-TW_PZ_06_Nov[1:which(TW_PZ_06_Nov[,"Date_Time"]=="11/19/18 04:15:00 PM"),]
+# Add manual data
+TW_PZ_06_Nov[which(TW_PZ_06_Nov[,"Date_Time"]=="06/19/18 02:45:00 PM"),"m_manual"]<-0.297
+TW_PZ_06_Nov[which(TW_PZ_06_Nov[,"Date_Time"]=="07/11/18 01:30:00 PM"),"m_manual"]<-0.36
+TW_PZ_06_Nov[which(TW_PZ_06_Nov[,"Date_Time"]=="11/19/18 03:30:00 PM"),"m_manual"]<-0.063
 TW_PZ_06_Nov[,"lat"]<-41.91573
 TW_PZ_06_Nov[,"long"]<--70.57496
-                       
+# Save as CSV  
+write.csv(TW_PZ_06_Nov, file="TWPZ06_6-18-18_to_11-19-18.csv", row.names=FALSE)                                       
 
 ############## TW_PZ_07 ##############    
 # Create a column for height of water above stream bed
