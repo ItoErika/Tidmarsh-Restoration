@@ -26,6 +26,13 @@ model_botm = np.linspace(model_top - delv, 0., nlay) # Elevation of model bottom
 dis = flopy.modflow.ModflowDis(mf, nlay, nrow, ncol, delr=delr, delc=delc, top=model_top, botm=model_botm)
 
 # Define variables for the BAS package
+# Assign an ibound of -1 (constant head) to both sides of the vertical cross section
 ibound = np.ones((nlay, nrow, ncol), dtype=np.int32)
 ibound[:, :, -1] = -1
-bas = flopy.modflow.ModflowBas(swt, ibound, 0)
+ibound[:, :, 0] = -1
+# Assign starting head values to both sides of the vertical cross section
+strt = np.ones((nlay, nrow, ncol), dtype=np.float32)
+strt[:, :, -1] = 10
+strt[:, :, 0] = 20
+
+bas = flopy.modflow.ModflowBas(mf, ibound=ibound, strt=strt)
