@@ -225,6 +225,23 @@ TW_PZ_07_3_19<-loggerProcess(TW_PZ_07_3_19)
  
 TW_PZ_09_5_6<-loggerProcess(TW_PZ_09_5_6)  
 TW_PZ_02_5_6<-loggerProcess(TW_PZ_02_5_6)
+
+TW_PZ_01_Jun319<-loggerProcess(TW_PZ_01_Jun319)  
+TW_PZ_01_SAND_Jun319<-loggerProcess(TW_PZ_01_SAND_Jun319)
+TW_PZ_02_Jun319<-loggerProcess(TW_PZ_02_Jun319)  
+TW_SW_02_Jun319<-loggerProcess(TW_SW_02_Jun319)
+TW_PZ_03_Jun319<-loggerProcess(TW_PZ_03_Jun319)  
+TW_PZ_04_Jun319<-loggerProcess(TW_PZ_04_Jun319)
+TW_SW_04_Jun319<-loggerProcess(TW_SW_04_Jun319)  
+TW_PZ_05_SAND_Jun319<-loggerProcess(TW_PZ_05_SAND_Jun319)
+TW_PZ_06_Jun319<-loggerProcess(TW_PZ_06_Jun319)  
+TW_PZ_06_SAND_Jun319<-loggerProcess(TW_PZ_06_SAND_Jun319)
+TW_PZ_07_Jun319<-loggerProcess(TW_PZ_07_Jun319)  
+TW_SW_07_Jun319<-loggerProcess(TW_SW_07_Jun319)
+TW_PZ_08_Jun319<-loggerProcess(TW_PZ_08_Jun319)  
+TW_PZ_09_Jun319<-loggerProcess(TW_PZ_09_Jun319)
+TW_SW_10_Jun319<-loggerProcess(TW_SW_10_Jun319)
+                      
                     
 TW_PZ_01_Nov<-loggerProcess(TW_PZ_01_Nov)
 TW_PZ_02_Nov<-loggerProcess(TW_PZ_02_Nov)
