@@ -30,6 +30,24 @@ TW_PZ_07_3_19<-read.csv("file:///C:/Users/erikai94/Documents/UMass/Tidmarsh/PZ_L
 TW_PZ_02_5_6<-read.csv("file:///C:/Users/erikai94/Documents/UMass/Tidmarsh/PZ_Loggers/TW_WL_2018_05_06/TW_PZ_02.csv", skip=1, row.names=1)
 TW_PZ_09_5_6<-read.csv("file:///C:/Users/erikai94/Documents/UMass/Tidmarsh/PZ_Loggers/TW_WL_2018_05_06/TW-PZ-09.csv", skip=1, row.names=1)
 
+# sn 10499242?
+TW_PZ_01_Jun319<-read.csv("file:///C:/Users/erikai94/Documents/UMass/Tidmarsh/PZ_Loggers/TW-WL_2019_06_03/TW-PZ-01_sn10499234.csv", skip=1, row.names=1)
+TW_PZ_01_SAND_Jun319<-read.csv("file:///C:/Users/erikai94/Documents/UMass/Tidmarsh/PZ_Loggers/TW-WL_2019_06_03/TW-PZ-01-SAND_sn_10499243.csv", skip=1, row.names=1)
+TW_PZ_02_Jun319<-read.csv("file:///C:/Users/erikai94/Documents/UMass/Tidmarsh/PZ_Loggers/TW-WL_2019_06_03/TW_PZ_02.csv", skip=1, row.names=1)
+TW_SW_02_Jun319<-read.csv("file:///C:/Users/erikai94/Documents/UMass/Tidmarsh/PZ_Loggers/TW-WL_2019_06_03/TW-SW-02_sn10499246.csv", skip=1, row.names=1)
+TW_PZ_03_Jun319<-read.csv("file:///C:/Users/erikai94/Documents/UMass/Tidmarsh/PZ_Loggers/TW-WL_2019_06_03/TW-PZ-03_sn10499228.csv", skip=1, row.names=1)
+TW_PZ_04_Jun319<-read.csv("file:///C:/Users/erikai94/Documents/UMass/Tidmarsh/PZ_Loggers/TW-WL_2019_06_03/TW_PZ_04.csv", skip=1, row.names=1)
+TW_SW_04_Jun319<-read.csv("file:///C:/Users/erikai94/Documents/UMass/Tidmarsh/PZ_Loggers/TW-WL_2019_06_03/TW-SW-04_sn10499238.csv", skip=1, row.names=1)
+# TW_PZ_05_SAND_TP_PZ_02?
+TW_PZ_05_SAND_Jun319<-read.csv("file:///C:/Users/erikai94/Documents/UMass/Tidmarsh/PZ_Loggers/TW-WL_2019_06_03/TW-PZ-05-SAND_sn10499236.csv", skip=1, row.names=1)
+TW_PZ_06_Jun319<-read.csv("file:///C:/Users/erikai94/Documents/UMass/Tidmarsh/PZ_Loggers/TW-WL_2019_06_03/TW-PZ-06_sn10499244.csv", skip=1, row.names=1)
+TW_PZ_06_SAND_Jun319<-read.csv("file:///C:/Users/erikai94/Documents/UMass/Tidmarsh/PZ_Loggers/TW-WL_2019_06_03/TW-PZ-06-SAND_sn10499231.csv", skip=1, row.names=1)
+TW_PZ_07_Jun319<-read.csv("file:///C:/Users/erikai94/Documents/UMass/Tidmarsh/PZ_Loggers/TW-WL_2019_06_03/TW-PZ-07_sn10499240.csv", skip=1, row.names=1)
+TW_SW_07_Jun319<-read.csv("file:///C:/Users/erikai94/Documents/UMass/Tidmarsh/PZ_Loggers/TW-WL_2019_06_03/TW-SW-07_sn10744415.csv", skip=1, row.names=1)
+TW_PZ_08_Jun319<-read.csv("file:///C:/Users/erikai94/Documents/UMass/Tidmarsh/PZ_Loggers/TW-WL_2019_06_03/TW-PZ-08_sn10499239.csv", skip=1, row.names=1)
+TW_PZ_09_Jun319<-read.csv("file:///C:/Users/erikai94/Documents/UMass/Tidmarsh/PZ_Loggers/TW-WL_2019_06_03/TW-PZ-09.csv", skip=1, row.names=1)
+TW_SW_10_Jun319<-read.csv("file:///C:/Users/erikai94/Documents/UMass/Tidmarsh/PZ_Loggers/TW-WL_2019_06_03/sn_10499233.csv", skip=1, row.names=1)
+
 
 TW_PZ_01_Nov<-read.csv("file:///C:/Users/erikai94/Documents/Umass/Tidmarsh/PZ_Loggers/Tidmarsh_TW_WL_2018_11_20/TW-PZ-01_sn10499234_2018_11_20.csv", skip=1, row.names=1)
 TW_PZ_02_Nov<-read.csv("file:///C:/Users/erikai94/Documents/Umass/Tidmarsh/PZ_Loggers/Tidmarsh_TW_WL_2018_11_20/TW_PZ_02_2018_11_20.csv", skip=1, row.names=1)
@@ -51,7 +69,7 @@ TW_PZ_06_SAND_Nov<-read.csv("file:///C:/Users/erikai94/Documents/Umass/Tidmarsh/
 
 # Load data from Plymouth Municipal Airport from NOAA
 # This includes barometric pressure data (use to correct logger data) 
-NOAA_Plymouth_Data<-read.table("file:///C:/Users/erikai94/Documents/UMass/Tidmarsh/PZ_Loggers/NOAA/full/9414367922965dat.txt", fill=TRUE, header=TRUE)
+NOAA_Plymouth_Data<-read.table("file:///C:/Users/erikai94/Documents/UMass/Tidmarsh/PZ_Loggers/NOAA/8-9-17_to_6-3-2019/9777647952006dat.txt", fill=TRUE, header=TRUE)
 
 ####################################################### REFORMAT NOAA DATA ##################################################################################
 
