@@ -36,6 +36,7 @@ TW_PZ_01_SAND_Jun319<-read.csv("file:///C:/Users/erikai94/Documents/UMass/Tidmar
 TW_PZ_02_Jun319<-read.csv("file:///C:/Users/erikai94/Documents/UMass/Tidmarsh/PZ_Loggers/TW-WL_2019_06_03/TW_PZ_02.csv", skip=1, row.names=1)
 TW_SW_02_Jun319<-read.csv("file:///C:/Users/erikai94/Documents/UMass/Tidmarsh/PZ_Loggers/TW-WL_2019_06_03/TW-SW-02_sn10499246.csv", skip=1, row.names=1)
 TW_PZ_03_Jun319<-read.csv("file:///C:/Users/erikai94/Documents/UMass/Tidmarsh/PZ_Loggers/TW-WL_2019_06_03/TW-PZ-03_sn10499228.csv", skip=1, row.names=1)
+TW_SW_03_Jun319<-read.csv("file:///C:/Users/erikai94/Documents/UMass/Tidmarsh/PZ_Loggers/TW-WL_2019_06_03/TW_SW_03.csv", skip=1, row.names=1)
 TW_PZ_04_Jun319<-read.csv("file:///C:/Users/erikai94/Documents/UMass/Tidmarsh/PZ_Loggers/TW-WL_2019_06_03/TW_PZ_04.csv", skip=1, row.names=1)
 TW_SW_04_Jun319<-read.csv("file:///C:/Users/erikai94/Documents/UMass/Tidmarsh/PZ_Loggers/TW-WL_2019_06_03/TW-SW-04_sn10499238.csv", skip=1, row.names=1)
 # TW_PZ_05_SAND_TP_PZ_02?
@@ -231,6 +232,7 @@ TW_PZ_01_SAND_Jun319<-loggerProcess(TW_PZ_01_SAND_Jun319)
 TW_PZ_02_Jun319<-loggerProcess(TW_PZ_02_Jun319)  
 TW_SW_02_Jun319<-loggerProcess(TW_SW_02_Jun319)
 TW_PZ_03_Jun319<-loggerProcess(TW_PZ_03_Jun319)  
+TW_SW_03_Jun319<-loggerProcess(TW_SW_03_Jun319)  
 TW_PZ_04_Jun319<-loggerProcess(TW_PZ_04_Jun319)
 TW_SW_04_Jun319<-loggerProcess(TW_SW_04_Jun319)  
 TW_PZ_05_SAND_Jun319<-loggerProcess(TW_PZ_05_SAND_Jun319)
@@ -608,7 +610,14 @@ write.csv(TW_SW_02_Jun319, file="TWSW02_11-20-18_to_6-3-19.csv", row.names=FALSE
 
 ############## TW_SW_03 ##############     
 # Correct based on manual stream measurements
-
+TW_SW_03_Jun319[,"m_above_GS"]<-TW_SW_03_Jun319[,"m_water"]-2
+# Add manual data
+TW_SW_03_Jun319[which(TW_SW_03_Jun319[,"Date_Time"]=="03/30/19 04:00:00 PM"),"m_manual"]<-0.204
+TW_SW_03_Jun319[which(TW_SW_03_Jun319[,"Date_Time"]=="06/03/19 12:30:00 PM"),"m_manual"]<-0.245 
+# Save as CSV  
+write.csv(TW_SW_03_Jun319, file="TWSW03_11-20-18_to_6-3-19.csv", row.names=FALSE)     
+                     
+                       
 ############## TW_SW_04 ##############     
 # Correct based on manual stream measurements
 TW_SW_04_Nov[,"m_above_GS"]<-TW_SW_04_Nov[,"m_water"]-.075
