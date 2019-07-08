@@ -421,7 +421,15 @@ TW_PZ_03_Jun319[which(TW_PZ_03_Jun319[,"Date_Time"]=="03/30/19 03:45:00 PM"),"m_
 TW_PZ_03_Jun319[which(TW_PZ_03_Jun319[,"Date_Time"]=="06/03/19 12:30:00 PM"),"m_manual"]<-0.29
 # Save as CSV  
 write.csv(TW_PZ_03_Jun319, file="TWPZ03_11-20-18_to_6-3-19.csv", row.names=FALSE)                         
-                       
+
+############## TW_PZ_04 ##############  
+# Create a column for the depth to water below ground surface
+TW_PZ_04_Jun319[,"m_above_GS"]<-(TW_PZ_04_Jun319[,"m_water"])-1.03
+# Add manual data
+TW_PZ_04_Jun319[which(TW_PZ_04_Jun319[,"Date_Time"]=="03/30/19 03:00:00 PM"),"m_manual"]<-0.29
+TW_PZ_04_Jun319[which(TW_PZ_04_Jun319[,"Date_Time"]=="06/03/19 10:00:00 AM"),"m_manual"]<-0.292
+# Save as CSV  
+write.csv(TW_PZ_03_Jun319, file="TWPZ03_11-20-18_to_6-3-19.csv", row.names=FALSE)                            
   
 ############## TW_PZ_05 ##############       
 # Create a column for the depth to water below ground surface
