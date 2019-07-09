@@ -476,6 +476,28 @@ TW_PZ_05_Nov[which(TW_PZ_05_Nov[,"Date_Time"]=="11/19/18 03:00:00 PM"),"m_manual
 write.csv(TW_PZ_05_Nov, file="TWPZ05_6-19-18_to_11-19-18.csv", row.names=FALSE)    
 TW_PZ_05_Nov[,"lat"]<-41.91594
 TW_PZ_05_Nov[,"long"]<--70.57631
+
+############## TW_PZ_05_SAND ##############    
+TW_PZ_05_SAND_Nov[,"m_below_GS"]<-160/100-(105.5/100+TW_PZ_05_SAND_Nov[,"m_water"])  
+# Remove last few rows of data 
+TW_PZ_05_SAND_Nov<-TW_PZ_05_SAND_Nov[1:which(TW_PZ_05_SAND_Nov[,"Date_Time"]=="11/19/18 03:45:00 PM"),]
+# Correct the vertical jump in data on 6/19 (date of logger retrieval); logger was in slightly different vertical position upon reinstallation
+vert_shift_start<-which(TW_PZ_05_SAND_Nov[,"Date_Time"]=="06/19/18 03:15:00 PM")
+TW_PZ_05_SAND_Nov[vert_shift_start:nrow(TW_PZ_05_SAND_Nov),"m_below_GS"]<-TW_PZ_05_SAND_Nov[vert_shift_start:nrow(TW_PZ_05_SAND_Nov),"m_below_GS"]-0.0970146
+TW_PZ_05_SAND_Nov[,"lat"]<-41.91594
+TW_PZ_05_SAND_Nov[,"long"]<--70.57631
+# Interpolate between the 7/11 spike
+Start_Spike<-which(TW_PZ_05_SAND_Nov[,"Date_Time"]=="07/11/18 02:30:00 PM")                     
+Stop_Spike<-which(TW_PZ_05_SAND_Nov[,"Date_Time"]=="07/11/18 03:00:00 PM")     
+Smoothed_Spike<-seq(TW_PZ_05_SAND_Nov[Start_Spike,"m_below_GS"], TW_PZ_05_SAND_Nov[Stop_Spike,"m_below_GS"], length=Stop_Spike-Start_Spike+1)  
+# Replace the spike with the smoothed interpolated data
+TW_PZ_05_SAND_Nov[Start_Spike:Stop_Spike,"m_below_GS"]<-Smoothed_Spike  
+# Add manual data
+TW_PZ_05_SAND_Nov[which(TW_PZ_05_SAND_Nov[,"Date_Time"]=="06/19/18 03:00:00 PM"),"m_manual"]<-0.224                    
+TW_PZ_05_SAND_Nov[which(TW_PZ_05_SAND_Nov[,"Date_Time"]=="07/11/18 02:30:00 PM"),"m_manual"]<-0.398
+TW_PZ_05_SAND_Nov[which(TW_PZ_05_SAND_Nov[,"Date_Time"]=="11/19/18 03:00:00 PM"),"m_manual"]<-0.127 
+# Save as CSV  
+write.csv(TW_PZ_05_SAND_Nov, file="TWPZ05_SAND_6-18-18_to_11-19-18.csv", row.names=FALSE)    
                        
 ############## TW_PZ_06 ##############     
 # Create a column for the depth to water below ground surface
@@ -726,29 +748,6 @@ TW_SW_07_Nov<-TW_SW_07_Nov[-which(is.na(TW_SW_07_Nov[,"m_above_GS"])),]
 TW_SW_07_Nov[,"lat"]<-41.91708333
 TW_SW_07_Nov[,"long"]<--70.57833333
 write.csv(TW_SW_07_Nov, file="TWSW07_6-18-18_to_11-19-18.csv", row.names=FALSE) 
-
-
-############## TW_PZ_05_SAND ##############    
-TW_PZ_05_SAND_Nov[,"m_below_GS"]<-160/100-(105.5/100+TW_PZ_05_SAND_Nov[,"m_water"])  
-# Remove last few rows of data 
-TW_PZ_05_SAND_Nov<-TW_PZ_05_SAND_Nov[1:which(TW_PZ_05_SAND_Nov[,"Date_Time"]=="11/19/18 03:45:00 PM"),]
-# Correct the vertical jump in data on 6/19 (date of logger retrieval); logger was in slightly different vertical position upon reinstallation
-vert_shift_start<-which(TW_PZ_05_SAND_Nov[,"Date_Time"]=="06/19/18 03:15:00 PM")
-TW_PZ_05_SAND_Nov[vert_shift_start:nrow(TW_PZ_05_SAND_Nov),"m_below_GS"]<-TW_PZ_05_SAND_Nov[vert_shift_start:nrow(TW_PZ_05_SAND_Nov),"m_below_GS"]-0.0970146
-TW_PZ_05_SAND_Nov[,"lat"]<-41.91594
-TW_PZ_05_SAND_Nov[,"long"]<--70.57631
-# Interpolate between the 7/11 spike
-Start_Spike<-which(TW_PZ_05_SAND_Nov[,"Date_Time"]=="07/11/18 02:30:00 PM")                     
-Stop_Spike<-which(TW_PZ_05_SAND_Nov[,"Date_Time"]=="07/11/18 03:00:00 PM")     
-Smoothed_Spike<-seq(TW_PZ_05_SAND_Nov[Start_Spike,"m_below_GS"], TW_PZ_05_SAND_Nov[Stop_Spike,"m_below_GS"], length=Stop_Spike-Start_Spike+1)  
-# Replace the spike with the smoothed interpolated data
-TW_PZ_05_SAND_Nov[Start_Spike:Stop_Spike,"m_below_GS"]<-Smoothed_Spike  
-# Add manual data
-TW_PZ_05_SAND_Nov[which(TW_PZ_05_SAND_Nov[,"Date_Time"]=="06/19/18 03:00:00 PM"),"m_manual"]<-0.224                    
-TW_PZ_05_SAND_Nov[which(TW_PZ_05_SAND_Nov[,"Date_Time"]=="07/11/18 02:30:00 PM"),"m_manual"]<-0.398
-TW_PZ_05_SAND_Nov[which(TW_PZ_05_SAND_Nov[,"Date_Time"]=="11/19/18 03:00:00 PM"),"m_manual"]<-0.127 
-# Save as CSV  
-write.csv(TW_PZ_05_SAND_Nov, file="TWPZ05_SAND_6-18-18_to_11-19-18.csv", row.names=FALSE)    
 
 ############## TW_PZ_06_SAND ##############    
 TW_PZ_06_SAND_Nov[,"m_below_GS"]<-150/100-(102/100+TW_PZ_06_SAND_Nov[,"m_water"])  
