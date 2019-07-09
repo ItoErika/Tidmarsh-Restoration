@@ -425,12 +425,25 @@ write.csv(TW_PZ_03_Jun319, file="TWPZ03_11-20-18_to_6-3-19.csv", row.names=FALSE
 ############## TW_PZ_04 ##############  
 # Create a column for the depth to water below ground surface
 TW_PZ_04_Jun319[,"m_above_GS"]<-(TW_PZ_04_Jun319[,"m_water"])-1.03
+# Correct the vertical jump in data on 3/30
+vert_shift_start<-which(TW_PZ_04_Jun319[,"Date_Time"]=="03/30/19 03:15:00 PM")
+TW_PZ_04_Jun319[vert_shift_start:nrow(TW_PZ_04_Jun319),"m_above_GS"]<-TW_PZ_04_Jun319[vert_shift_start:nrow(TW_PZ_04_Jun319),"m_above_GS"]- 0.05620621                      
+# Make first and last row blank where logger was out of water
+TW_PZ_04_Jun319[which(TW_PZ_04_Jun319[,"Date_Time"]=="11/20/18 09:15:00 AM"),"m_above_GS"]<-NA                      
+TW_PZ_04_Jun319[which(TW_PZ_04_Jun319[,"Date_Time"]=="06/03/19 10:15:00 AM"),"m_above_GS"]<-NA                      
 # Add manual data
 TW_PZ_04_Jun319[which(TW_PZ_04_Jun319[,"Date_Time"]=="03/30/19 03:00:00 PM"),"m_manual"]<-0.29
-TW_PZ_04_Jun319[which(TW_PZ_04_Jun319[,"Date_Time"]=="06/03/19 10:00:00 AM"),"m_manual"]<-0.292
+TW_PZ_04_Jun319[which(TW_PZ_04_Jun319[,"Date_Time"]=="06/03/19 10:00:00 AM"),"m_manual"]<-0.292                       
 # Save as CSV  
-write.csv(TW_PZ_03_Jun319, file="TWPZ03_11-20-18_to_6-3-19.csv", row.names=FALSE)                            
-  
+write.csv(TW_PZ_04_Jun319, file="TWPZ04_11-20-18_to_6-3-19_RISE.csv", row.names=FALSE)   
+
+# Save another CSV without the rise 
+TW_PZ_04_Jun319_norise<-TW_PZ_04_Jun319
+# Replace the portion of the data during the rise on 3/30 with NA 
+Start_Blank<-which(TW_PZ_04_Jun319_norise[,"Date_Time"]=="03/30/19 03:15:00 PM")
+Stop_Blank<-which(TW_PZ_04_Jun319_norise[,"Date_Time"]=="04/23/19 12:00:00 AM") 
+TW_PZ_04_Jun319_norise[Start_Blank:Stop_Blank,"m_above_GS"]<-NA
+
 ############## TW_PZ_05 ##############       
 # Create a column for the depth to water below ground surface
 # The top of piezometer casing to ground surface = 30.9 cm
@@ -812,6 +825,22 @@ ggsave("TW_PZ_03_11-20-18_to_6-3-19.pdf", width = 12, height = 6)
 Plot_Times<-as.POSIXct(TW_PZ_03_Jun319[,"Date_Time"], "%m/%d/%y %I:%M:%S %p", tz="America/New_York")
 ggplot(TW_PZ_03_Jun319, aes(Plot_Times, TW_PZ_03_Jun319[,"m_above_GS"]))+geom_line(color='royalblue3', size=.6)+ ylim(0,.6) + xlab("Date") + ylab("Water Above Streambed (m)")+ggtitle("TW_PZ_03")+  scale_x_datetime(breaks = seq(Plot_Times[1], Plot_Times[length(Plot_Times)], "7 days"),date_labels="%b %d")+theme(axis.text.x = element_text(angle=45, vjust = 0.5))+ geom_point(aes(x=Plot_Times, y=TW_PZ_03_Jun319[,"m_manual"]), color="orange3", size=3)                                                                           
 ggsave("TW_PZ_03_11-20-18_to_6-3-19_manual.pdf", width = 12, height = 6)
+
+# TW_PZ_04
+# uncorrected rise                        
+Plot_Times<-as.POSIXct(TW_PZ_04_Jun319[,"Date_Time"], "%m/%d/%y %I:%M:%S %p", tz="America/New_York")
+ggplot(TW_PZ_04_Jun319, aes(Plot_Times, TW_PZ_04_Jun319[,"m_above_GS"]))+geom_line(color='royalblue3', size=.6)+ ylim(-.75,.6) + xlab("Date") + ylab("Water Above Streambed (m)")+ggtitle("TW_PZ_04")+  scale_x_datetime(breaks = seq(Plot_Times[1], Plot_Times[length(Plot_Times)], "7 days"),date_labels="%b %d")+theme(axis.text.x = element_text(angle=45, vjust = 0.5))     
+ggsave("TW_PZ_04_11-20-18_to_6-3-19_RISE.pdf", width = 12, height = 6)
+# Add manual data
+Plot_Times<-as.POSIXct(TW_PZ_04_Jun319[,"Date_Time"], "%m/%d/%y %I:%M:%S %p", tz="America/New_York")
+ggplot(TW_PZ_04_Jun319, aes(Plot_Times, TW_PZ_04_Jun319[,"m_above_GS"]))+geom_line(color='royalblue3', size=.6)+ ylim(-.75,.6) + xlab("Date") + ylab("Water Above Streambed (m)")+ggtitle("TW_PZ_04")+  scale_x_datetime(breaks = seq(Plot_Times[1], Plot_Times[length(Plot_Times)], "7 days"),date_labels="%b %d")+theme(axis.text.x = element_text(angle=45, vjust = 0.5))+ geom_point(aes(x=Plot_Times, y=TW_PZ_04_Jun319[,"m_manual"]), color="orange3", size=3)                                                                                
+ggsave("TW_PZ_04_11-20-18_to_6-3-19_RISE_manual.pdf", width = 12, height = 6)
+
+# removed rise
+Plot_Times<-as.POSIXct(TW_PZ_03_Jun319[,"Date_Time"], "%m/%d/%y %I:%M:%S %p", tz="America/New_York")
+ggplot(TW_PZ_03_Jun319, aes(Plot_Times, TW_PZ_03_Jun319[,"m_above_GS"]))+geom_line(color='royalblue3', size=.6)+ ylim(0,.6) + xlab("Date") + ylab("Water Above Streambed (m)")+ggtitle("TW_PZ_03")+  scale_x_datetime(breaks = seq(Plot_Times[1], Plot_Times[length(Plot_Times)], "7 days"),date_labels="%b %d")+theme(axis.text.x = element_text(angle=45, vjust = 0.5))+ geom_point(aes(x=Plot_Times, y=TW_PZ_03_Jun319[,"m_manual"]), color="orange3", size=3)                                                                           
+ggsave("TW_PZ_03_11-20-18_to_6-3-19_manual.pdf", width = 12, height = 6)
+# removed rise
 
 # TW_PZ_05
 Plot_Times<-as.POSIXct(TW_PZ_05_3_3[,"Date_Time"], "%m/%d/%y %I:%M:%S %p", tz="America/New_York")
