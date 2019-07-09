@@ -499,9 +499,11 @@ TW_PZ_05_SAND_Nov[which(TW_PZ_05_SAND_Nov[,"Date_Time"]=="11/19/18 03:00:00 PM")
 # Save as CSV  
 write.csv(TW_PZ_05_SAND_Nov, file="TWPZ05_SAND_6-18-18_to_11-19-18.csv", row.names=FALSE)  
 
-# JUNE                       
-TW_PZ_05_SAND_June319[,"m_below_GS"]<-150/100-(105.5/100+TW_PZ_05_SAND_June319[,"m_water"])  
-  
+# JUNE 
+# This logger appeared to have filled or stopped logging before it was downloaded                      
+TW_PZ_05_SAND_Jun319[,"m_below_GS"]<-150.2985/100-(105.5/100+TW_PZ_05_SAND_Jun319[,"m_water"])  
+# Save as CSV  
+write.csv(TW_PZ_05_SAND_Jun319, file="TWPZ05_SAND_11-19-18.csv", row.names=FALSE)  
                        
 ############## TW_PZ_06 ##############     
 # Create a column for the depth to water below ground surface
