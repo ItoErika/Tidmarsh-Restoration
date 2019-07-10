@@ -585,7 +585,22 @@ Start_Blank<-which(TW_PZ_06_Jun319_norise[,"Date_Time"]=="03/30/19 03:15:00 PM")
 Stop_Blank<-which(TW_PZ_06_Jun319_norise[,"Date_Time"]=="04/01/19 12:00:00 AM") 
 TW_PZ_06_Jun319_norise[Start_Blank:Stop_Blank,"m_below_GS"]<-NA  
 # Save as CSV  
-write.csv(TW_PZ_06_Jun319_norise, file="TWPZ06_11-19-18_to_6-3-19.csv", row.names=FALSE)                                     
+write.csv(TW_PZ_06_Jun319_norise, file="TWPZ06_11-19-18_to_6-3-19.csv", row.names=FALSE)  
+
+
+############## TW_PZ_06_SAND ##############    
+TW_PZ_06_SAND_Nov[,"m_below_GS"]<-150/100-(102/100+TW_PZ_06_SAND_Nov[,"m_water"])  
+# Remove last few rows of data 
+TW_PZ_06_SAND_Nov<-TW_PZ_06_SAND_Nov[1:which(TW_PZ_06_SAND_Nov[,"Date_Time"]=="11/19/18 04:15:00 PM"),]                 
+ # Remove last first row of data 
+TW_PZ_06_SAND_Nov<-TW_PZ_06_SAND_Nov[-1,] 
+# This data has a lot of noise the ma() function uses a moving average, using an order of 75 smoothed the data well 
+TW_PZ_06_SAND_Nov[,"denoised"]<-ma(TW_PZ_06_SAND_Nov[,"m_below_GS"], order=75)                     
+TW_PZ_06_SAND_Nov<-TW_PZ_06_SAND_Nov[-which(is.na(TW_PZ_06_SAND_Nov[,"denoised"])),]  
+TW_PZ_06_SAND_Nov[,"lat"]<-41.91573
+TW_PZ_06_SAND_Nov[,"long"]<--70.57496
+# Save as CSV  
+write.csv(TW_PZ_06_SAND_Nov, file="TWPZ06_SAND_6-18-18_to_11-19-18.csv", row.names=FALSE)                                      
 
 ############## TW_PZ_07 ##############    
 # Create a column for height of water above stream bed
@@ -783,20 +798,6 @@ TW_SW_07_Nov<-TW_SW_07_Nov[-which(is.na(TW_SW_07_Nov[,"m_above_GS"])),]
 TW_SW_07_Nov[,"lat"]<-41.91708333
 TW_SW_07_Nov[,"long"]<--70.57833333
 write.csv(TW_SW_07_Nov, file="TWSW07_6-18-18_to_11-19-18.csv", row.names=FALSE) 
-
-############## TW_PZ_06_SAND ##############    
-TW_PZ_06_SAND_Nov[,"m_below_GS"]<-150/100-(102/100+TW_PZ_06_SAND_Nov[,"m_water"])  
-# Remove last few rows of data 
-TW_PZ_06_SAND_Nov<-TW_PZ_06_SAND_Nov[1:which(TW_PZ_06_SAND_Nov[,"Date_Time"]=="11/19/18 04:15:00 PM"),]                 
- # Remove last first row of data 
-TW_PZ_06_SAND_Nov<-TW_PZ_06_SAND_Nov[-1,] 
-# This data has a lot of noise the ma() function uses a moving average, using an order of 75 smoothed the data well 
-TW_PZ_06_SAND_Nov[,"denoised"]<-ma(TW_PZ_06_SAND_Nov[,"m_below_GS"], order=75)                     
-TW_PZ_06_SAND_Nov<-TW_PZ_06_SAND_Nov[-which(is.na(TW_PZ_06_SAND_Nov[,"denoised"])),]  
-TW_PZ_06_SAND_Nov[,"lat"]<-41.91573
-TW_PZ_06_SAND_Nov[,"long"]<--70.57496
-# Save as CSV  
-write.csv(TW_PZ_06_SAND_Nov, file="TWPZ06_SAND_6-18-18_to_11-19-18.csv", row.names=FALSE)   
                      
 ##################################################### MAKE PLOTS ####################################################################################
 
