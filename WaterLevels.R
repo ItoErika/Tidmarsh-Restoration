@@ -642,7 +642,21 @@ TW_PZ_07_3_19[which(TW_PZ_07_3_19[,"Date_Time"]=="11/17/17 05:45:00 PM"),"m_manu
 TW_PZ_07_3_19[which(TW_PZ_07_3_19[,"Date_Time"]=="03/03/18 05:45:00 PM"),"m_manual"]<-0.181
 TW_PZ_07_3_19[which(TW_PZ_07_3_19[,"Date_Time"]=="03/19/18 10:15:00 AM"),"m_manual"]<-0.155 
 # Save as CSV  
-write.csv(TW_PZ_07_3_19, file="TWPZ07_8-29-17_to_3-19-18.csv", row.names=FALSE)                        
+write.csv(TW_PZ_07_3_19, file="TWPZ07_8-29-17_to_3-19-18.csv", row.names=FALSE)     
+
+# Create a column for the depth to water below ground surface
+# The top of piezometer casing to ground surface = 31 cm
+TW_PZ_07_Nov[,"m_above_GS"]<-(153/100-(31/100+TW_PZ_07_Nov[,"m_water"]) )*-1 
+# Remove last few rows of data 
+TW_PZ_07_Nov<-TW_PZ_07_Nov[1:which(TW_PZ_07_Nov[,"Date_Time"]=="11/19/18 05:00:00 PM"),] 
+# Remove blank rows from logger extractions                    
+TW_PZ_07_Nov<-TW_PZ_07_Nov[-which(is.na(TW_PZ_07_Nov[,"m_above_GS"])),]   
+# Add manual data
+TW_PZ_07_Nov[which(TW_PZ_07_Nov[,"Date_Time"]=="11/19/18 04:15:00 PM"),"m_manual"]<-0.228
+TW_PZ_07_Nov[which(TW_PZ_07_Nov[,"Date_Time"]=="07/12/18 12:30:00 PM"),"m_manual"]<-0.26
+TW_PZ_07_Nov[,"lat"]<-41.91708333
+TW_PZ_07_Nov[,"long"]<--70.57833333
+write.csv(TW_PZ_07_Nov, file="TWPZ07_6-18-18_to_11-19-18.csv", row.names=FALSE)                    
 
 ############## TW_PZ_08 ##############     
 # Create a column for the depth to water below ground surface
@@ -708,22 +722,6 @@ TW_PZ_09_Nov[,"long"]<--70.57588889
 TW_PZ_09_Nov[which(TW_PZ_09_Nov[,"Date_Time"]=="07/11/18 04:45:00 PM"),"m_manual"]<-0.513
 TW_PZ_09_Nov[which(TW_PZ_09_Nov[,"Date_Time"]=="11/19/18 03:30:00 PM"),"m_manual"]<-0.403
 write.csv(TW_PZ_09_Nov, file="TWPZ09_6-18-18_to_11-19-18.csv", row.names=FALSE)      
-  
-
-############## TW_PZ_07 ##############    
-# Create a column for the depth to water below ground surface
-# The top of piezometer casing to ground surface = 31 cm
-TW_PZ_07_Nov[,"m_above_GS"]<-(153/100-(31/100+TW_PZ_07_Nov[,"m_water"]) )*-1 
-# Remove last few rows of data 
-TW_PZ_07_Nov<-TW_PZ_07_Nov[1:which(TW_PZ_07_Nov[,"Date_Time"]=="11/19/18 05:00:00 PM"),] 
-# Remove blank rows from logger extractions                    
-TW_PZ_07_Nov<-TW_PZ_07_Nov[-which(is.na(TW_PZ_07_Nov[,"m_above_GS"])),]   
-# Add manual data
-TW_PZ_07_Nov[which(TW_PZ_07_Nov[,"Date_Time"]=="11/19/18 04:15:00 PM"),"m_manual"]<-0.228
-TW_PZ_07_Nov[which(TW_PZ_07_Nov[,"Date_Time"]=="07/12/18 12:30:00 PM"),"m_manual"]<-0.26
-TW_PZ_07_Nov[,"lat"]<-41.91708333
-TW_PZ_07_Nov[,"long"]<--70.57833333
-write.csv(TW_PZ_07_Nov, file="TWPZ07_6-18-18_to_11-19-18.csv", row.names=FALSE) 
 
 ############## TW_SW_02 ##############     
 # Create a column for the depth to water below ground surface
