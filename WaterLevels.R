@@ -46,6 +46,7 @@ TW_PZ_06_SAND_Jun319<-read.csv("file:///C:/Users/erikai94/Documents/UMass/Tidmar
 TW_PZ_07_Jun319<-read.csv("file:///C:/Users/erikai94/Documents/UMass/Tidmarsh/PZ_Loggers/TW-WL_2019_06_03/TW-PZ-07_sn10499240.csv", skip=1, row.names=1)
 TW_SW_07_Jun319<-read.csv("file:///C:/Users/erikai94/Documents/UMass/Tidmarsh/PZ_Loggers/TW-WL_2019_06_03/TW-SW-07_sn10744415.csv", skip=1, row.names=1)
 TW_PZ_08_Jun319<-read.csv("file:///C:/Users/erikai94/Documents/UMass/Tidmarsh/PZ_Loggers/TW-WL_2019_06_03/TW-PZ-08_sn10499239.csv", skip=1, row.names=1)
+TW_PZ_08_SAND_Jun319<-read.csv("file:///C:/Users/erikai94/Documents/UMass/Tidmarsh/PZ_Loggers/TW-WL_2019_06_03/TW_PZ_08_SAND_sn_10499247.csv", skip=1, row.names=1)
 TW_PZ_09_Jun319<-read.csv("file:///C:/Users/erikai94/Documents/UMass/Tidmarsh/PZ_Loggers/TW-WL_2019_06_03/TW-PZ-09.csv", skip=1, row.names=1)
 TW_SW_10_Jun319<-read.csv("file:///C:/Users/erikai94/Documents/UMass/Tidmarsh/PZ_Loggers/TW-WL_2019_06_03/sn_10499233.csv", skip=1, row.names=1)
 
@@ -241,6 +242,7 @@ TW_PZ_06_SAND_Jun319<-loggerProcess(TW_PZ_06_SAND_Jun319)
 TW_PZ_07_Jun319<-loggerProcess(TW_PZ_07_Jun319)  
 TW_SW_07_Jun319<-loggerProcess(TW_SW_07_Jun319)
 TW_PZ_08_Jun319<-loggerProcess(TW_PZ_08_Jun319)  
+TW_PZ_08_SAND_Jun319<-loggerProcess(TW_PZ_08_SAND_Jun319)  
 TW_PZ_09_Jun319<-loggerProcess(TW_PZ_09_Jun319)
 TW_SW_10_Jun319<-loggerProcess(TW_SW_10_Jun319)
                       
