@@ -567,7 +567,25 @@ TW_PZ_06_Nov[which(TW_PZ_06_Nov[,"Date_Time"]=="11/19/18 03:30:00 PM"),"m_manual
 TW_PZ_06_Nov[,"lat"]<-41.91573
 TW_PZ_06_Nov[,"long"]<--70.57496
 # Save as CSV  
-write.csv(TW_PZ_06_Nov, file="TWPZ06_6-18-18_to_11-19-18.csv", row.names=FALSE)                                       
+write.csv(TW_PZ_06_Nov, file="TWPZ06_6-18-18_to_11-19-18.csv", row.names=FALSE)    
+
+# Create a column for the depth to water below ground surface
+# The top of piezometer casing to ground surface = 32 cm
+TW_PZ_06_Jun319[,"m_below_GS"]<-153/100-(31/100+TW_PZ_06_Jun319[,"m_water"])  
+# Add manual data
+TW_PZ_06_Jun319[which(TW_PZ_06_Jun319[,"Date_Time"]=="03/30/19 12:30:00 PM"),"m_manual"]<-0.152
+TW_PZ_06_Jun319[which(TW_PZ_06_Jun319[,"Date_Time"]=="06/03/19 10:45:00 AM"),"m_manual"]<-0.145
+# Save as CSV  
+write.csv(TW_PZ_06_Jun319, file="TWPZ06_11-19-18_to_6-3-19_rise.csv", row.names=FALSE) 
+
+# Save another file without the rise (WL recovery)
+TW_PZ_06_Jun319_norise<-TW_PZ_06_Jun319
+# Replace the portion of the data during the rise on 3/30 with NA 
+Start_Blank<-which(TW_PZ_06_Jun319_norise[,"Date_Time"]=="03/30/19 03:15:00 PM")
+Stop_Blank<-which(TW_PZ_06_Jun319_norise[,"Date_Time"]=="04/01/19 12:00:00 AM") 
+TW_PZ_06_Jun319_norise[Start_Blank:Stop_Blank,"m_below_GS"]<-NA  
+# Save as CSV  
+write.csv(TW_PZ_06_Jun319_norise, file="TWPZ06_11-19-18_to_6-3-19.csv", row.names=FALSE)                                     
 
 ############## TW_PZ_07 ##############    
 # Create a column for height of water above stream bed
@@ -664,6 +682,7 @@ TW_PZ_09_Nov[,"long"]<--70.57588889
 TW_PZ_09_Nov[which(TW_PZ_09_Nov[,"Date_Time"]=="07/11/18 04:45:00 PM"),"m_manual"]<-0.513
 TW_PZ_09_Nov[which(TW_PZ_09_Nov[,"Date_Time"]=="11/19/18 03:30:00 PM"),"m_manual"]<-0.403
 write.csv(TW_PZ_09_Nov, file="TWPZ09_6-18-18_to_11-19-18.csv", row.names=FALSE)      
+  
 
 ############## TW_PZ_07 ##############    
 # Create a column for the depth to water below ground surface
@@ -893,6 +912,22 @@ ggsave("TW_PZ_06_3_19.pdf", width = 12, height = 6)
                                         
 Plot_Times<-as.POSIXct(TW_PZ_06_Nov[,"Date_Time"], "%m/%d/%y %I:%M:%S %p", tz="America/New_York")
 ggplot(TW_PZ_06_Nov, aes(Plot_Times, TW_PZ_06_Nov[,"m_below_GS"]))+geom_line(color='royalblue3', size=.6) + xlab("Date") + ylab("Depth to Water Below Ground Surface (m)")+ggtitle("TW_PZ_06")+  scale_x_datetime(breaks = seq(Plot_Times[1], Plot_Times[length(Plot_Times)], "7 days"),date_labels="%b %d")+ scale_y_reverse(limits =c(.6,-.1)) +theme(axis.text.x = element_text(angle=45, vjust = 0.5))
+
+Plot_Times<-as.POSIXct(TW_PZ_06_Jun319[,"Date_Time"], "%m/%d/%y %I:%M:%S %p", tz="America/New_York")
+ggplot(TW_PZ_06_Jun319, aes(Plot_Times, TW_PZ_06_Jun319[,"m_below_GS"]))+geom_line(color='royalblue3', size=.6) + xlab("Date") + ylab("Depth to Water Below Ground Surface (m)")+ggtitle("TW_PZ_06")+  scale_x_datetime(breaks = seq(Plot_Times[1], Plot_Times[length(Plot_Times)], "7 days"),date_labels="%b %d")+ scale_y_reverse(limits =c(0.8,-.1)) +theme(axis.text.x = element_text(angle=45, vjust = 0.5))
+ggsave("TW_PZ_06_11-19-18_to_6-3-19_RISE.pdf", width = 12, height = 6) 
+
+Plot_Times<-as.POSIXct(TW_PZ_06_Jun319[,"Date_Time"], "%m/%d/%y %I:%M:%S %p", tz="America/New_York")
+ggplot(TW_PZ_06_Jun319, aes(Plot_Times, TW_PZ_06_Jun319[,"m_below_GS"]))+geom_line(color='royalblue3', size=.6) + xlab("Date") + ylab("Depth to Water Below Ground Surface (m)")+ggtitle("TW_PZ_06")+  scale_x_datetime(breaks = seq(Plot_Times[1], Plot_Times[length(Plot_Times)], "7 days"),date_labels="%b %d")+ scale_y_reverse(limits =c(0.8,-.1)) +theme(axis.text.x = element_text(angle=45, vjust = 0.5)) + geom_point(aes(x=Plot_Times, y=TW_PZ_06_Jun319[,"m_manual"]), color="orange3", size=3)                                                                           
+ggsave("TW_PZ_06_11-19-18_to_6-3-19_RISE_manual.pdf", width = 12, height = 6) 
+
+Plot_Times<-as.POSIXct(TW_PZ_06_Jun319_norise[,"Date_Time"], "%m/%d/%y %I:%M:%S %p", tz="America/New_York")
+ggplot(TW_PZ_06_Jun319_norise, aes(Plot_Times, TW_PZ_06_Jun319_norise[,"m_below_GS"]))+geom_line(color='royalblue3', size=.6) + xlab("Date") + ylab("Depth to Water Below Ground Surface (m)")+ggtitle("TW_PZ_06")+  scale_x_datetime(breaks = seq(Plot_Times[1], Plot_Times[length(Plot_Times)], "7 days"),date_labels="%b %d")+ scale_y_reverse(limits =c(0.3,-.1)) +theme(axis.text.x = element_text(angle=45, vjust = 0.5))
+ggsave("TW_PZ_06_11-19-18_to_6-3-19.pdf", width = 12, height = 6) 
+
+Plot_Times<-as.POSIXct(TW_PZ_06_Jun319_norise[,"Date_Time"], "%m/%d/%y %I:%M:%S %p", tz="America/New_York")
+ggplot(TW_PZ_06_Jun319_norise, aes(Plot_Times, TW_PZ_06_Jun319_norise[,"m_below_GS"]))+geom_line(color='royalblue3', size=.6) + xlab("Date") + ylab("Depth to Water Below Ground Surface (m)")+ggtitle("TW_PZ_06")+  scale_x_datetime(breaks = seq(Plot_Times[1], Plot_Times[length(Plot_Times)], "7 days"),date_labels="%b %d")+ scale_y_reverse(limits =c(0.3,-.1)) +theme(axis.text.x = element_text(angle=45, vjust = 0.5)) + geom_point(aes(x=Plot_Times, y=TW_PZ_06_Jun319_norise[,"m_manual"]), color="orange3", size=3)                                                                           
+ggsave("TW_PZ_06_11-19-18_to_6-3-19_manual.pdf", width = 12, height = 6) 
 
 
 # TW_PZ_08
