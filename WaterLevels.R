@@ -715,16 +715,24 @@ TW_PZ_07_3_19[which(TW_PZ_07_3_19[,"Date_Time"]=="03/19/18 10:15:00 AM"),"m_manu
 write.csv(TW_PZ_07_3_19, file="TWPZ07_8-29-17_to_33-19-18.csv", row.names=FALSE)           
 
 # Correct based on manual stream measurements
-TW_SW_07_Nov[,"m_above_GS"]<-TW_SW_07_Nov[,"m_water"]-.17  
+TW_SW_07_Nov[,"m_above_GS"]<-TW_SW_07_Nov[,"m_water"]-.14
 # Add manual data
-TW_SW_07_Nov[which(TW_SW_07_Nov[,"Date_Time"]=="07/12/18 12:30:00 PM"),"m_manual"]<-0.23                      
-TW_SW_07_Nov[which(TW_SW_07_Nov[,"Date_Time"]=="11/19/18 04:15:00 PM"),"m_manual"]<-0.208
+TW_SW_07_Nov[which(TW_SW_07_Nov[,"Date_Time"]=="07/11/18 12:15:00 PM"),"m_manual"]<-0.28                     
+TW_SW_07_Nov[which(TW_SW_07_Nov[,"Date_Time"]=="11/19/18 03:15:00 PM"),"m_manual"]<-0.21
 # Remove last few rows of data 
 TW_SW_07_Nov<-TW_SW_07_Nov[1:which(TW_SW_07_Nov[,"Date_Time"]=="11/19/18 05:00:00 PM"),]
 # Remove blank rows from logger extractions
 TW_SW_07_Nov<-TW_SW_07_Nov[-which(is.na(TW_SW_07_Nov[,"m_above_GS"])),]  
 TW_SW_07_Nov[,"lat"]<-41.91708333
 TW_SW_07_Nov[,"long"]<--70.57833333
+write.csv(TW_SW_07_Nov, file="TWSW07_6-18-18_to_11-19-18.csv", row.names=FALSE) 
+
+# Correct based on manual stream measurements
+TW_SW_07_Jun319[,"m_above_GS"]<-TW_SW_07_Jun319[,"m_water"]-.1
+# Add manual data
+TW_SW_07_Jun319[which(TW_SW_07_Jun319[,"Date_Time"]=="03/30/19 01:45:00 PM"),"m_manual"]<-0.077                      
+TW_SW_07_Jun319[which(TW_SW_07_Jun319[,"Date_Time"]=="06/03/19 09:15:00 AM"),"m_manual"]<-0.109
+# Save as CSV
 write.csv(TW_SW_07_Nov, file="TWSW07_6-18-18_to_11-19-18.csv", row.names=FALSE) 
 
 ############## TW_PZ_08 ##############     
@@ -999,7 +1007,12 @@ ggsave("TW_SW_07_3_3.pdf", width = 12, height = 6)
 
 Plot_Times<-as.POSIXct(TW_SW_07_Nov[,"Date_Time"], "%m/%d/%y %I:%M:%S %p", tz="America/New_York")
 ggplot(TW_SW_07_Nov, aes(Plot_Times, TW_SW_07_Nov[,"m_above_GS"]))+geom_line(color='royalblue3', size=.6)+ ylim(0,.5) + xlab("Date") + ylab("Stream Stage (m)")+ggtitle("TW_SW_07")+  scale_x_datetime(breaks = seq(Plot_Times[1], Plot_Times[length(Plot_Times)], "7 days"),date_labels="%b %d")+theme(axis.text.x = element_text(angle=45, vjust = 0.5))                                               
-ggsave("TW_SW_07_Nov.pdf", width = 12, height = 6)                                            
+ggsave("TW_SW_07_Nov.pdf", width = 12, height = 6) 
+
+Plot_Times<-as.POSIXct(TW_SW_07_Nov[,"Date_Time"], "%m/%d/%y %I:%M:%S %p", tz="America/New_York")
+ggplot(TW_SW_07_Nov, aes(Plot_Times, TW_SW_07_Nov[,"m_above_GS"]))+geom_line(color='royalblue3', size=.6)+ ylim(0,.5) + xlab("Date") + ylab("Stream Stage (m)")+ggtitle("TW_SW_07")+  scale_x_datetime(breaks = seq(Plot_Times[1], Plot_Times[length(Plot_Times)], "7 days"),date_labels="%b %d")+theme(axis.text.x = element_text(angle=45, vjust = 0.5)) + geom_point(aes(x=Plot_Times, y=TW_SW_07_Nov[,"m_manual"]), color="orange3", size=3)                                                                                                                         
+                                              
+                                           
 
 # TW_PZ_08
 Plot_Times<-as.POSIXct(TW_PZ_08_3_3[,"Date_Time"], "%m/%d/%y %I:%M:%S %p", tz="America/New_York")
