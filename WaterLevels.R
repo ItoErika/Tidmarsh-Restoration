@@ -416,19 +416,18 @@ write.csv(TW_SW_02_Jun319, file="TWSW02_11-20-18_to_6-3-19.csv", row.names=FALSE
 ############## TW_Grad_02 ##############
 # Calculate the vertical gradient between PZ_02 and SW_02     
 # Join the pz and sw files together by the "Date_Time" column
-TW_Grad_02<-join(TW_PZ_02_Jun319[,c("Date_Time","m_above_GS")], TW_SW_02_Jun319[,c("Date_Time","m_above_GS")], by="Date_Time")
+TW_Grad_02_Jun319<-join(TW_PZ_02_Jun319[,c("Date_Time","m_above_GS")], TW_SW_02_Jun319[,c("Date_Time","m_above_GS")], by="Date_Time")
 # Rename the columns to designate between pz and sw water level values
- colnames(TW_Grad_02)<-c( "Date_Time", "PZ_m_above_GS", "SW_m_above_GS_")
-# Calculate the                        
-                   
+ colnames(TW_Grad_02_Jun319)<-c( "Date_Time", "PZ_m_above_GS", "SW_m_above_GS")
+# Define dh (difference in head values)
+TW_Grad_02_Jun319[,"dh"]<--(TW_Grad_02_Jun319[,"PZ_m_above_GS"]-TW_Grad_02_Jun319[,"SW_m_above_GS"])
+# Define dz (vertical distance between midpoint of screens)
+TW_Grad_02_Jun319[,"dz"]<-1.29-0         
+# Calculate the gradient (dh/dz) such that a positive gradient indicates downward flow
+TW_Grad_02_Jun319[,"dh/dz"]<-TW_Grad_02_Jun319[,"dh"]/TW_Grad_02_Jun319[,"dz"]         
+# Save as CSV  
+write.csv(TW_Grad_02_Jun319, file="TWGrad02_11-20-18_to_6-3-19.csv", row.names=FALSE)    
 
-# Create a key to merge the correct date into the NOAA_STP matrix                       
-DateKey<-unique(NOAA_Plymouth_Data[,c("DAY","DATE")])                       
-# Add a column for the day in NOAA_STP
-NOAA_STP<-cbind(NOAA_STP, floor(NOAA_STP[,"time_col"]/24))
-# Assign colnames to NOAA_STP for merge 
-colnames(NOAA_STP)<-c("HRS_ELAPSED","STP","DAY")                       
-                       
 ############## TW_PZ_03 ##############    
 # Create a column for the depth to water below ground surface
 # The top of piezometer casing to ground surface = 58 cm
@@ -955,6 +954,11 @@ ggsave("TW_PZ_02_11-20-18_to_6-3-19.pdf", width = 12, height = 6)
 Plot_Times<-as.POSIXct(TW_PZ_02_Jun319[,"Date_Time"], "%m/%d/%y %I:%M:%S %p", tz="America/New_York")
 ggplot(TW_PZ_02_Jun319, aes(Plot_Times, TW_PZ_02_Jun319[,"m_above_GS"]))+geom_line(color='royalblue3', size=.6) + xlab("Date") + ylab("Water Above Streambed (m)")+ggtitle("TW_PZ_02")+  scale_x_datetime(breaks = seq(Plot_Times[1], Plot_Times[length(Plot_Times)], "7 days"),date_labels="%b %d")+ ylim(0,.8) +theme(axis.text.x = element_text(angle=45, vjust = 0.5)) + geom_point(aes(x=Plot_Times, y=TW_PZ_02_Jun319[,"m_manual"]), color="orange3", size=3)                            
 ggsave("TW_PZ_02_11-20-18_to_6-3-19_manual.pdf", width = 12, height = 6)  
+
+# TW_Grad_02
+Plot_Times<-as.POSIXct(TW_Grad_02_Jun319[,"Date_Time"], "%m/%d/%y %I:%M:%S %p", tz="America/New_York")
+ggplot(TW_Grad_02_Jun319, aes(Plot_Times, TW_Grad_02_Jun319[,"dh/dz"]))+geom_line(color='royalblue3', size=.6) + xlab("Date") + ylab("Vertical Hydraulic Gradient")+ scale_y_reverse(limits =c(0,-.3))+ ggtitle("TW_Gradient_02")+  scale_x_datetime(breaks = seq(Plot_Times[1], Plot_Times[length(Plot_Times)], "7 days"),date_labels="%b %d")+theme(axis.text.x = element_text(angle=45, vjust = 0.5))
+ggsave("TW_Grad_02_11-20-18_to_6-3-19.pdf", width = 12, height = 6) 
 
 # TW_PZ_03
 Plot_Times<-as.POSIXct(TW_PZ_03_Nov[,"Date_Time"], "%m/%d/%y %I:%M:%S %p", tz="America/New_York")
