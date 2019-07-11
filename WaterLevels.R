@@ -388,7 +388,46 @@ TW_PZ_02_Jun319[,"m_above_GS"]<-(TW_PZ_02_Jun319[,"m_water"])-.64
 TW_PZ_02_Jun319[which(TW_PZ_02_Jun319[,"Date_Time"]=="03/30/19 04:45:00 PM"),"m_manual"]<-0.279
 TW_PZ_02_Jun319[which(TW_PZ_02_Jun319[,"Date_Time"]=="06/03/19 12:15:00 PM"),"m_manual"]<-0.449 
 # Save as CSV  
-write.csv(TW_PZ_02_Jun319, file="TWPZ02_11-20-18_to_6-3-19.csv", row.names=FALSE)   
+write.csv(TW_PZ_02_Jun319, file="TWPZ02_11-20-18_to_6-3-19.csv", row.names=FALSE)
+                       
+############## TW_SW_02 ##############     
+# Create a column for the depth to water below ground surface
+TW_SW_02_Nov[,"m_above_GS"]<-TW_SW_02_Nov[,"m_water"]-.15
+# Remove last few rows of data 
+TW_SW_02_Nov<-TW_SW_02_Nov[1:which(TW_SW_02_Nov[,"Date_Time"]=="11/20/18 10:30:00 AM"),]
+# Add manual data
+TW_SW_02_Nov[which(TW_SW_02_Nov[,"Date_Time"]=="06/19/18 02:45:00 PM"),"m_manual"]<-0.233 
+TW_SW_02_Nov[which(TW_SW_02_Nov[,"Date_Time"]=="07/11/18 10:45:00 AM"),"m_manual"]<-0.33 
+TW_SW_02_Nov[which(TW_SW_02_Nov[,"Date_Time"]=="11/20/18 10:00:00 AM"),"m_manual"]<-0.334
+TW_SW_02_Nov[,"lat"]<-41.91389722
+TW_SW_02_Nov[,"long"]<--70.57706944
+# Save as CSV  
+write.csv(TW_SW_02_Nov, file="TWSW02_6-18-18_to_11-20-18.csv", row.names=FALSE) 
+
+#JUNE 3, 19                       
+# Create a column for the depth to water above ground surface
+TW_SW_02_Jun319[,"m_above_GS"]<-TW_SW_02_Jun319[,"m_water"]-.035
+# Add manual data
+TW_SW_02_Jun319[which(TW_SW_02_Jun319[,"Date_Time"]=="03/30/19 04:45:00 PM"),"m_manual"]<-0.224
+TW_SW_02_Jun319[which(TW_SW_02_Jun319[,"Date_Time"]=="06/03/19 12:15:00 PM"),"m_manual"]<-0.22      
+# Save as CSV  
+write.csv(TW_SW_02_Jun319, file="TWSW02_11-20-18_to_6-3-19.csv", row.names=FALSE)    
+
+############## TW_Grad_02 ##############
+# Calculate the vertical gradient between PZ_02 and SW_02     
+# Join the pz and sw files together by the "Date_Time" column
+TW_Grad_02<-join(TW_PZ_02_Jun319[,c("Date_Time","m_above_GS")], TW_SW_02_Jun319[,c("Date_Time","m_above_GS")], by="Date_Time")
+# Rename the columns to designate between pz and sw water level values
+ colnames(TW_Grad_02)<-c( "Date_Time", "PZ_m_above_GS", "SW_m_above_GS_")
+# Calculate the                        
+                   
+
+# Create a key to merge the correct date into the NOAA_STP matrix                       
+DateKey<-unique(NOAA_Plymouth_Data[,c("DAY","DATE")])                       
+# Add a column for the day in NOAA_STP
+NOAA_STP<-cbind(NOAA_STP, floor(NOAA_STP[,"time_col"]/24))
+# Assign colnames to NOAA_STP for merge 
+colnames(NOAA_STP)<-c("HRS_ELAPSED","STP","DAY")                       
                        
 ############## TW_PZ_03 ##############    
 # Create a column for the depth to water below ground surface
@@ -853,30 +892,7 @@ TW_SW_10_Jun319[Start_Blank:Stop_Blank,"m_above_GS"]<-NA
 TW_SW_10_Jun319[which(TW_SW_10_Jun319[,"Date_Time"]=="03/30/19 04:30:00 PM"),"m_manual"]<-0.21
 TW_SW_10_Jun319[which(TW_SW_10_Jun319[,"Date_Time"]=="06/03/19 12:00:00 PM"),"m_manual"]<-0.20    
 # Save as CSV
-write.csv(TW_SW_10_Jun319, file="TWSW10_11-19-18_to_6-3-19.csv", row.names=FALSE)                    
-
-############## TW_SW_02 ##############     
-# Create a column for the depth to water below ground surface
-TW_SW_02_Nov[,"m_above_GS"]<-TW_SW_02_Nov[,"m_water"]-.15
-# Remove last few rows of data 
-TW_SW_02_Nov<-TW_SW_02_Nov[1:which(TW_SW_02_Nov[,"Date_Time"]=="11/20/18 10:30:00 AM"),]
-# Add manual data
-TW_SW_02_Nov[which(TW_SW_02_Nov[,"Date_Time"]=="06/19/18 02:45:00 PM"),"m_manual"]<-0.233 
-TW_SW_02_Nov[which(TW_SW_02_Nov[,"Date_Time"]=="07/11/18 10:45:00 AM"),"m_manual"]<-0.33 
-TW_SW_02_Nov[which(TW_SW_02_Nov[,"Date_Time"]=="11/20/18 10:00:00 AM"),"m_manual"]<-0.334
-TW_SW_02_Nov[,"lat"]<-41.91389722
-TW_SW_02_Nov[,"long"]<--70.57706944
-# Save as CSV  
-write.csv(TW_SW_02_Nov, file="TWSW02_6-18-18_to_11-20-18.csv", row.names=FALSE) 
-
-#JUNE 3, 19                       
-# Create a column for the depth to water above ground surface
-TW_SW_02_Jun319[,"m_above_GS"]<-TW_SW_02_Jun319[,"m_water"]-.035
-# Add manual data
-TW_SW_02_Jun319[which(TW_SW_02_Jun319[,"Date_Time"]=="03/30/19 04:45:00 PM"),"m_manual"]<-0.224
-TW_SW_02_Jun319[which(TW_SW_02_Jun319[,"Date_Time"]=="06/03/19 12:15:00 PM"),"m_manual"]<-0.22      
-# Save as CSV  
-write.csv(TW_SW_02_Jun319, file="TWSW02_11-20-18_to_6-3-19.csv", row.names=FALSE)      
+write.csv(TW_SW_10_Jun319, file="TWSW10_11-19-18_to_6-3-19.csv", row.names=FALSE)                       
                        
 
 ############## TW_SW_03 ##############     
