@@ -1188,7 +1188,13 @@ ggsave("TW_PZ_05_SAND_Nov.pdf", width = 12, height = 6)
 # Load LiDAR elevation / terrain data from MassGIS:
 # Bare-earth Digital Surface Model (DSM) rasters (aka DEMs): 
 # https://docs.digital.mass.gov/dataset/massgis-data-lidar-terrain-data#download
-TW_Raster <- raster("C:/Users/erikai94/Documents/UMass/Tidmarsh/LiDAR/19_03694641.tif")
+TW_LiDAR <- raster("C:/Users/erikai94/Documents/UMass/Tidmarsh/LiDAR/19_03694641.tif")
 # Tighten the border around the bog
 TW_border <- extent(369000, 369600, 4641200, 4642000)
-TW_Raster<-crop(TW_Raster, TW_border)
+TW_LiDAR<-crop(TW_LiDAR, TW_border)
+# Reproject the raster into lat long (from UTM) 
+projected_TW_LiDAR <- projectRaster(TW_LiDAR, crs = "+proj=longlat +datum=WGS84")
+# Plot the piezometer points onto the raster
+                       
+                       
+                       
