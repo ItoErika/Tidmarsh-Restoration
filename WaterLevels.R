@@ -1183,4 +1183,12 @@ ggsave("TW_SW_03_11-20-18_to_6-3-19_manual.pdf", width = 12, height = 6)
 Plot_Times<-as.POSIXct(TW_PZ_05_SAND_Nov[,"Date_Time"], "%m/%d/%y %I:%M:%S %p", tz="America/New_York")
 ggplot(TW_PZ_05_SAND_Nov, aes(Plot_Times, TW_PZ_05_SAND_Nov[,"m_below_GS"]))+geom_line(color='royalblue3', size=.6) + xlab("Date") + ylab("Depth to Water Below Ground Surface (m)")+ggtitle("TW_PZ_05_SAND_Nov")+  scale_x_datetime(breaks = seq(Plot_Times[1], Plot_Times[length(Plot_Times)], "7 days"),date_labels="%b %d")+ scale_y_reverse(limits =c(.6,-.1)) +theme(axis.text.x = element_text(angle=45, vjust = 0.5))                       
 ggsave("TW_PZ_05_SAND_Nov.pdf", width = 12, height = 6)     
-##################################################### GET SPATIAL DATA ###################
+##################################################### GET SPATIAL DATA ######################################
+
+# Load LiDAR elevation / terrain data from MassGIS:
+# Bare-earth Digital Surface Model (DSM) rasters (aka DEMs): 
+# https://docs.digital.mass.gov/dataset/massgis-data-lidar-terrain-data#download
+TW_Raster <- raster("C:/Users/erikai94/Documents/UMass/Tidmarsh/LiDAR/19_03694641.tif")
+# Tighten the border around the bog
+TW_border <- extent(369000, 369600, 4641200, 4642000)
+TW_Raster<-crop(TW_Raster, TW_border)
