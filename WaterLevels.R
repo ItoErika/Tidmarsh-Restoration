@@ -1207,5 +1207,8 @@ TW_PZ_Elev<-extract(TW_LiDAR, tp_TW)
 # Bind the elevations to the long lat data 
 TW_PZ_Positions<-cbind(TW_PZ_longlat, TW_PZ_Elev)
 # Rename columns        
-colnames(TW_PZ_Positions)<-c("long", "lat", "elev_m")                       
-                       
+colnames(TW_PZ_Positions)<-c("long", "lat", "elev_m")                  
+
+##################################################### CALCUATE DH/DX ######################################
+
+# Calculate the horizontal groundwater gradient in the "sand aquifer"
