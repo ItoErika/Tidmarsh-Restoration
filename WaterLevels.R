@@ -1193,8 +1193,19 @@ TW_LiDAR <- raster("C:/Users/erikai94/Documents/UMass/Tidmarsh/LiDAR/19_03694641
 TW_border <- extent(369000, 369600, 4641200, 4642000)
 TW_LiDAR<-crop(TW_LiDAR, TW_border)
 # Reproject the raster into lat long (from UTM) 
-projected_TW_LiDAR <- projectRaster(TW_LiDAR, crs = "+proj=longlat +datum=WGS84")
-# Plot the piezometer points onto the raster
-                       
-                       
+#projected_TW_LiDAR <- projectRaster(TW_LiDAR, crs = "+proj=longlat +ellps=GRS80 +towgs84=0,0,0,0,0,0,0  +no_defs")
+
+# Load the lat long data for the piezometers
+TW_PZ_longlat<-read.csv("file:///C:/Users/erikai94/Documents/UMass/Tidmarsh/LiDAR/PZ_longlat.csv", row.names=1)
+# Convert into a spatial points
+sp_TW_PZ_longlat<- SpatialPoints(TW_PZ_longlat, proj4string = CRS("+proj=longlat +datum=WGS84"))
+sp_TW_PZ_longlat<- SpatialPoints(cbind(-70.57844, 41.91347), proj4string = CRS("+proj=longlat +datum=WGS84"))
+# Convert the lat long points into UTM points
+tp_TW <- spTransform(sp_TW_PZ_longlat, crs(TW_LiDAR))                       
+# Extract elevations at each lat long piezometer point
+TW_PZ_Elev<-extract(TW_LiDAR, tp_TW)   
+# Bind the elevations to the long lat data 
+TW_PZ_Positions<-cbind(TW_PZ_longlat, TW_PZ_Elev)
+# Rename columns        
+colnames(TW_PZ_Positions)<-c("long", "lat", "elev_m")                       
                        
