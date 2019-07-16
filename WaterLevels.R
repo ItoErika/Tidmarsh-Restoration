@@ -1212,3 +1212,20 @@ colnames(TW_PZ_Positions)<-c("long", "lat", "elev_m")
 ##################################################### CALCUATE DH/DX ######################################
 
 # Calculate the horizontal groundwater gradient in the "sand aquifer"
+
+# First, calculate the horizontal distances between each piezometer screened in sand:
+# note that lonlat must = TRUE to calculate distance between points on WGS ellipsoid instead of distance between points on a plane 
+# Calculate the distance (in meters) between TW_PZ_01_SAND and TW_PZ_05_SAND
+Dist_01_to_05_SAND <- pointDistance(TW_PZ_longlat["TW_PZ_01_SAND",], TW_PZ_longlat["TW_PZ_05_SAND",], lonlat=TRUE)
+# Between TW_PZ_01_SAND and TW_PZ_06_SAND
+Dist_01_to_06_SAND <- pointDistance(TW_PZ_longlat["TW_PZ_01_SAND",], TW_PZ_longlat["TW_PZ_06_SAND",], lonlat=TRUE)
+# Between TW_PZ_01_SAND and TW_PZ_08_SAND
+Dist_01_to_08_SAND <- pointDistance(TW_PZ_longlat["TW_PZ_01_SAND",], TW_PZ_longlat["TW_PZ_08_SAND",], lonlat=TRUE)
+# Between TW_PZ_05_SAND and TW_PZ_06_SAND
+Dist_05_to_06_SAND <- pointDistance(TW_PZ_longlat["TW_PZ_05_SAND",], TW_PZ_longlat["TW_PZ_06_SAND",], lonlat=TRUE)
+# Between TW_PZ_05_SAND and TW_PZ_08_SAND
+Dist_05_to_08_SAND <- pointDistance(TW_PZ_longlat["TW_PZ_05_SAND",], TW_PZ_longlat["TW_PZ_08_SAND",], lonlat=TRUE)
+# Between TW_PZ_06_SAND and TW_PZ_08_SAND
+Dist_06_to_08_SAND <- pointDistance(TW_PZ_longlat["TW_PZ_06_SAND",], TW_PZ_longlat["TW_PZ_08_SAND",], lonlat=TRUE)
+
+
