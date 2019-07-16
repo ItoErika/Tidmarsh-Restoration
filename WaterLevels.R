@@ -1199,7 +1199,6 @@ TW_LiDAR<-crop(TW_LiDAR, TW_border)
 TW_PZ_longlat<-read.csv("file:///C:/Users/erikai94/Documents/UMass/Tidmarsh/LiDAR/PZ_longlat.csv", row.names=1)
 # Convert into a spatial points
 sp_TW_PZ_longlat<- SpatialPoints(TW_PZ_longlat, proj4string = CRS("+proj=longlat +datum=WGS84"))
-sp_TW_PZ_longlat<- SpatialPoints(cbind(-70.57844, 41.91347), proj4string = CRS("+proj=longlat +datum=WGS84"))
 # Convert the lat long points into UTM points
 tp_TW <- spTransform(sp_TW_PZ_longlat, crs(TW_LiDAR))                       
 # Extract elevations at each lat long piezometer point
@@ -1213,6 +1212,7 @@ colnames(TW_PZ_Positions)<-c("long", "lat", "elev_m")
 
 # Calculate the horizontal groundwater gradient in the "sand aquifer"
 
+############ CALCUATE DH ############
 # First, calculate the horizontal distances between each piezometer screened in sand:
 # note that lonlat must = TRUE to calculate distance between points on WGS ellipsoid instead of distance between points on a plane 
 # Calculate the distance (in meters) between TW_PZ_01_SAND and TW_PZ_05_SAND
@@ -1228,4 +1228,90 @@ Dist_05_to_08_SAND <- pointDistance(TW_PZ_longlat["TW_PZ_05_SAND",], TW_PZ_longl
 # Between TW_PZ_06_SAND and TW_PZ_08_SAND
 Dist_06_to_08_SAND <- pointDistance(TW_PZ_longlat["TW_PZ_06_SAND",], TW_PZ_longlat["TW_PZ_08_SAND",], lonlat=TRUE)
 
+############ CALCULATE DZ ############ 
 
+# First, calculate the head elevation in each piezometer
+# (based on manual water level measurements and LiDAR elevation data)
+# Subtract the water level below ground surface from the elevation at each piezometer to get the head elevations
+
+### PZ_01_SAND head elevation ### 
+# Head elevation in TW_PZ_01_SAND on 03/03/18 (see manual data spreadsheet): 
+PZ_01_SAND_h_elev<-c(TW_PZ_Positions["TW_PZ_01_SAND","elev_m"]-(5.8/100), 
+# on 05/06/18
+TW_PZ_Positions["TW_PZ_01_SAND","elev_m"]-(13.3/100),
+# on 06/18/18
+TW_PZ_Positions["TW_PZ_01_SAND","elev_m"]-(18.5/100),  
+# on 06/19/18             
+TW_PZ_Positions["TW_PZ_01_SAND","elev_m"]-(19.5/100),  
+# on 07/11/18
+TW_PZ_Positions["TW_PZ_01_SAND","elev_m"]-(20.1/100),
+# on 11/19/18 - the manual measurement was taken on 11/20 at this pz, so it won't be used 
+NA,
+# on 03/30/19
+TW_PZ_Positions["TW_PZ_01_SAND","elev_m"]-(7/100),
+# on 06/03/19
+TW_PZ_Positions["TW_PZ_01_SAND","elev_m"]-(10.2/100))
+
+### PZ_05_SAND head elevation ### 
+# Head elevation in TW_PZ_05_SAND on 03/03/18 (see manual data spreadsheet): 
+PZ_05_SAND_h_elev<-c(TW_PZ_Positions["TW_PZ_05_SAND","elev_m"]-(7.2/100), 
+# on 05/06/18
+TW_PZ_Positions["TW_PZ_05_SAND","elev_m"]-(9.8/100),
+# on 06/18/18
+TW_PZ_Positions["TW_PZ_05_SAND","elev_m"]-(20.4/100),  
+# on 06/19/18             
+TW_PZ_Positions["TW_PZ_05_SAND","elev_m"]-(22.4/100),  
+# on 07/11/18
+TW_PZ_Positions["TW_PZ_05_SAND","elev_m"]-(39.8/100),
+# on 11/19/18
+TW_PZ_Positions["TW_PZ_05_SAND","elev_m"]-(12.7/100),
+# on 03/30/19
+TW_PZ_Positions["TW_PZ_05_SAND","elev_m"]-(9.5/100),
+# on 06/03/19
+TW_PZ_Positions["TW_PZ_05_SAND","elev_m"]-(14.4/100))
+
+### PZ_06_SAND head elevation ### 
+# Head elevation in PZ_06_SAND on 03/03/18 (see manual data spreadsheet): 
+PZ_06_SAND_h_elev<-c(TW_PZ_Positions["TW_PZ_06_SAND","elev_m"]-(18/100), 
+# on 05/06/18
+TW_PZ_Positions["TW_PZ_06_SAND","elev_m"]-(10.7/100),
+# on 06/18/18
+TW_PZ_Positions["TW_PZ_06_SAND","elev_m"]-(10.2/100),  
+# on 06/19/18             
+TW_PZ_Positions["TW_PZ_06_SAND","elev_m"]-(13.8/100),  
+# on 07/11/18
+TW_PZ_Positions["TW_PZ_06_SAND","elev_m"]-(20.7/100),
+# on 11/19/18
+TW_PZ_Positions["TW_PZ_06_SAND","elev_m"]-(19.9/100),
+# on 03/30/19
+TW_PZ_Positions["TW_PZ_06_SAND","elev_m"]-(8.3/100),
+# on 06/03/19
+TW_PZ_Positions["TW_PZ_06_SAND","elev_m"]-(16.5/100))
+
+### PZ_08_SAND head elevation ### 
+# Head elevation in PZ_06_SAND on 03/03/18 (see manual data spreadsheet): 
+PZ_08_SAND_h_elev<-c(TW_PZ_Positions["TW_PZ_08_SAND","elev_m"]-(16.2/100), 
+# on 05/06/18
+TW_PZ_Positions["TW_PZ_08_SAND","elev_m"]-(16.9/100),
+# on 06/18/18
+TW_PZ_Positions["TW_PZ_08_SAND","elev_m"]-(17/100),  
+# on 06/19/18             
+TW_PZ_Positions["TW_PZ_08_SAND","elev_m"]-(30.8/100),  
+# on 07/11/18
+TW_PZ_Positions["TW_PZ_08_SAND","elev_m"]-(23.1/100),
+# on 11/19/18
+TW_PZ_Positions["TW_PZ_08_SAND","elev_m"]-(1.8/100),
+# on 03/30/19
+NA,
+# on 06/03/19
+TW_PZ_Positions["TW_PZ_08_SAND","elev_m"]-(18/100))
+
+# Paste manual measurement dates together into a vector
+dates<-c("03/03/18","05/06/18","06/18/18","06/19/18","07/11/18","11/19/18","03/30/19","06/03/19")
+
+# Bind all the manual head level data together from PZ_01_SAND, PZ_05_SAND, PZ_06_SAND, and PZ_08_SAND
+PZ_SAND_h_elev<-cbind(PZ_01_SAND_h_elev,PZ_05_SAND_h_elev,PZ_06_SAND_h_elev,PZ_08_SAND_h_elev)                      
+# Assign manual measurement dates as row names to the head elevation matrix
+rownames(PZ_SAND_h_elev)<-dates                   
+                       
+                       
