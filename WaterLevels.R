@@ -13,7 +13,6 @@ library('gstat')
 library('geosphere')
 library('plotly')
 
-
 ####################################################### LOAD DATA ######################################################################################
 
 # Load raw data (downloaded from pressure transducers)
@@ -1312,6 +1311,20 @@ dates<-c("03/03/18","05/06/18","06/18/18","06/19/18","07/11/18","11/19/18","03/3
 # Bind all the manual head level data together from PZ_01_SAND, PZ_05_SAND, PZ_06_SAND, and PZ_08_SAND
 PZ_SAND_h_elev<-cbind(PZ_01_SAND_h_elev,PZ_05_SAND_h_elev,PZ_06_SAND_h_elev,PZ_08_SAND_h_elev)                      
 # Assign manual measurement dates as row names to the head elevation matrix
-rownames(PZ_SAND_h_elev)<-dates                   
+rownames(PZ_SAND_h_elev)<-dates   
+# Assign column names to match piezometers
+colnames(PZ_SAND_h_elev)<- c("TW_PZ_01_SAND", "TW_PZ_05_SAND", "TW_PZ_06_SAND", "TW_PZ_08_SAND")
+
+# Calculate the gradient between 01, 05, and 06  
+max(PZ_SAND_h_elev[1,1:3])   
+min(PZ_SAND_h_elev[1,1:3])                     
+TW_PZ_Positions[names(which.max(PZ_SAND_h_elev[1,1:3])),]
+TW_PZ_Positions[names(which.min(PZ_SAND_h_elev[1,1:3])),]
+
+
+
+ 
+
+               
                        
                        
