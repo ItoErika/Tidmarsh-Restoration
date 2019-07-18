@@ -1335,66 +1335,15 @@ C_h<-max(PZ_SAND_h_elev[1,1:3])
 # The partial derivatives between B and A are defined as: hB−hA = ∂h/∂x(xB−xA) + ∂h/∂y(yB−yA)
 # The partial derivatives between C and A are defined as: hC−hA = ∂h/∂x(xC−xA) + ∂h/∂y(yC−yA)
 # Create a matrix for ∂h/∂x and ∂h/∂y to solve for system of equations:
-rbind(c(as.numeric(B_xy["easting"])-as.numeric(A_xy["easting"]), as.numeric(B_xy["northing"])-as.numeric(A_xy["northing"])),               
+Matrix_A<-rbind(c(as.numeric(B_xy["easting"])-as.numeric(A_xy["easting"]), as.numeric(B_xy["northing"])-as.numeric(A_xy["northing"])),               
 c(as.numeric(C_xy["easting"])-as.numeric(A_xy["easting"]), as.numeric(C_xy["northing"])-as.numeric(A_xy["northing"])))
+# Create a matrix for the head differences between B and A and between C and A                        
+Matrix_B<-rbind(B_h-A_h, C_h-A_h)                       
+# AX = B so the solution is X = (Ainv)B:                       
+Matrix_X<-solve(Matrix_A,Matrix_B)                       
+# Calculate the magnitude of the gradient dh/dl
+dh_dl<-sqrt((Matrix_X[1,])^2+(Matrix_X[2,])^2)                       
+# Calculate the direction of the gradient 
                        
                        
-                       
-                       
-                       
-                       
-                       
-                       
-# AC is the distance (in meters) between the highest and lowest head values
-AC<-pointDistance(A,C, lonlat=FALSE, type='Euclidean' )
-# Calculate the head difference between the median and minimum head values
-B_min_A<-PZ_SAND_h_elev[1,which(PZ_SAND_h_elev[1,1:3]==median(PZ_SAND_h_elev[1,1:3]))]-min(PZ_SAND_h_elev[1,1:3])
-# Calculate the head difference between the maximum and minimum head values
-C_min_A<-max(PZ_SAND_h_elev[1,1:3])-min(PZ_SAND_h_elev[1,1:3])
-# Calculate the line between the median head value and the point where the median head value would land on the gradient line between the highest and lowest head points
-AD<-AC*(B_min_A/C_min_A)
-print(AD)
-# Determine the slope of the line between A and C (bc it must match the slope between A and D)
-slope<-(TW_PZ_Positions_UTM[names(which.min(PZ_SAND_h_elev[1,1:3])),2]-TW_PZ_Positions_UTM[names(which.max(PZ_SAND_h_elev[1,1:3])),2])/(TW_PZ_Positions_UTM[names(which.min(PZ_SAND_h_elev[1,1:3])),1]-TW_PZ_Positions_UTM[names(which.max(PZ_SAND_h_elev[1,1:3])),1])
-print(slope)
-# Determine UTM coordinates for point D   
-D_north<-TW_PZ_Positions_UTM[names(which.min(PZ_SAND_h_elev[1,1:3])),2]+(AD/AC)*(TW_PZ_Positions_UTM[names(which.max(PZ_SAND_h_elev[1,1:3])),2]-TW_PZ_Positions_UTM[names(which.min(PZ_SAND_h_elev[1,1:3])),2])
-D_east<-TW_PZ_Positions_UTM[names(which.min(PZ_SAND_h_elev[1,1:3])),1]+(AD/AC)*(TW_PZ_Positions_UTM[names(which.max(PZ_SAND_h_elev[1,1:3])),1]-TW_PZ_Positions_UTM[names(which.min(PZ_SAND_h_elev[1,1:3])),1])                    
-# Confirm that these coordinates are consistent with the length of AD
-print(pointDistance(TW_PZ_Positions_UTM[names(which.min(PZ_SAND_h_elev[1,1:3])),1:2],cbind(D_east,D_north), lonlat=FALSE, type='Euclidean' ))
-# Recall that the slope of AD is equal to the slope of AC
-(TW_PZ_Positions_UTM[names(which.min(PZ_SAND_h_elev[1,1:3])),2]-D_north)/(TW_PZ_Positions_UTM[names(which.min(PZ_SAND_h_elev[1,1:3])),1]- D_east)
-# Calculate the slope and y-intercept of line BD
-slopeBD<-(as.numeric(B[2])-D_north)/(as.numeric(B[1])-D_east)
-BD_yint<-D_north-(slopeBD_perp*D_east)
-# Determine the equation for the line perpendicular to BD, which passes through point A                    
-# Determine the slope perpendicular to BD
-slopeBD_perp<--1/slopeBD                       
-BD_perp_yint<-as.numeric(A[2])-slopeBD_perp*as.numeric(A[1])
-# Point E is perpendicular to line BD and passes through point A (minimum head point)
-E_east<-(BD_perp_yint-BD_yint)/(slopeBD-slopeBD_perp)
-E_north<-slopeBD*x+BD_yint 
-# Determine the distance between points A and E
-AE<-pointDistance(A,c(E_east,E_north), lonlat=FALSE, type='Euclidean')
-B_min_A/AE                     
-                       
-
-# (1) Calculate the elevation difference between the highest and lowest head values                       
-#dh<-max(PZ_SAND_h_elev[1,1:3])-min(PZ_SAND_h_elev[1,1:3])
-# (2) Calculate the horizontal distance (in meters) between the points of highest and lowest head value                     
-#dx<-pointDistance(TW_PZ_Positions[names(which.max(PZ_SAND_h_elev[1,1:3])),1:2],TW_PZ_Positions[names(which.min(PZ_SAND_h_elev[1,1:3])),1:2], lonlat=TRUE )
-# (3) Calcule the angle in the right triangle with dz as y and dh as x (atan value is in radians)
-#alpha<-atan(dh/dx)
-# (4) Determine the dh between the minimum head point and the medium head point
-#dh2<-PZ_SAND_h_elev[1,which(PZ_SAND_h_elev[1,1:3]==median(PZ_SAND_h_elev[1,1:3]))]-min(PZ_SAND_h_elev[1,1:3])
- Determine where median head value would hit the line between the max and min head points
-#dh2/(atan(alpha))    
-
-                  
-
-
  
-
-               
-                       
-                       
