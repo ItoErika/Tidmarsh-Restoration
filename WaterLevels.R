@@ -1205,7 +1205,12 @@ TW_PZ_Elev<-extract(TW_LiDAR, tp_TW)
 # Bind the elevations to the long lat data 
 TW_PZ_Positions<-cbind(TW_PZ_longlat, TW_PZ_Elev)
 # Rename columns        
-colnames(TW_PZ_Positions)<-c("long", "lat", "elev_m")                  
+colnames(TW_PZ_Positions)<-c("long", "lat", "elev_m")   
+# Bind the elevations to the UTM data 
+TW_PZ_Positions_UTM<-cbind(as.data.frame(tp_TW), TW_PZ_Elev)
+# Rename columns        
+colnames(TW_PZ_Positions_UTM)<-c("easting", "northing", "elev_m")                  
+               
 
 ##################################################### CALCUATE DH/DX ######################################
 
@@ -1316,16 +1321,28 @@ rownames(PZ_SAND_h_elev)<-dates
 colnames(PZ_SAND_h_elev)<- c("TW_PZ_01_SAND", "TW_PZ_05_SAND", "TW_PZ_06_SAND", "TW_PZ_08_SAND")
 
 # Calculate the gradient between 01, 05, and 06 
+# https://waterwelljournal.com/field-notes-2/
+# (1) Calculate the horizontal distance (in meters) between the points of highest and lowest head value     
+AC<-pointDistance(TW_PZ_Positions_UTM[names(which.max(PZ_SAND_h_elev[1,1:3])),1:2],TW_PZ_Positions_UTM[names(which.min(PZ_SAND_h_elev[1,1:3])),1:2], lonlat=FALSE, type='Euclidean' )
+# Calculate the head difference between the median and minimum head values
+B_min_A<-PZ_SAND_h_elev[1,which(PZ_SAND_h_elev[1,1:3]==median(PZ_SAND_h_elev[1,1:3]))]-min(PZ_SAND_h_elev[1,1:3])
+# Calculate the head difference between the maximum and minimum head values
+C_min_A<-max(PZ_SAND_h_elev[1,1:3])-min(PZ_SAND_h_elev[1,1:3])
+# Calculate the line between the median head value and the point where the median head value would land on the gradient line between the highest and lowest head points
+AD<-AC*(B_min_A/C_min_A)
+
 # (1) Calculate the elevation difference between the highest and lowest head values                       
-dh<-max(PZ_SAND_h_elev[1,1:3])-min(PZ_SAND_h_elev[1,1:3])
+#dh<-max(PZ_SAND_h_elev[1,1:3])-min(PZ_SAND_h_elev[1,1:3])
 # (2) Calculate the horizontal distance (in meters) between the points of highest and lowest head value                     
-dx<-pointDistance(TW_PZ_Positions[names(which.max(PZ_SAND_h_elev[1,1:3])),1:2],TW_PZ_Positions[names(which.min(PZ_SAND_h_elev[1,1:3])),1:2], lonlat=TRUE )
+#dx<-pointDistance(TW_PZ_Positions[names(which.max(PZ_SAND_h_elev[1,1:3])),1:2],TW_PZ_Positions[names(which.min(PZ_SAND_h_elev[1,1:3])),1:2], lonlat=TRUE )
 # (3) Calcule the angle in the right triangle with dz as y and dh as x (atan value is in radians)
-alpha<-atan(dh/dx)
+#alpha<-atan(dh/dx)
 # (4) Determine the dh between the minimum head point and the medium head point
-dh2<-PZ_SAND_h_elev[1,which(PZ_SAND_h_elev[1,1:3]==median(PZ_SAND_h_elev[1,1:3]))]-min(PZ_SAND_h_elev[1,1:3])
-# Determine where median head value would hit the line between the max and min head points
-dh2/(atan(alpha))                      
+#dh2<-PZ_SAND_h_elev[1,which(PZ_SAND_h_elev[1,1:3]==median(PZ_SAND_h_elev[1,1:3]))]-min(PZ_SAND_h_elev[1,1:3])
+ Determine where median head value would hit the line between the max and min head points
+#dh2/(atan(alpha))    
+
+                  
 
 
  
