@@ -1320,6 +1320,31 @@ rownames(PZ_SAND_h_elev)<-dates
 # Assign column names to match piezometers
 colnames(PZ_SAND_h_elev)<- c("TW_PZ_01_SAND", "TW_PZ_05_SAND", "TW_PZ_06_SAND", "TW_PZ_08_SAND")
 
+# Calculate the gradient between 01, 05, and 06 
+# A_xy is the coordinate of the piezometer point of minimum head value; A_h is the minimum head value
+A_xy<-TW_PZ_Positions_UTM[names(which.min(PZ_SAND_h_elev[1,1:3])),1:2]
+A_h<-min(PZ_SAND_h_elev[1,1:3])
+# B_xy is the coordinate of the piezometer point of median head value; B_h is the median head value
+B_xy<-TW_PZ_Positions_UTM[names(which(PZ_SAND_h_elev[1,1:3]==median(PZ_SAND_h_elev[1,1:3]))),1:2]
+B_h<-PZ_SAND_h_elev[1,which(PZ_SAND_h_elev[1,1:3]==median(PZ_SAND_h_elev[1,1:3]))]
+# C_xy is the coordinate of the piezometer point of maximum head value; B_h is the maximum head value
+C_xy<-TW_PZ_Positions_UTM[names(which.max(PZ_SAND_h_elev[1,1:3])),1:2]
+C_h<-max(PZ_SAND_h_elev[1,1:3])
+# A plane through these three points has the linear approximation: ∆h = (∂h/∂x)∆x + (∂h/∂y)∆y
+# The partial derivatives (∂h/∂x and ∂h/∂y) are CONSTANT in a plane
+# The partial derivatives between B and A are defined as: hB−hA = ∂h/∂x(xB−xA) + ∂h/∂y(yB−yA)
+# The partial derivatives between C and A are defined as: hC−hA = ∂h/∂x(xC−xA) + ∂h/∂y(yC−yA)
+# Create a matrix for ∂h/∂x and ∂h/∂y to solve for system of equations:
+rbind(c(as.numeric(B_xy["easting"])-as.numeric(A_xy["easting"]), as.numeric(B_xy["northing"])-as.numeric(A_xy["northing"])),               
+c(as.numeric(C_xy["easting"])-as.numeric(A_xy["easting"]), as.numeric(C_xy["northing"])-as.numeric(A_xy["northing"])))
+                       
+                       
+                       
+                       
+                       
+                       
+                       
+                       
 # AC is the distance (in meters) between the highest and lowest head values
 AC<-pointDistance(A,C, lonlat=FALSE, type='Euclidean' )
 # Calculate the head difference between the median and minimum head values
