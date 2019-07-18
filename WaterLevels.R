@@ -1320,10 +1320,8 @@ rownames(PZ_SAND_h_elev)<-dates
 # Assign column names to match piezometers
 colnames(PZ_SAND_h_elev)<- c("TW_PZ_01_SAND", "TW_PZ_05_SAND", "TW_PZ_06_SAND", "TW_PZ_08_SAND")
 
-# Calculate the gradient between 01, 05, and 06 
-# https://waterwelljournal.com/field-notes-2/
-# (1) Calculate the horizontal distance (in meters) between the points of highest and lowest head value     
-AC<-pointDistance(TW_PZ_Positions_UTM[names(which.max(PZ_SAND_h_elev[1,1:3])),1:2],TW_PZ_Positions_UTM[names(which.min(PZ_SAND_h_elev[1,1:3])),1:2], lonlat=FALSE, type='Euclidean' )
+# AC is the distance (in meters) between the highest and lowest head values
+AC<-pointDistance(A,C, lonlat=FALSE, type='Euclidean' )
 # Calculate the head difference between the median and minimum head values
 B_min_A<-PZ_SAND_h_elev[1,which(PZ_SAND_h_elev[1,1:3]==median(PZ_SAND_h_elev[1,1:3]))]-min(PZ_SAND_h_elev[1,1:3])
 # Calculate the head difference between the maximum and minimum head values
@@ -1341,12 +1339,19 @@ D_east<-TW_PZ_Positions_UTM[names(which.min(PZ_SAND_h_elev[1,1:3])),1]+(AD/AC)*(
 print(pointDistance(TW_PZ_Positions_UTM[names(which.min(PZ_SAND_h_elev[1,1:3])),1:2],cbind(D_east,D_north), lonlat=FALSE, type='Euclidean' ))
 # Recall that the slope of AD is equal to the slope of AC
 (TW_PZ_Positions_UTM[names(which.min(PZ_SAND_h_elev[1,1:3])),2]-D_north)/(TW_PZ_Positions_UTM[names(which.min(PZ_SAND_h_elev[1,1:3])),1]- D_east)
-# Calculate the slope of line BD
-slopeBD<-(TW_PZ_Positions_UTM[names(which(PZ_SAND_h_elev[1,1:3]==median(PZ_SAND_h_elev[1,1:3]))),2]-D_north)/(TW_PZ_Positions_UTM[names(which(PZ_SAND_h_elev[1,1:3]==median(PZ_SAND_h_elev[1,1:3]))),1]-D_east)
+# Calculate the slope and y-intercept of line BD
+slopeBD<-(as.numeric(B[2])-D_north)/(as.numeric(B[1])-D_east)
+BD_yint<-D_north-(slopeBD_perp*D_east)
+# Determine the equation for the line perpendicular to BD, which passes through point A                    
 # Determine the slope perpendicular to BD
-# need y - inter of BD                       
-
-                       
+slopeBD_perp<--1/slopeBD                       
+BD_perp_yint<-as.numeric(A[2])-slopeBD_perp*as.numeric(A[1])
+# Point E is perpendicular to line BD and passes through point A (minimum head point)
+E_east<-(BD_perp_yint-BD_yint)/(slopeBD-slopeBD_perp)
+E_north<-slopeBD*x+BD_yint 
+# Determine the distance between points A and E
+AE<-pointDistance(A,c(E_east,E_north), lonlat=FALSE, type='Euclidean')
+B_min_A/AE                     
                        
 
 # (1) Calculate the elevation difference between the highest and lowest head values                       
