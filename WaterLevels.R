@@ -1211,7 +1211,7 @@ colnames(TW_PZ_Positions)<-c("long", "lat", "elev_m")
 
 # Calculate the horizontal groundwater gradient in the "sand aquifer"
 
-############ CALCUATE DH ############
+############ CALCUATE DX ############
 # First, calculate the horizontal distances between each piezometer screened in sand:
 # note that lonlat must = TRUE to calculate distance between points on WGS ellipsoid instead of distance between points on a plane 
 # Calculate the distance (in meters) between TW_PZ_01_SAND and TW_PZ_05_SAND
@@ -1227,7 +1227,7 @@ Dist_05_to_08_SAND <- pointDistance(TW_PZ_longlat["TW_PZ_05_SAND",], TW_PZ_longl
 # Between TW_PZ_06_SAND and TW_PZ_08_SAND
 Dist_06_to_08_SAND <- pointDistance(TW_PZ_longlat["TW_PZ_06_SAND",], TW_PZ_longlat["TW_PZ_08_SAND",], lonlat=TRUE)
 
-############ CALCULATE DZ ############ 
+############ CALCULATE DH ############ 
 
 # First, calculate the head elevation in each piezometer
 # (based on manual water level measurements and LiDAR elevation data)
@@ -1315,12 +1315,17 @@ rownames(PZ_SAND_h_elev)<-dates
 # Assign column names to match piezometers
 colnames(PZ_SAND_h_elev)<- c("TW_PZ_01_SAND", "TW_PZ_05_SAND", "TW_PZ_06_SAND", "TW_PZ_08_SAND")
 
-# Calculate the gradient between 01, 05, and 06  
-max(PZ_SAND_h_elev[1,1:3])   
-min(PZ_SAND_h_elev[1,1:3])                     
-TW_PZ_Positions[names(which.max(PZ_SAND_h_elev[1,1:3])),]
-TW_PZ_Positions[names(which.min(PZ_SAND_h_elev[1,1:3])),]
-
+# Calculate the gradient between 01, 05, and 06 
+# (1) Calculate the elevation difference between the highest and lowest head values                       
+dh<-max(PZ_SAND_h_elev[1,1:3])-min(PZ_SAND_h_elev[1,1:3])
+# (2) Calculate the horizontal distance (in meters) between the points of highest and lowest head value                     
+dx<-pointDistance(TW_PZ_Positions[names(which.max(PZ_SAND_h_elev[1,1:3])),1:2],TW_PZ_Positions[names(which.min(PZ_SAND_h_elev[1,1:3])),1:2], lonlat=TRUE )
+# (3) Calcule the angle in the right triangle with dz as y and dh as x (atan value is in radians)
+alpha<-atan(dh/dx)
+# (4) Determine the dh between the minimum head point and the medium head point
+dh2<-PZ_SAND_h_elev[1,which(PZ_SAND_h_elev[1,1:3]==median(PZ_SAND_h_elev[1,1:3]))]-min(PZ_SAND_h_elev[1,1:3])
+# Determine where median head value would hit the line between the max and min head points
+dh2/(atan(alpha))                      
 
 
  
