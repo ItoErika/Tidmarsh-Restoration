@@ -1330,17 +1330,22 @@ B_min_A<-PZ_SAND_h_elev[1,which(PZ_SAND_h_elev[1,1:3]==median(PZ_SAND_h_elev[1,1
 C_min_A<-max(PZ_SAND_h_elev[1,1:3])-min(PZ_SAND_h_elev[1,1:3])
 # Calculate the line between the median head value and the point where the median head value would land on the gradient line between the highest and lowest head points
 AD<-AC*(B_min_A/C_min_A)
+print(AD)
 # Determine the slope of the line between A and C (bc it must match the slope between A and D)
 slope<-(TW_PZ_Positions_UTM[names(which.min(PZ_SAND_h_elev[1,1:3])),2]-TW_PZ_Positions_UTM[names(which.max(PZ_SAND_h_elev[1,1:3])),2])/(TW_PZ_Positions_UTM[names(which.min(PZ_SAND_h_elev[1,1:3])),1]-TW_PZ_Positions_UTM[names(which.max(PZ_SAND_h_elev[1,1:3])),1])
 print(slope)
 # Determine UTM coordinates for point D   
 D_north<-TW_PZ_Positions_UTM[names(which.min(PZ_SAND_h_elev[1,1:3])),2]+(AD/AC)*(TW_PZ_Positions_UTM[names(which.max(PZ_SAND_h_elev[1,1:3])),2]-TW_PZ_Positions_UTM[names(which.min(PZ_SAND_h_elev[1,1:3])),2])
 D_east<-TW_PZ_Positions_UTM[names(which.min(PZ_SAND_h_elev[1,1:3])),1]+(AD/AC)*(TW_PZ_Positions_UTM[names(which.max(PZ_SAND_h_elev[1,1:3])),1]-TW_PZ_Positions_UTM[names(which.min(PZ_SAND_h_elev[1,1:3])),1])                    
+# Confirm that these coordinates are consistent with the length of AD
+print(pointDistance(TW_PZ_Positions_UTM[names(which.min(PZ_SAND_h_elev[1,1:3])),1:2],cbind(D_east,D_north), lonlat=FALSE, type='Euclidean' ))
 # Recall that the slope of AD is equal to the slope of AC
 (TW_PZ_Positions_UTM[names(which.min(PZ_SAND_h_elev[1,1:3])),2]-D_north)/(TW_PZ_Positions_UTM[names(which.min(PZ_SAND_h_elev[1,1:3])),1]- D_east)
 # Calculate the slope of line BD
-(TW_PZ_Positions_UTM[names(which(PZ_SAND_h_elev[1,1:3]==median(PZ_SAND_h_elev[1,1:3]))),2]-D_north)/(TW_PZ_Positions_UTM[names(which(PZ_SAND_h_elev[1,1:3]==median(PZ_SAND_h_elev[1,1:3]))),1]-D_east)
-# Determine the point that is perpendicular to BD and goes through A. 
+slopeBD<-(TW_PZ_Positions_UTM[names(which(PZ_SAND_h_elev[1,1:3]==median(PZ_SAND_h_elev[1,1:3]))),2]-D_north)/(TW_PZ_Positions_UTM[names(which(PZ_SAND_h_elev[1,1:3]==median(PZ_SAND_h_elev[1,1:3]))),1]-D_east)
+# Determine the slope perpendicular to BD
+# need y - inter of BD                       
+
                        
                        
 
