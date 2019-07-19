@@ -1320,6 +1320,7 @@ rownames(PZ_SAND_h_elev)<-dates
 # Assign column names to match piezometers
 colnames(PZ_SAND_h_elev)<- c("TW_PZ_01_SAND", "TW_PZ_05_SAND", "TW_PZ_06_SAND", "TW_PZ_08_SAND")
 
+                       
 # Calculate the gradient between 01, 05, and 06 
 # A_xy is the coordinate of the piezometer point of minimum head value; A_h is the minimum head value
 A_xy<-TW_PZ_Positions_UTM[names(which.min(PZ_SAND_h_elev[1,1:3])),1:2]
@@ -1342,8 +1343,20 @@ Matrix_B<-rbind(B_h-A_h, C_h-A_h)
 # AX = B so the solution is X = (Ainv)B:                       
 Matrix_X<-solve(Matrix_A,Matrix_B)                       
 # Calculate the magnitude of the gradient dh/dl
-dh_dl<-sqrt((Matrix_X[1,])^2+(Matrix_X[2,])^2)                       
-# Calculate the direction of the gradient 
-                       
-                       
+dh_dl<-sqrt((Matrix_X[1,])^2+(Matrix_X[2,])^2)  
+
+# Calculate the direction of dh/dl       
+# Calculate the components of the pole to the plane containing all three points
+#  Ui =  (y1-y2)*(z3-z2)-(y3-y2)*(z1-z2)i
+Ui<-(as.numeric(A_xy["northing"])-as.numeric(B_xy["northing"]))*(C_h-B_h)-(as.numeric(C_xy["northing"])-as.numeric(B_xy["northing"]))*(A_h-B_h)                      
+# -Uj = -(x1-x2)*(z3-z2)-(x3-x2)*(z1-z2)j
+neg_Uj<--((as.numeric(A_xy["easting"])-as.numeric(B_xy["easting"]))*(C_h-B_h)-(as.numeric(C_xy["easting"])-as.numeric(B_xy["easting"]))*(A_h-B_h))                                             
+# Uk =  (x1-x2)*(y3-y2)-(x3-x2)*(y1-y2)k
+Uk<-(as.numeric(A_xy["easting"])-as.numeric(B_xy["easting"]))*(as.numeric(C_xy["northing"])-as.numeric(B_xy["northing"]))-(as.numeric(C_xy["easting"])-as.numeric(B_xy["easting"]))*(as.numeric(A_xy["northing"])-as.numeric(B_xy["northing"]))                      
+# Calculate direction of gradient: angle = arccos(N/(sqrt(E^2+N^2)))
+if(Uk>0){
+grad_dir<-acos(Ui/(sqrt(neg_Uj^2+Ui^2)))*(180/pi)+90
+} else if (Uk<0 ) {   
+grad_dir<-acos(-Ui/(sqrt(neg_Uj^2+Ui^2)))*(180/pi)+90
+}      
  
