@@ -1320,6 +1320,67 @@ rownames(PZ_SAND_h_elev)<-dates
 # Assign column names to match piezometers
 colnames(PZ_SAND_h_elev)<- c("TW_PZ_01_SAND", "TW_PZ_05_SAND", "TW_PZ_06_SAND", "TW_PZ_08_SAND")
 
+### Write functions to calculate dh/dl (three point problem)
+
+# First extract coordinate data (easting, northing, elevation) for the three piezometers that will be used in the three point problem
+findCoords_3P<-function(ElevationData, Piezometers) { 
+        # A_xy is the coordinate of the piezometer point of minimum head value; A_h is the minimum head value       
+        A_x<-TW_PZ_Positions_UTM[names(which.min(ElevationData[Piezometers])),1]
+        A_y<-TW_PZ_Positions_UTM[names(which.min(ElevationData[Piezometers])),2]
+        A_h<-min(ElevationData[Piezometers]) 
+        # B_xy is the coordinate of the piezometer point of median head value; B_h is the median head value
+        B_x<-TW_PZ_Positions_UTM[names(which(ElevationData[Piezometers]==median(ElevationData[Piezometers]))),1]
+        B_y<-TW_PZ_Positions_UTM[names(which(ElevationData[Piezometers]==median(ElevationData[Piezometers]))),2]
+        B_h<-PZ_SAND_h_elev[1,which(ElevationData[Piezometers]==median(ElevationData[Piezometers]))]
+        # C_xy is the coordinate of the piezometer point of maximum head value; B_h is the maximum head value
+        C_x<-TW_PZ_Positions_UTM[names(which.max(ElevationData[Piezometers])),1]
+        C_y<-TW_PZ_Positions_UTM[names(which.max(ElevationData[Piezometers])),2]
+        C_h<-max(ElevationData[Piezometers]) 
+        Coords<-rbind(A_x, A_y, A_h, B_x, B_y, B_h, C_x, C_y, C_h)
+        return(Coords)
+        }
+
+test<-apply(PZ_SAND_h_elev,1, function(x) findCoords_3P(ElevationData=x, Piezometers=1:3)) 
+# Remove the list elements who do not have data for all three piezometers for the three point problem
+test<-test[-which(sapply(test, length)<9)]
+# Convert the list into a matrix
+Coords<-t(do.call(cbind,test)) 
+# Assign column names based on dates of manual measurements
+rownames(Coords)<-names(test)           
+
+ # Next, calculate the magnitude of the gradient using the coordinate data 
+
+### Write a function to calculate dh/dl (three point problem)
+dh_dl<-vector(length=nrow(Coords))
+calcGrad_3P<-function(Coordinates) {   
+        for (i in 1:nrow(Coords)){                  
+        Matrix_A<-rbind(c(Coordinates[i,"B_x"]-Coordinates[i,"A_x"], Coordinates[i,"B_y"]-Coordinates[i,"A_y"]),               
+        c(Coordinates[i,"C_x"]-Coordinates[i,"A_x"], Coordinates[i,"C_y"]-Coordinates[i,"A_y"]))
+        # Create a matrix for the head differences between B and A and between C and A                        
+        Matrix_B<-rbind(Coordinates[i,"B_h"]-Coordinates[i,"A_h"], Coordinates[i,"C_h"]-Coordinates[i,"A_h"])  
+        print(Matrix_B)
+        # AX = B so the solution is X = (Ainv)B:                       
+        Matrix_X<-solve(Matrix_A,Matrix_B)                       
+        # Calculate the magnitude of the gradient dh/dl
+        dh_dl[i]<-sqrt((Matrix_X[1,])^2+(Matrix_X[2,])^2)
+        }
+        return(dh_dl)
+        }
+
+dh_dl<-calcGrad_3P(Coordinates=Coords)
+
+
+
+
+
+
+            
+            
+            
+            
+            
+            
+            
 ### Write a function to calculate dh/dl (three point problem)
 Gradient_3P_Calc<-function(ElevationData, Piezometers) {
                        
