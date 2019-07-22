@@ -1320,60 +1320,134 @@ rownames(PZ_SAND_h_elev)<-dates
 # Assign column names to match piezometers
 colnames(PZ_SAND_h_elev)<- c("TW_PZ_01_SAND", "TW_PZ_05_SAND", "TW_PZ_06_SAND", "TW_PZ_08_SAND")
 
-### Write functions to calculate dh/dl (three point problem)
+################################################# THREE POINT FUNCTIONS #################################################
 
 # First extract coordinate data (easting, northing, elevation) for the three piezometers that will be used in the three point problem
 findCoords_3P<-function(ElevationData, Piezometers) { 
-        # A_xy is the coordinate of the piezometer point of minimum head value; A_h is the minimum head value       
+        # A_x,y are the coordinates of the piezometer point of minimum head value; A_h is the minimum head value       
         A_x<-TW_PZ_Positions_UTM[names(which.min(ElevationData[Piezometers])),1]
         A_y<-TW_PZ_Positions_UTM[names(which.min(ElevationData[Piezometers])),2]
         A_h<-min(ElevationData[Piezometers]) 
-        # B_xy is the coordinate of the piezometer point of median head value; B_h is the median head value
+        # B_x,y are the coordinates of the piezometer point of median head value; B_h is the median head value
         B_x<-TW_PZ_Positions_UTM[names(which(ElevationData[Piezometers]==median(ElevationData[Piezometers]))),1]
         B_y<-TW_PZ_Positions_UTM[names(which(ElevationData[Piezometers]==median(ElevationData[Piezometers]))),2]
         B_h<-PZ_SAND_h_elev[1,which(ElevationData[Piezometers]==median(ElevationData[Piezometers]))]
-        # C_xy is the coordinate of the piezometer point of maximum head value; B_h is the maximum head value
+        # C_x,y are the coordinates of the piezometer point of maximum head value; B_h is the maximum head value
         C_x<-TW_PZ_Positions_UTM[names(which.max(ElevationData[Piezometers])),1]
         C_y<-TW_PZ_Positions_UTM[names(which.max(ElevationData[Piezometers])),2]
         C_h<-max(ElevationData[Piezometers]) 
         Coords<-rbind(A_x, A_y, A_h, B_x, B_y, B_h, C_x, C_y, C_h)
         return(Coords)
-        }
-
-test<-apply(PZ_SAND_h_elev,1, function(x) findCoords_3P(ElevationData=x, Piezometers=1:3)) 
-# Remove the list elements who do not have data for all three piezometers for the three point problem
-test<-test[-which(sapply(test, length)<9)]
-# Convert the list into a matrix
-Coords<-t(do.call(cbind,test)) 
-# Assign column names based on dates of manual measurements
-rownames(Coords)<-names(test)           
+        }     
 
  # Next, calculate the magnitude of the gradient using the coordinate data 
 
 ### Write a function to calculate dh/dl (three point problem)
-dh_dl<-vector(length=nrow(Coords))
-calcGrad_3P<-function(Coordinates) {   
-        for (i in 1:nrow(Coords)){                  
-        Matrix_A<-rbind(c(Coordinates[i,"B_x"]-Coordinates[i,"A_x"], Coordinates[i,"B_y"]-Coordinates[i,"A_y"]),               
-        c(Coordinates[i,"C_x"]-Coordinates[i,"A_x"], Coordinates[i,"C_y"]-Coordinates[i,"A_y"]))
-        # Create a matrix for the head differences between B and A and between C and A                        
-        Matrix_B<-rbind(Coordinates[i,"B_h"]-Coordinates[i,"A_h"], Coordinates[i,"C_h"]-Coordinates[i,"A_h"])  
-        print(Matrix_B)
-        # AX = B so the solution is X = (Ainv)B:                       
-        Matrix_X<-solve(Matrix_A,Matrix_B)                       
-        # Calculate the magnitude of the gradient dh/dl
-        dh_dl[i]<-sqrt((Matrix_X[1,])^2+(Matrix_X[2,])^2)
-        }
-        return(dh_dl)
-        }
+calcGrad_3P<-function(Coordinates) {  
+        # Create emtpy vectors for for loops
+        dh_dl<-vector(length=nrow(Coordinates))
+        grad_dir<-vector(length=nrow(Coordinates)) 
+        for (i in 1:nrow(Coordinates)){ 
+                # A plane through these three points has the linear approximation: ∆h = (∂h/∂x)∆x + (∂h/∂y)∆y
+                # The partial derivatives (∂h/∂x and ∂h/∂y) are CONSTANT in a plane
+                # The partial derivatives between B and A are defined as: hB−hA = ∂h/∂x(xB−xA) + ∂h/∂y(yB−yA)
+                # The partial derivatives between C and A are defined as: hC−hA = ∂h/∂x(xC−xA) + ∂h/∂y(yC−yA)
+                # Create a matrix for ∂h/∂x and ∂h/∂y to solve for system of equations:                 
+                Matrix_A<-rbind(c(Coordinates[i,"B_x"]-Coordinates[i,"A_x"], Coordinates[i,"B_y"]-Coordinates[i,"A_y"]),               
+                c(Coordinates[i,"C_x"]-Coordinates[i,"A_x"], Coordinates[i,"C_y"]-Coordinates[i,"A_y"]))
+                # Create a matrix for the head differences between B and A and between C and A                        
+                Matrix_B<-rbind(Coordinates[i,"B_h"]-Coordinates[i,"A_h"], Coordinates[i,"C_h"]-Coordinates[i,"A_h"])  
+                print(Matrix_B)
+                # AX = B so the solution is X = (Ainv)B:                       
+                Matrix_X<-solve(Matrix_A,Matrix_B)                       
+                # Calculate the magnitude of the gradient dh/dl
+                dh_dl[i]<-sqrt((Matrix_X[1,])^2+(Matrix_X[2,])^2)
+                }                
+        # Calculate the direction of dh/dl  
+        for (i in 1:nrow(Coordinates)){      
+                # Calculate the components of the pole to the plane containing all three points
+                #  Ui =  (y1-y2)*(z3-z2)-(y3-y2)*(z1-z2)i
+                Ui<-(Coordinates[i,"A_y"]-Coordinates[i,"B_y"])*(Coordinates[i,"C_h"]-Coordinates[i,"B_h"])-(Coordinates[i,"C_y"]-Coordinates[i,"B_y"])*(Coordinates[i,"A_h"]-Coordinates[i,"B_h"])                      
+                # -Uj = -(x1-x2)*(z3-z2)-(x3-x2)*(z1-z2)j
+                neg_Uj<--((Coordinates[i,"A_x"]-Coordinates[i,"B_x"])*(Coordinates[i,"C_h"]-Coordinates[i,"B_h"])-(Coordinates[i,"C_x"]-Coordinates[i,"B_x"])*(Coordinates[i,"A_h"]-Coordinates[i,"B_h"]))                                             
+                # Uk =  (x1-x2)*(y3-y2)-(x3-x2)*(y1-y2)k
+                Uk<-(Coordinates[i,"A_x"]-Coordinates[i,"B_x"])*(Coordinates[i,"C_y"]-Coordinates[i,"B_y"])-(Coordinates[i,"C_x"]-Coordinates[i,"B_x"])*(Coordinates[i,"A_y"]-Coordinates[i,"B_y"])                      
+                # Calculate direction of gradient: angle = arccos(N/(sqrt(E^2+N^2)))
+                if(Uk>0){
+                grad_dir[i]<-acos(Ui/(sqrt(neg_Uj^2+Ui^2)))*(180/pi)+90
+                } else if (Uk<0 ) {   
+                grad_dir[i]<-acos(-Ui/(sqrt(neg_Uj^2+Ui^2)))*(180/pi)+90
+                }
+                }
+                return(cbind(dh_dl,grad_dir))
+         }
 
-dh_dl<-calcGrad_3P(Coordinates=Coords)
+######################################################################################################################3
 
+# First, calculate the gradient in the sand between piezometers 1, 5 and 6: 
+# Run the function to define piezometer coordinates
+test156<-apply(PZ_SAND_h_elev,1, function(x) findCoords_3P(ElevationData=x, Piezometers=1:3)) 
+# Remove the list elements who do not have data for all three piezometers for the three point problem
+test156<-test156[-which(sapply(test156, length)<9)]
+# Convert the list into a matrix
+Coords156<-t(do.call(cbind,test156)) 
+# Assign column names based on dates of manual measurements
+rownames(Coords156)<-names(test156)      
+# Run the function to calculate the gradient magnitude and direction
+Gradient156<-calcGrad_3P(Coordinates=Coords156)
+# Rename row names based on manual measurement dates
+rownames(Gradient156)<-rownames(Coords156)
 
+# Second, calculate the gradient in the sand between piezometers 1, 6 and 8: 
+# Run the function to define piezometer coordinates
+test168<-apply(PZ_SAND_h_elev,1, function(x) findCoords_3P(ElevationData=x, Piezometers=c(1,3,4))) 
+# Remove the list elements who do not have data for all three piezometers for the three point problem
+test168<-test168[-which(sapply(test168, length)<9)]
+# Convert the list into a matrix
+Coords168<-t(do.call(cbind,test168)) 
+# Assign column names based on dates of manual measurements
+rownames(Coords168)<-names(test168)      
+# Run the function to calculate the gradient magnitude and direction
+Gradient168<-calcGrad_3P(Coordinates=Coords168)
+# Rename row names based on manual measurement dates
+rownames(Gradient168)<-rownames(Coords168)
 
+# Third, calculate the gradient in the sand between piezometers 1, 5 and 8: 
+# Run the function to define piezometer coordinates
+test158<-apply(PZ_SAND_h_elev,1, function(x) findCoords_3P(ElevationData=x, Piezometers=c(1,2,4))) 
+# Remove the list elements who do not have data for all three piezometers for the three point problem
+test158<-test158[-which(sapply(test158, length)<9)]
+# Convert the list into a matrix
+Coords158<-t(do.call(cbind,test158)) 
+# Assign column names based on dates of manual measurements
+rownames(Coords158)<-names(test158)      
+# Run the function to calculate the gradient magnitude and direction
+Gradient158<-calcGrad_3P(Coordinates=Coords158)
+# Rename row names based on manual measurement dates
+rownames(Gradient158)<-rownames(Coords158)
 
+# Fourth, calculate the gradient in the sand between piezometers 5, 6 and 8: 
+# Run the function to define piezometer coordinates
+test568<-apply(PZ_SAND_h_elev,1, function(x) findCoords_3P(ElevationData=x, Piezometers=c(2:4))) 
+# Remove the list elements who do not have data for all three piezometers for the three point problem
+test568<-test568[-which(sapply(test568, length)<9)]
+# Convert the list into a matrix
+Coords568<-t(do.call(cbind,test568)) 
+# Assign column names based on dates of manual measurements
+rownames(Coords568)<-names(test568)      
+# Run the function to calculate the gradient magnitude and direction
+Gradient568<-calcGrad_3P(Coordinates=Coords568)
+# Rename row names based on manual measurement dates
+rownames(Gradient568)<-rownames(Coords568)
 
+# Bind all gradient data into the manual measurements matrix for the sand piezometers
+PZ_SAND_Grad<-cbind(PZ_SAND_h_elev, Gradient156[match(rownames(PZ_SAND_h_elev), rownames(Gradient156)),])
+PZ_SAND_Grad<-cbind(PZ_SAND_Grad, Gradient168[match(rownames(PZ_SAND_Grad), rownames(Gradient168)),])
+PZ_SAND_Grad<-cbind(PZ_SAND_Grad, Gradient158[match(rownames(PZ_SAND_Grad), rownames(Gradient158)),])
+PZ_SAND_Grad<-cbind(PZ_SAND_Grad, Gradient568[match(rownames(PZ_SAND_Grad), rownames(Gradient568)),])
+colnames(PZ_SAND_Grad)<- c("TW_PZ_01_SAND","TW_PZ_05_SAND","TW_PZ_06_SAND","TW_PZ_08_SAND","dh_dl_156","grad_dir_156","dh_dl_168","grad_dir_168","dh_dl_158","grad_dir_158","dh_dl_568","grad_dir_568") 
 
+write.csv(PZ_SAND_Grad, "PZ_SAND_Grad.csv")
             
             
             
