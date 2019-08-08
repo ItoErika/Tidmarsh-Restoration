@@ -8,12 +8,11 @@ import geostatspy.GSLIB as GSLIB
 
 import geostatspy.geostats as geostats
 
+os.chdir("C:/Users/erikai94/Documents/UMass/Tidmarsh/Models/geostats")  
 
-df = pd.read_csv("sample_data_MV_biased.csv")             # read a .csv file in as a DataFrame
+
+df = pd.read_csv("FakeFaciesData.csv")             # read a .csv file in as a DataFrame
 df.describe()                                             # summary statistics 
-df = df.sample(50)                                        # extract 50 samples
-df = df.reset_index()                                     # reset the record index 
-df.head(n=20)
 
 
 # Sequential Indicator Simulation with Simple Kriging Multiple Realizations 
