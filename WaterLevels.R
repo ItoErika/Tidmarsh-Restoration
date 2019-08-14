@@ -1199,7 +1199,12 @@ TW_PZ_longlat<-read.csv("file:///C:/Users/erikai94/Documents/UMass/Tidmarsh/LiDA
 # Convert into a spatial points
 sp_TW_PZ_longlat<- SpatialPoints(TW_PZ_longlat, proj4string = CRS("+proj=longlat +datum=WGS84"))
 # Convert the lat long points into UTM points
-tp_TW <- spTransform(sp_TW_PZ_longlat, crs(TW_LiDAR))                       
+tp_TW <- spTransform(sp_TW_PZ_longlat, crs(TW_LiDAR))             
+
+# Optional script to plot the elevation raster showing locations of piezometers 
+plot(TW_LiDAR, col = terrain.colors( length(seq(7, 10, by = .1))-1), breaks= seq(7, 10, by = .1), zlim=c(7,10))
+plot(tp_TW, add=TRUE)
+          
 # Extract elevations at each lat long piezometer point
 TW_PZ_Elev<-extract(TW_LiDAR, tp_TW)   
 # Bind the elevations to the long lat data 
