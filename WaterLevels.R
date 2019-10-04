@@ -433,15 +433,15 @@ write.csv(TW_Grad_02_Jun319, file="TWGrad02_11-20-18_to_6-3-19.csv", row.names=F
 ############## TW_PZ_03 ##############    
 # Create a column for the depth to water below ground surface
 # The top of piezometer casing to ground surface = 58 cm
-TW_PZ_03_Nov[,"m_above_GS"]<-(151/100-(58/100+TW_PZ_03_Nov[,"m_water"]) )*-1 
+TW_PZ_03_Nov2018[,"m_above_GS"]<-(151/100-(58/100+TW_PZ_03_Nov2018[,"m_water"]) )*-1 
 # Remove last few rows of data 
-TW_PZ_03_Nov<-TW_PZ_03_Nov[1:which(TW_PZ_03_Nov[,"Date_Time"]=="11/20/18 10:15:00 AM"),]
+TW_PZ_03_Nov2018<-TW_PZ_03_Nov2018[1:which(TW_PZ_03_Nov2018[,"Date_Time"]=="11/20/18 10:15:00 AM"),]
 # Add manual data
-TW_PZ_03_Nov[which(TW_PZ_03_Nov[,"Date_Time"]=="07/12/18 11:30:00 AM"),"m_manual"]<-0.383
-TW_PZ_03_Nov[which(TW_PZ_03_Nov[,"Date_Time"]=="11/20/18 09:15:00 AM"),"m_manual"]<-0.382                    
-TW_PZ_03_Nov[,"lat"]<-41.91499167
-TW_PZ_03_Nov[,"long"]<--70.57736111   
-write.csv(TW_PZ_03_Nov, file="TWPZ03_7-12-18_to_11-20-18.csv", row.names=FALSE)  
+TW_PZ_03_Nov2018[which(TW_PZ_03_Nov2018[,"Date_Time"]=="07/12/18 11:30:00 AM"),"m_manual"]<-0.383
+TW_PZ_03_Nov2018[which(TW_PZ_03_Nov2018[,"Date_Time"]=="11/20/18 09:15:00 AM"),"m_manual"]<-0.382                    
+#TW_PZ_03_Nov2018[,"lat"]<-41.91499167
+#TW_PZ_03_Nov2018[,"long"]<--70.57736111   
+write.csv(TW_PZ_03_Nov2018, file="TWPZ03_7-12-18_to_11-20-18.csv", row.names=FALSE)  
    
 # Create a column for the depth to water below ground surface
 TW_PZ_03_Jun319[,"m_above_GS"]<-(TW_PZ_03_Jun319[,"m_water"])-.46
@@ -462,8 +462,27 @@ TW_PZ_03_Jun319[Start_Blank:Stop_Blank,"m_above_GS"]<-NA
 TW_PZ_03_Jun319[which(TW_PZ_03_Jun319[,"Date_Time"]=="03/30/19 03:45:00 PM"),"m_manual"]<-0.279
 TW_PZ_03_Jun319[which(TW_PZ_03_Jun319[,"Date_Time"]=="06/03/19 12:30:00 PM"),"m_manual"]<-0.29
 # Save as CSV  
-write.csv(TW_PZ_03_Jun319, file="TWPZ03_11-20-18_to_6-3-19.csv", row.names=FALSE)                         
+write.csv(TW_PZ_03_Jun319, file="TWPZ03_11-20-18_to_6-3-19.csv", row.names=FALSE)      
 
+############## TW_SW_03 ##############     
+# Correct based on manual stream measurements
+TW_SW_03_Nov2018[,"m_above_GS"]<-TW_SW_03_Nov2018[,"m_water"]-2
+# Add manual data
+TW_SW_03_Nov2018[which(TW_SW_03_Nov2018[,"Date_Time"]=="07/11/18 12:00:00 PM"),"m_manual"]<-0.351
+TW_SW_03_Nov2018[which(TW_SW_03_Nov2018[,"Date_Time"]=="11/20/18 10:30:00 AM"),"m_manual"]<-0.342
+# Save as CSV  
+write.csv(TW_SW_03_Nov2018, file="TWSW03_6-18-18_to_11-20-18_MALFUNC.csv", row.names=FALSE)                               
+                       
+                      
+# Correct based on manual stream measurements
+TW_SW_03_Jun319[,"m_above_GS"]<-TW_SW_03_Jun319[,"m_water"]-2
+# Add manual data
+TW_SW_03_Jun319[which(TW_SW_03_Jun319[,"Date_Time"]=="03/30/19 04:00:00 PM"),"m_manual"]<-0.204
+TW_SW_03_Jun319[which(TW_SW_03_Jun319[,"Date_Time"]=="06/03/19 12:30:00 PM"),"m_manual"]<-0.245 
+# Save as CSV  
+write.csv(TW_SW_03_Jun319, file="TWSW03_11-20-18_to_6-3-19.csv", row.names=FALSE)                        
+
+                       
 ############## TW_PZ_04 ##############  
 # Create a column for the depth to water below ground surface
 TW_PZ_04_Jun319[,"m_above_GS"]<-(TW_PZ_04_Jun319[,"m_water"])-1.03
@@ -904,16 +923,7 @@ TW_SW_10_Jun319[which(TW_SW_10_Jun319[,"Date_Time"]=="03/30/19 04:30:00 PM"),"m_
 TW_SW_10_Jun319[which(TW_SW_10_Jun319[,"Date_Time"]=="06/03/19 12:00:00 PM"),"m_manual"]<-0.20    
 # Save as CSV
 write.csv(TW_SW_10_Jun319, file="TWSW10_11-19-18_to_6-3-19.csv", row.names=FALSE)                       
-                       
-
-############## TW_SW_03 ##############     
-# Correct based on manual stream measurements
-TW_SW_03_Jun319[,"m_above_GS"]<-TW_SW_03_Jun319[,"m_water"]-2
-# Add manual data
-TW_SW_03_Jun319[which(TW_SW_03_Jun319[,"Date_Time"]=="03/30/19 04:00:00 PM"),"m_manual"]<-0.204
-TW_SW_03_Jun319[which(TW_SW_03_Jun319[,"Date_Time"]=="06/03/19 12:30:00 PM"),"m_manual"]<-0.245 
-# Save as CSV  
-write.csv(TW_SW_03_Jun319, file="TWSW03_11-20-18_to_6-3-19.csv", row.names=FALSE)                           
+                                             
 
                      
 ##################################################### MAKE PLOTS ####################################################################################
@@ -981,19 +991,45 @@ Plot_Times<-as.POSIXct(TW_Grad_02_Jun319[,"Date_Time"], "%m/%d/%y %I:%M:%S %p", 
 ggplot(TW_Grad_02_Jun319, aes(Plot_Times, TW_Grad_02_Jun319[,"dh/dz"]))+geom_line(color='black', size=.6) + xlab("Date") + ylab("Vertical Hydraulic Gradient")+ scale_y_reverse(limits =c(0,-.3))+ ggtitle("TW_Gradient_02")+  scale_x_datetime(breaks = seq(Plot_Times[1], Plot_Times[length(Plot_Times)], "7 days"),date_labels="%b %d")+theme(axis.text.x = element_text(angle=45, vjust = 0.5))
 ggsave("TW_Grad_02_11-20-18_to_6-3-19.pdf", width = 12, height = 6) 
 
-# TW_PZ_03
-Plot_Times<-as.POSIXct(TW_PZ_03_Nov[,"Date_Time"], "%m/%d/%y %I:%M:%S %p", tz="America/New_York")
-ggplot(TW_PZ_03_Nov, aes(Plot_Times, TW_PZ_03_Nov[,"m_above_GS"]))+geom_line(color='royalblue3', size=.6)+ ylim(0,.6) + xlab("Date") + ylab("Water Above Streambed (m)")+ggtitle("TW_PZ_03")+  scale_x_datetime(breaks = seq(Plot_Times[1], Plot_Times[length(Plot_Times)], "7 days"),date_labels="%b %d")+theme(axis.text.x = element_text(angle=45, vjust = 0.5))                                               
-ggsave("TW_PZ_03_Nov.pdf", width = 12, height = 6)
-
+################ TW_PZ_03 ################
+# November                       
+Plot_Times<-as.POSIXct(TW_PZ_03_Nov2018[,"Date_Time"], "%m/%d/%y %I:%M:%S %p", tz="America/New_York")
+ggplot(TW_PZ_03_Nov2018, aes(Plot_Times, TW_PZ_03_Nov2018[,"m_above_GS"]))+geom_line(color='royalblue3', size=.6)+ ylim(0,.6) + xlab("Date") + ylab("Water Above Streambed (m)")+ggtitle("TW_PZ_03")+  scale_x_datetime(breaks = seq(Plot_Times[1], Plot_Times[length(Plot_Times)], "7 days"),date_labels="%b %d")+theme(axis.text.x = element_text(angle=45, vjust = 0.5))                                               
+ggsave("TW_PZ_03_7-12-18_to_11-20-18.pdf", width = 12, height = 6)
+# November with manual                      
+Plot_Times<-as.POSIXct(TW_PZ_03_Nov2018[,"Date_Time"], "%m/%d/%y %I:%M:%S %p", tz="America/New_York")
+ggplot(TW_PZ_03_Nov2018, aes(Plot_Times, TW_PZ_03_Nov2018[,"m_above_GS"]))+geom_line(color='royalblue3', size=.6)+ ylim(0,.6) + xlab("Date") + ylab("Water Above Streambed (m)")+ggtitle("TW_PZ_03")+  scale_x_datetime(breaks = seq(Plot_Times[1], Plot_Times[length(Plot_Times)], "7 days"),date_labels="%b %d")+theme(axis.text.x = element_text(angle=45, vjust = 0.5)) + geom_point(aes(x=Plot_Times, y=TW_PZ_03_Nov2018[,"m_manual"]), color="orange3", size=3)                                                                                                                         
+ggsave("TW_PZ_03_7-12-18_to_11-20-18_manual.pdf", width = 12, height = 6)                       
+# June
 Plot_Times<-as.POSIXct(TW_PZ_03_Jun319[,"Date_Time"], "%m/%d/%y %I:%M:%S %p", tz="America/New_York")
 ggplot(TW_PZ_03_Jun319, aes(Plot_Times, TW_PZ_03_Jun319[,"m_above_GS"]))+geom_line(color='royalblue3', size=.6)+ ylim(0,.6) + xlab("Date") + ylab("Water Above Streambed (m)")+ggtitle("TW_PZ_03")+  scale_x_datetime(breaks = seq(Plot_Times[1], Plot_Times[length(Plot_Times)], "7 days"),date_labels="%b %d")+theme(axis.text.x = element_text(angle=45, vjust = 0.5))                                               
 ggsave("TW_PZ_03_11-20-18_to_6-3-19.pdf", width = 12, height = 6)
-
+# June with manual
 Plot_Times<-as.POSIXct(TW_PZ_03_Jun319[,"Date_Time"], "%m/%d/%y %I:%M:%S %p", tz="America/New_York")
 ggplot(TW_PZ_03_Jun319, aes(Plot_Times, TW_PZ_03_Jun319[,"m_above_GS"]))+geom_line(color='royalblue3', size=.6)+ ylim(0,.6) + xlab("Date") + ylab("Water Above Streambed (m)")+ggtitle("TW_PZ_03")+  scale_x_datetime(breaks = seq(Plot_Times[1], Plot_Times[length(Plot_Times)], "7 days"),date_labels="%b %d")+theme(axis.text.x = element_text(angle=45, vjust = 0.5))+ geom_point(aes(x=Plot_Times, y=TW_PZ_03_Jun319[,"m_manual"]), color="orange3", size=3)                                                                           
 ggsave("TW_PZ_03_11-20-18_to_6-3-19_manual.pdf", width = 12, height = 6)
 
+# TW_SW_03
+# November
+Plot_Times<-as.POSIXct(TW_SW_03_Nov2018[,"Date_Time"], "%m/%d/%y %I:%M:%S %p", tz="America/New_York")
+ggplot(TW_SW_03_Nov2018, aes(Plot_Times, TW_SW_03_Nov2018[,"m_above_GS"]))+geom_line(color='royalblue3', size=.6)+ ylim(-1,3) + xlab("Date") + ylab("Stream Stage (m)")+ggtitle("TW_SW_03")+  scale_x_datetime(breaks = seq(Plot_Times[1], Plot_Times[length(Plot_Times)], "7 days"),date_labels="%b %d")+theme(axis.text.x = element_text(angle=45, vjust = 0.5))                                               
+ggsave("TW_SW_03_11-20-18_to_6-3-19_MALFUNC.pdf", width = 12, height = 6)
+# November with manual 
+Plot_Times<-as.POSIXct(TW_SW_03_Nov2018[,"Date_Time"], "%m/%d/%y %I:%M:%S %p", tz="America/New_York")
+ggplot(TW_SW_03_Nov2018, aes(Plot_Times, TW_SW_03_Nov2018[,"m_above_GS"]))+geom_line(color='royalblue3', size=.6)+ ylim(-1,3) + xlab("Date") + ylab("Stream Stage (m)")+ggtitle("TW_SW_03")+  scale_x_datetime(breaks = seq(Plot_Times[1], Plot_Times[length(Plot_Times)], "7 days"),date_labels="%b %d")+theme(axis.text.x = element_text(angle=45, vjust = 0.5)) + geom_point(aes(x=Plot_Times, y=TW_SW_03_Nov2018[,"m_manual"]), color="orange3", size=3)                                                                                                                      
+ggsave("TW_SW_03_11-20-18_to_6-3-19_manual_MALFUNC.pdf", width = 12, height = 6)
+                                                            
+# June
+Plot_Times<-as.POSIXct(TW_SW_03_Jun319[,"Date_Time"], "%m/%d/%y %I:%M:%S %p", tz="America/New_York")
+ggplot(TW_SW_03_Jun319, aes(Plot_Times, TW_SW_03_Jun319[,"m_above_GS"]))+geom_line(color='royalblue3', size=.6)+ ylim(-1,3) + xlab("Date") + ylab("Stream Stage (m)")+ggtitle("TW_SW_03")+  scale_x_datetime(breaks = seq(Plot_Times[1], Plot_Times[length(Plot_Times)], "7 days"),date_labels="%b %d")+theme(axis.text.x = element_text(angle=45, vjust = 0.5))                                               
+ggsave("TW_SW_03_11-20-18_to_6-3-19.pdf", width = 12, height = 6)
+# June with manual 
+Plot_Times<-as.POSIXct(TW_SW_03_Jun319[,"Date_Time"], "%m/%d/%y %I:%M:%S %p", tz="America/New_York")
+ggplot(TW_SW_03_Jun319, aes(Plot_Times, TW_SW_03_Jun319[,"m_above_GS"]))+geom_line(color='royalblue3', size=.6)+ ylim(-1,3) + xlab("Date") + ylab("Stream Stage (m)")+ggtitle("TW_SW_03")+  scale_x_datetime(breaks = seq(Plot_Times[1], Plot_Times[length(Plot_Times)], "7 days"),date_labels="%b %d")+theme(axis.text.x = element_text(angle=45, vjust = 0.5)) + geom_point(aes(x=Plot_Times, y=TW_SW_03_Jun319[,"m_manual"]), color="orange3", size=3)                                                                                                                      
+ggsave("TW_SW_03_11-20-18_to_6-3-19_manual.pdf", width = 12, height = 6)
+                                      
+                              
+                       
 # TW_PZ_04
 # uncorrected rise                        
 Plot_Times<-as.POSIXct(TW_PZ_04_Jun319[,"Date_Time"], "%m/%d/%y %I:%M:%S %p", tz="America/New_York")
@@ -1200,16 +1236,7 @@ Plot_Times<-as.POSIXct(TW_SW_02_Jun319[,"Date_Time"], "%m/%d/%y %I:%M:%S %p", tz
 ggplot(TW_SW_02_Jun319, aes(Plot_Times, TW_SW_02_Jun319[,"m_above_GS"]))+geom_line(color='royalblue3', size=.6)+ ylim(0,.7) + xlab("Date") + ylab("Stream Stage (m)")+ggtitle("TW_SW_02")+  scale_x_datetime(breaks = seq(Plot_Times[1], Plot_Times[length(Plot_Times)], "7 days"),date_labels="%b %d")+theme(axis.text.x = element_text(angle=45, vjust = 0.5))   + geom_point(aes(x=Plot_Times, y=TW_SW_02_Jun319[,"m_manual"]), color="orange3", size=3)                                                                        
 ggsave("TW_SW_02_11-20-18_to_6-3-19_manual.pdf.pdf", width = 12, height = 6)
 
-# TW_SW_03
-Plot_Times<-as.POSIXct(TW_SW_03_Jun319[,"Date_Time"], "%m/%d/%y %I:%M:%S %p", tz="America/New_York")
-ggplot(TW_SW_03_Jun319, aes(Plot_Times, TW_SW_03_Jun319[,"m_above_GS"]))+geom_line(color='royalblue3', size=.6)+ ylim(-1,3) + xlab("Date") + ylab("Stream Stage (m)")+ggtitle("TW_SW_03")+  scale_x_datetime(breaks = seq(Plot_Times[1], Plot_Times[length(Plot_Times)], "7 days"),date_labels="%b %d")+theme(axis.text.x = element_text(angle=45, vjust = 0.5))                                               
-ggsave("TW_SW_03_11-20-18_to_6-3-19.pdf", width = 12, height = 6)
-
-Plot_Times<-as.POSIXct(TW_SW_03_Jun319[,"Date_Time"], "%m/%d/%y %I:%M:%S %p", tz="America/New_York")
-ggplot(TW_SW_03_Jun319, aes(Plot_Times, TW_SW_03_Jun319[,"m_above_GS"]))+geom_line(color='royalblue3', size=.6)+ ylim(-1,3) + xlab("Date") + ylab("Stream Stage (m)")+ggtitle("TW_SW_03")+  scale_x_datetime(breaks = seq(Plot_Times[1], Plot_Times[length(Plot_Times)], "7 days"),date_labels="%b %d")+theme(axis.text.x = element_text(angle=45, vjust = 0.5)) + geom_point(aes(x=Plot_Times, y=TW_SW_03_Jun319[,"m_manual"]), color="orange3", size=3)                                                                                                                      
-ggsave("TW_SW_03_11-20-18_to_6-3-19_manual.pdf", width = 12, height = 6)
-                                      
-                       
+                
 # TW_PZ_05_SAND
 Plot_Times<-as.POSIXct(TW_PZ_05_SAND_Nov[,"Date_Time"], "%m/%d/%y %I:%M:%S %p", tz="America/New_York")
 ggplot(TW_PZ_05_SAND_Nov, aes(Plot_Times, TW_PZ_05_SAND_Nov[,"m_below_GS"]))+geom_line(color='royalblue3', size=.6) + xlab("Date") + ylab("Depth to Water Below Ground Surface (m)")+ggtitle("TW_PZ_05_SAND_Nov")+  scale_x_datetime(breaks = seq(Plot_Times[1], Plot_Times[length(Plot_Times)], "7 days"),date_labels="%b %d")+ scale_y_reverse(limits =c(.6,-.1)) +theme(axis.text.x = element_text(angle=45, vjust = 0.5))                       
