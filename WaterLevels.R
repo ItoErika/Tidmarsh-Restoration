@@ -585,26 +585,26 @@ write.csv(TW_PZ_05_Jun319, file="TWPZ05_11-19-18_to_6-3-19.csv", row.names=FALSE
           
 
 ############## TW_PZ_05_SAND ##############    
-TW_PZ_05_SAND_Nov[,"m_below_GS"]<-160/100-(105.5/100+TW_PZ_05_SAND_Nov[,"m_water"])  
+TW_PZ_05_SAND_Nov2018[,"m_below_GS"]<-160/100-(105.5/100+TW_PZ_05_SAND_Nov2018[,"m_water"])  
 # Remove last few rows of data 
-TW_PZ_05_SAND_Nov<-TW_PZ_05_SAND_Nov[1:which(TW_PZ_05_SAND_Nov[,"Date_Time"]=="11/19/18 03:45:00 PM"),]
+TW_PZ_05_SAND_Nov2018<-TW_PZ_05_SAND_Nov2018[1:which(TW_PZ_05_SAND_Nov2018[,"Date_Time"]=="11/19/18 03:45:00 PM"),]
 # Correct the vertical jump in data on 6/19 (date of logger retrieval); logger was in slightly different vertical position upon reinstallation
-vert_shift_start<-which(TW_PZ_05_SAND_Nov[,"Date_Time"]=="06/19/18 03:15:00 PM")
-TW_PZ_05_SAND_Nov[vert_shift_start:nrow(TW_PZ_05_SAND_Nov),"m_below_GS"]<-TW_PZ_05_SAND_Nov[vert_shift_start:nrow(TW_PZ_05_SAND_Nov),"m_below_GS"]-0.0970146
-TW_PZ_05_SAND_Nov[,"lat"]<-41.91594
-TW_PZ_05_SAND_Nov[,"long"]<--70.57631
+vert_shift_start<-which(TW_PZ_05_SAND_Nov2018[,"Date_Time"]=="06/19/18 03:15:00 PM")
+TW_PZ_05_SAND_Nov2018[vert_shift_start:nrow(TW_PZ_05_SAND_Nov2018),"m_below_GS"]<-TW_PZ_05_SAND_Nov2018[vert_shift_start:nrow(TW_PZ_05_SAND_Nov2018),"m_below_GS"]-0.0970146
+#TW_PZ_05_SAND_Nov2018[,"lat"]<-41.91594
+#TW_PZ_05_SAND_Nov2018[,"long"]<--70.57631
 # Interpolate between the 7/11 spike
-Start_Spike<-which(TW_PZ_05_SAND_Nov[,"Date_Time"]=="07/11/18 02:30:00 PM")                     
-Stop_Spike<-which(TW_PZ_05_SAND_Nov[,"Date_Time"]=="07/11/18 03:00:00 PM")     
-Smoothed_Spike<-seq(TW_PZ_05_SAND_Nov[Start_Spike,"m_below_GS"], TW_PZ_05_SAND_Nov[Stop_Spike,"m_below_GS"], length=Stop_Spike-Start_Spike+1)  
+Start_Spike<-which(TW_PZ_05_SAND_Nov2018[,"Date_Time"]=="07/11/18 02:30:00 PM")                     
+Stop_Spike<-which(TW_PZ_05_SAND_Nov2018[,"Date_Time"]=="07/11/18 03:00:00 PM")     
+Smoothed_Spike<-seq(TW_PZ_05_SAND_Nov2018[Start_Spike,"m_below_GS"], TW_PZ_05_SAND_Nov2018[Stop_Spike,"m_below_GS"], length=Stop_Spike-Start_Spike+1)  
 # Replace the spike with the smoothed interpolated data
-TW_PZ_05_SAND_Nov[Start_Spike:Stop_Spike,"m_below_GS"]<-Smoothed_Spike  
+TW_PZ_05_SAND_Nov2018[Start_Spike:Stop_Spike,"m_below_GS"]<-Smoothed_Spike  
 # Add manual data
-TW_PZ_05_SAND_Nov[which(TW_PZ_05_SAND_Nov[,"Date_Time"]=="06/19/18 03:00:00 PM"),"m_manual"]<-0.224                    
-TW_PZ_05_SAND_Nov[which(TW_PZ_05_SAND_Nov[,"Date_Time"]=="07/11/18 02:30:00 PM"),"m_manual"]<-0.398
-TW_PZ_05_SAND_Nov[which(TW_PZ_05_SAND_Nov[,"Date_Time"]=="11/19/18 03:00:00 PM"),"m_manual"]<-0.127 
+TW_PZ_05_SAND_Nov2018[which(TW_PZ_05_SAND_Nov2018[,"Date_Time"]=="06/19/18 03:00:00 PM"),"m_manual"]<-0.224                    
+TW_PZ_05_SAND_Nov2018[which(TW_PZ_05_SAND_Nov2018[,"Date_Time"]=="07/11/18 02:30:00 PM"),"m_manual"]<-0.398
+TW_PZ_05_SAND_Nov2018[which(TW_PZ_05_SAND_Nov2018[,"Date_Time"]=="11/19/18 03:00:00 PM"),"m_manual"]<-0.127 
 # Save as CSV  
-write.csv(TW_PZ_05_SAND_Nov, file="TWPZ05_SAND_6-18-18_to_11-19-18.csv", row.names=FALSE)  
+write.csv(TW_PZ_05_SAND_Nov2018, file="TWPZ05_SAND_6-18-18_to_11-19-18.csv", row.names=FALSE)  
 
 # JUNE 
 # This logger appeared to have filled or stopped logging before it was downloaded                      
@@ -1110,6 +1110,16 @@ ggsave("TW_PZ_05_11-19-18_to_6-3-19.pdf", width = 12, height = 6)
 Plot_Times<-as.POSIXct(TW_PZ_05_Jun319[,"Date_Time"], "%m/%d/%y %I:%M:%S %p", tz="America/New_York")
 ggplot(TW_PZ_05_Jun319, aes(Plot_Times, TW_PZ_05_Jun319[,"m_below_GS"]))+geom_line(color='royalblue3', size=.6) + xlab("Date") + ylab("Depth to Water Below Ground Surface (m)")+ggtitle("TW_PZ_05")+  scale_x_datetime(breaks = seq(Plot_Times[1], Plot_Times[length(Plot_Times)], "7 days"),date_labels="%b %d")+ scale_y_reverse(limits =c(1.0,-0.3)) +theme(axis.text.x = element_text(angle=45, vjust = 0.5))  + geom_point(aes(x=Plot_Times, y=TW_PZ_05_Jun319[,"m_manual"]), color="orange3", size=3)                         
 ggsave("TW_PZ_05_11-19-18_to_6-3-19_manual.pdf", width = 12, height = 6)
+
+################ TW_PZ_05_SAND ################
+# November
+Plot_Times<-as.POSIXct(TW_PZ_05_SAND_Nov2018[,"Date_Time"], "%m/%d/%y %I:%M:%S %p", tz="America/New_York")
+ggplot(TW_PZ_05_SAND_Nov2018, aes(Plot_Times, TW_PZ_05_SAND_Nov2018[,"m_below_GS"]))+geom_line(color='royalblue3', size=.6) + xlab("Date") + ylab("Depth to Water Below Ground Surface (m)")+ggtitle("TW_PZ_05_SAND_Nov")+  scale_x_datetime(breaks = seq(Plot_Times[1], Plot_Times[length(Plot_Times)], "7 days"),date_labels="%b %d")+ scale_y_reverse(limits =c(.6,-.1)) +theme(axis.text.x = element_text(angle=45, vjust = 0.5))                       
+ggsave("TW_PZ_05_SAND_6-18-18_to_11-19-18.pdf", width = 12, height = 6)     
+# November with manual                       
+Plot_Times<-as.POSIXct(TW_PZ_05_SAND_Nov2018[,"Date_Time"], "%m/%d/%y %I:%M:%S %p", tz="America/New_York")
+ggplot(TW_PZ_05_SAND_Nov2018, aes(Plot_Times, TW_PZ_05_SAND_Nov2018[,"m_below_GS"]))+geom_line(color='royalblue3', size=.6) + xlab("Date") + ylab("Depth to Water Below Ground Surface (m)")+ggtitle("TW_PZ_05_SAND_Nov")+  scale_x_datetime(breaks = seq(Plot_Times[1], Plot_Times[length(Plot_Times)], "7 days"),date_labels="%b %d")+ scale_y_reverse(limits =c(.6,-.1)) +theme(axis.text.x = element_text(angle=45, vjust = 0.5))  + geom_point(aes(x=Plot_Times, y=TW_PZ_05_SAND_Nov2018[,"m_manual"]), color="orange3", size=3)                                            
+ggsave("TW_PZ_05_SAND_6-18-18_to_11-19-18_manual.pdf", width = 12, height = 6)                                                 
                        
                       
 # TW_PZ_06
@@ -1266,11 +1276,8 @@ Plot_Times<-as.POSIXct(TW_SW_02_Jun319[,"Date_Time"], "%m/%d/%y %I:%M:%S %p", tz
 ggplot(TW_SW_02_Jun319, aes(Plot_Times, TW_SW_02_Jun319[,"m_above_GS"]))+geom_line(color='royalblue3', size=.6)+ ylim(0,.7) + xlab("Date") + ylab("Stream Stage (m)")+ggtitle("TW_SW_02")+  scale_x_datetime(breaks = seq(Plot_Times[1], Plot_Times[length(Plot_Times)], "7 days"),date_labels="%b %d")+theme(axis.text.x = element_text(angle=45, vjust = 0.5))   + geom_point(aes(x=Plot_Times, y=TW_SW_02_Jun319[,"m_manual"]), color="orange3", size=3)                                                                        
 ggsave("TW_SW_02_11-20-18_to_6-3-19_manual.pdf.pdf", width = 12, height = 6)
 
-                
-# TW_PZ_05_SAND
-Plot_Times<-as.POSIXct(TW_PZ_05_SAND_Nov[,"Date_Time"], "%m/%d/%y %I:%M:%S %p", tz="America/New_York")
-ggplot(TW_PZ_05_SAND_Nov, aes(Plot_Times, TW_PZ_05_SAND_Nov[,"m_below_GS"]))+geom_line(color='royalblue3', size=.6) + xlab("Date") + ylab("Depth to Water Below Ground Surface (m)")+ggtitle("TW_PZ_05_SAND_Nov")+  scale_x_datetime(breaks = seq(Plot_Times[1], Plot_Times[length(Plot_Times)], "7 days"),date_labels="%b %d")+ scale_y_reverse(limits =c(.6,-.1)) +theme(axis.text.x = element_text(angle=45, vjust = 0.5))                       
-ggsave("TW_PZ_05_SAND_Nov.pdf", width = 12, height = 6)     
+              
+
 ##################################################### GET SPATIAL DATA ######################################
 
 # Load LiDAR elevation / terrain data from MassGIS:
