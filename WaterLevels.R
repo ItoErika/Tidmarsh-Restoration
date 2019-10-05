@@ -733,17 +733,17 @@ write.csv(TW_PZ_07_3_19, file="TWPZ07_8-29-17_to_3-19-18.csv", row.names=FALSE)
 
 # Create a column for the depth to water below ground surface
 # The top of piezometer casing to ground surface = 31 cm
-TW_PZ_07_Nov[,"m_above_GS"]<-(153/100-(31/100+TW_PZ_07_Nov[,"m_water"]) )*-1 
+TW_PZ_07_Nov2018[,"m_above_GS"]<-(153/100-(31/100+TW_PZ_07_Nov2018[,"m_water"]) )*-1 
 # Remove last few rows of data 
-TW_PZ_07_Nov<-TW_PZ_07_Nov[1:which(TW_PZ_07_Nov[,"Date_Time"]=="11/19/18 05:00:00 PM"),] 
+TW_PZ_07_Nov2018<-TW_PZ_07_Nov2018[1:which(TW_PZ_07_Nov2018[,"Date_Time"]=="11/19/18 05:00:00 PM"),] 
 # Remove blank rows from logger extractions                    
-TW_PZ_07_Nov<-TW_PZ_07_Nov[-which(is.na(TW_PZ_07_Nov[,"m_above_GS"])),]   
+TW_PZ_07_Nov2018<-TW_PZ_07_Nov2018[-which(is.na(TW_PZ_07_Nov2018[,"m_above_GS"])),]   
 # Add manual data
-TW_PZ_07_Nov[which(TW_PZ_07_Nov[,"Date_Time"]=="11/19/18 04:15:00 PM"),"m_manual"]<-0.228
-TW_PZ_07_Nov[which(TW_PZ_07_Nov[,"Date_Time"]=="07/12/18 12:30:00 PM"),"m_manual"]<-0.26
-TW_PZ_07_Nov[,"lat"]<-41.91708333
-TW_PZ_07_Nov[,"long"]<--70.57833333
-write.csv(TW_PZ_07_Nov, file="TWPZ07_6-18-18_to_11-19-18.csv", row.names=FALSE) 
+TW_PZ_07_Nov2018[which(TW_PZ_07_Nov2018[,"Date_Time"]=="11/19/18 04:15:00 PM"),"m_manual"]<-0.228
+TW_PZ_07_Nov2018[which(TW_PZ_07_Nov2018[,"Date_Time"]=="07/12/18 12:30:00 PM"),"m_manual"]<-0.26
+#TW_PZ_07_Nov2018[,"lat"]<-41.91708333
+#TW_PZ_07_Nov2018[,"long"]<--70.57833333
+write.csv(TW_PZ_07_Nov2018, file="TWPZ07_6-18-18_to_11-19-18.csv", row.names=FALSE) 
 
 
 # Create a column for the depth to water below ground surface
@@ -1180,9 +1180,14 @@ Plot_Times<-as.POSIXct(TW_PZ_07_3_19[,"Date_Time"], "%m/%d/%y %I:%M:%S %p", tz="
 ggplot(TW_PZ_07_3_19, aes(Plot_Times, TW_PZ_07_3_19[,"m_above_GS"]))+geom_line(color='royalblue3', size=.6) + xlab("Date") + ylab("Water Above Streambed (m)")+ggtitle("TW_PZ_07")+  scale_x_datetime(breaks = seq(Plot_Times[1], Plot_Times[length(Plot_Times)], "7 days"),date_labels="%b %d")+ ylim(0,.3) +theme(axis.text.x = element_text(angle=45, vjust = 0.5))
 ggsave("TW_PZ_07_3_19.pdf", width = 12, height = 6)  
 
-Plot_Times<-as.POSIXct(TW_PZ_07_Nov[,"Date_Time"], "%m/%d/%y %I:%M:%S %p", tz="America/New_York")
-ggplot(TW_PZ_07_Nov, aes(Plot_Times, TW_PZ_07_Nov[,"m_above_GS"]))+geom_line(color='royalblue3', size=.6)+ ylim(0,.5) + xlab("Date") + ylab("Water Above Streambed (m)")+ggtitle("TW_PZ_07")+  scale_x_datetime(breaks = seq(Plot_Times[1], Plot_Times[length(Plot_Times)], "7 days"),date_labels="%b %d")+theme(axis.text.x = element_text(angle=45, vjust = 0.5))                                               
+Plot_Times<-as.POSIXct(TW_PZ_07_Nov2018[,"Date_Time"], "%m/%d/%y %I:%M:%S %p", tz="America/New_York")
+ggplot(TW_PZ_07_Nov2018, aes(Plot_Times, TW_PZ_07_Nov2018[,"m_above_GS"]))+geom_line(color='royalblue3', size=.6)+ ylim(0,.5) + xlab("Date") + ylab("Water Above Streambed (m)")+ggtitle("TW_PZ_07")+  scale_x_datetime(breaks = seq(Plot_Times[1], Plot_Times[length(Plot_Times)], "7 days"),date_labels="%b %d")+theme(axis.text.x = element_text(angle=45, vjust = 0.5))                                               
 ggsave("TW_PZ_07_Nov.pdf", width = 12, height = 6)
+
+Plot_Times<-as.POSIXct(TW_PZ_07_Nov2018[,"Date_Time"], "%m/%d/%y %I:%M:%S %p", tz="America/New_York")
+ggplot(TW_PZ_07_Nov2018, aes(Plot_Times, TW_PZ_07_Nov2018[,"m_above_GS"]))+geom_line(color='royalblue3', size=.6)+ ylim(0,.5) + xlab("Date") + ylab("Water Above Streambed (m)")+ggtitle("TW_PZ_07")+  scale_x_datetime(breaks = seq(Plot_Times[1], Plot_Times[length(Plot_Times)], "7 days"),date_labels="%b %d")+theme(axis.text.x = element_text(angle=45, vjust = 0.5))    + geom_point(aes(x=Plot_Times, y=TW_PZ_07_Nov2018[,"m_manual"]), color="orange3", size=3)                                               
+ggsave("TW_PZ_07_6-18-18_to_11-19-18_manual.pdf", width = 12, height = 6)
+
 
 #Plot_Times<-as.POSIXct(TW_PZ_07_Nov[,"Date_Time"], "%m/%d/%y %I:%M:%S %p", tz="America/New_York")
 #ggplot(TW_PZ_07_Nov, aes(Plot_Times, TW_PZ_07_Nov[,"m_stage"]))+geom_line(color='royalblue3', size=.6)+ ylim(0,.5) + xlab("Date") + ylab("Stream Stage (m)")+ggtitle("TW_PZ_07")+  scale_x_datetime(breaks = seq(Plot_Times[1], Plot_Times[length(Plot_Times)], "7 days"),date_labels="%b %d")+theme(axis.text.x = element_text(angle=45, vjust = 0.5))                                               
