@@ -633,24 +633,24 @@ write.csv(TW_PZ_06_3_19, file="TWPZ06_8-19-17_to_33-19-18.csv", row.names=FALSE)
                        
 # Create a column for the depth to water below ground surface
 # The top of piezometer casing to ground surface = 32 cm
-TW_PZ_06_Nov[,"m_below_GS"]<-153/100-(32/100+TW_PZ_06_Nov[,"m_water"])  
+TW_PZ_06_Nov2018[,"m_below_GS"]<-153/100-(32/100+TW_PZ_06_Nov2018[,"m_water"])  
 # Smooth the spikes in the data caused by logger removal during data downloading
 # Interpolate between the 7/11 spike
-Start_Spike<-which(TW_PZ_06_Nov[,"Date_Time"]=="07/11/18 01:30:00 PM")                     
-Stop_Spike<-which(TW_PZ_06_Nov[,"Date_Time"]=="07/11/18 02:15:00 PM")     
-Smoothed_Spike<-seq(TW_PZ_06_Nov[Start_Spike,"m_below_GS"], TW_PZ_06_Nov[Stop_Spike,"m_below_GS"], length=Stop_Spike-Start_Spike+1)
+Start_Spike<-which(TW_PZ_06_Nov2018[,"Date_Time"]=="07/11/18 01:30:00 PM")                     
+Stop_Spike<-which(TW_PZ_06_Nov2018[,"Date_Time"]=="07/11/18 02:15:00 PM")     
+Smoothed_Spike<-seq(TW_PZ_06_Nov2018[Start_Spike,"m_below_GS"], TW_PZ_06_Nov2018[Stop_Spike,"m_below_GS"], length=Stop_Spike-Start_Spike+1)
 # Replace the spike with the smoothed interpolated data
-TW_PZ_06_Nov[Start_Spike:Stop_Spike,"m_below_GS"]<-Smoothed_Spike
+TW_PZ_06_Nov2018[Start_Spike:Stop_Spike,"m_below_GS"]<-Smoothed_Spike
 # Remove the end of the dataset (where logger was not submerged) 
-TW_PZ_06_Nov<-TW_PZ_06_Nov[1:which(TW_PZ_06_Nov[,"Date_Time"]=="11/19/18 04:15:00 PM"),]
+TW_PZ_06_Nov2018<-TW_PZ_06_Nov2018[1:which(TW_PZ_06_Nov2018[,"Date_Time"]=="11/19/18 04:15:00 PM"),]
 # Add manual data
-TW_PZ_06_Nov[which(TW_PZ_06_Nov[,"Date_Time"]=="06/19/18 02:45:00 PM"),"m_manual"]<-0.297
-TW_PZ_06_Nov[which(TW_PZ_06_Nov[,"Date_Time"]=="07/11/18 01:30:00 PM"),"m_manual"]<-0.36
-TW_PZ_06_Nov[which(TW_PZ_06_Nov[,"Date_Time"]=="11/19/18 03:30:00 PM"),"m_manual"]<-0.063
-TW_PZ_06_Nov[,"lat"]<-41.91573
-TW_PZ_06_Nov[,"long"]<--70.57496
+TW_PZ_06_Nov2018[which(TW_PZ_06_Nov2018[,"Date_Time"]=="06/19/18 02:45:00 PM"),"m_manual"]<-0.297
+TW_PZ_06_Nov2018[which(TW_PZ_06_Nov2018[,"Date_Time"]=="07/11/18 01:30:00 PM"),"m_manual"]<-0.36
+TW_PZ_06_Nov2018[which(TW_PZ_06_Nov2018[,"Date_Time"]=="11/19/18 03:30:00 PM"),"m_manual"]<-0.063
+#TW_PZ_06_Nov2018[,"lat"]<-41.91573
+#TW_PZ_06_Nov2018[,"long"]<--70.57496
 # Save as CSV  
-write.csv(TW_PZ_06_Nov, file="TWPZ06_6-18-18_to_11-19-18.csv", row.names=FALSE)    
+write.csv(TW_PZ_06_Nov2018, file="TWPZ06_6-18-18_to_11-19-18.csv", row.names=FALSE)    
 
 # Create a column for the depth to water below ground surface
 # The top of piezometer casing to ground surface = 32 cm
@@ -672,16 +672,20 @@ write.csv(TW_PZ_06_Jun319_norise, file="TWPZ06_11-19-18_to_6-3-19.csv", row.name
 
 
 ############## TW_PZ_06_SAND ##############    
-TW_PZ_06_SAND_Nov[,"m_below_GS"]<-150/100-(102/100+TW_PZ_06_SAND_Nov[,"m_water"])  
+TW_PZ_06_SAND_Nov2018[,"m_below_GS"]<-150/100-(102/100+TW_PZ_06_SAND_Nov2018[,"m_water"])  
 # Remove last few rows of data 
-TW_PZ_06_SAND_Nov<-TW_PZ_06_SAND_Nov[1:which(TW_PZ_06_SAND_Nov[,"Date_Time"]=="11/19/18 04:15:00 PM"),]                 
+TW_PZ_06_SAND_Nov2018<-TW_PZ_06_SAND_Nov2018[1:which(TW_PZ_06_SAND_Nov2018[,"Date_Time"]=="11/19/18 04:15:00 PM"),]                 
  # Remove last first row of data 
-TW_PZ_06_SAND_Nov<-TW_PZ_06_SAND_Nov[-1,] 
+TW_PZ_06_SAND_Nov2018<-TW_PZ_06_SAND_Nov2018[-1,] 
+# Add manual data
+TW_PZ_06_SAND_Nov2018[which(TW_PZ_06_SAND_Nov2018[,"Date_Time"]=="06/19/18 02:45:00 PM"),"m_manual"]<-0.138
+TW_PZ_06_SAND_Nov2018[which(TW_PZ_06_SAND_Nov2018[,"Date_Time"]=="07/11/18 01:30:00 PM"),"m_manual"]<-0.207
+TW_PZ_06_SAND_Nov2018[which(TW_PZ_06_SAND_Nov2018[,"Date_Time"]=="11/19/18 03:30:00 PM"),"m_manual"]<-0.199
 # This data has a lot of noise the ma() function uses a moving average, using an order of 75 smoothed the data well 
-TW_PZ_06_SAND_Nov[,"denoised"]<-ma(TW_PZ_06_SAND_Nov[,"m_below_GS"], order=75)                     
-TW_PZ_06_SAND_Nov<-TW_PZ_06_SAND_Nov[-which(is.na(TW_PZ_06_SAND_Nov[,"denoised"])),]  
-TW_PZ_06_SAND_Nov[,"lat"]<-41.91573
-TW_PZ_06_SAND_Nov[,"long"]<--70.57496
+#TW_PZ_06_SAND_Nov2018[,"denoised"]<-ma(TW_PZ_06_SAND_Nov2018[,"m_below_GS"], order=75)                     
+#TW_PZ_06_SAND_Nov2018<-TW_PZ_06_SAND_Nov2018[-which(is.na(TW_PZ_06_SAND_Nov2018[,"denoised"])),]  
+#TW_PZ_06_SAND_Nov2018[,"lat"]<-41.91573
+#TW_PZ_06_SAND_Nov2018[,"long"]<--70.57496
 # Save as CSV  
 write.csv(TW_PZ_06_SAND_Nov, file="TWPZ06_SAND_6-18-18_to_11-19-18.csv", row.names=FALSE)    
 
@@ -1127,8 +1131,14 @@ Plot_Times<-as.POSIXct(TW_PZ_06_3_19[,"Date_Time"], "%m/%d/%y %I:%M:%S %p", tz="
 ggplot(TW_PZ_06_3_19, aes(Plot_Times, TW_PZ_06_3_19[,"m_below_GS"]))+geom_line(color='royalblue3', size=.6) + xlab("Date") + ylab("Depth to Water Below Ground Surface (m)")+ggtitle("TW_PZ_06")+  scale_x_datetime(breaks = seq(Plot_Times[1], Plot_Times[length(Plot_Times)], "7 days"),date_labels="%b %d")+ scale_y_reverse(limits =c(.6,-.1)) +theme(axis.text.x = element_text(angle=45, vjust = 0.5)) 
 ggsave("TW_PZ_06_3_19.pdf", width = 12, height = 6) 
                                         
-Plot_Times<-as.POSIXct(TW_PZ_06_Nov[,"Date_Time"], "%m/%d/%y %I:%M:%S %p", tz="America/New_York")
-ggplot(TW_PZ_06_Nov, aes(Plot_Times, TW_PZ_06_Nov[,"m_below_GS"]))+geom_line(color='royalblue3', size=.6) + xlab("Date") + ylab("Depth to Water Below Ground Surface (m)")+ggtitle("TW_PZ_06")+  scale_x_datetime(breaks = seq(Plot_Times[1], Plot_Times[length(Plot_Times)], "7 days"),date_labels="%b %d")+ scale_y_reverse(limits =c(.6,-.1)) +theme(axis.text.x = element_text(angle=45, vjust = 0.5))
+Plot_Times<-as.POSIXct(TW_PZ_06_Nov2018[,"Date_Time"], "%m/%d/%y %I:%M:%S %p", tz="America/New_York")
+ggplot(TW_PZ_06_Nov2018, aes(Plot_Times, TW_PZ_06_Nov2018[,"m_below_GS"]))+geom_line(color='royalblue3', size=.6) + xlab("Date") + ylab("Depth to Water Below Ground Surface (m)")+ggtitle("TW_PZ_06")+  scale_x_datetime(breaks = seq(Plot_Times[1], Plot_Times[length(Plot_Times)], "7 days"),date_labels="%b %d")+ scale_y_reverse(limits =c(.6,-.1)) +theme(axis.text.x = element_text(angle=45, vjust = 0.5))
+ggsave("TW_PZ_06_6-18-18_to_11-29-18.pdf", width = 12, height = 6) 
+
+Plot_Times<-as.POSIXct(TW_PZ_06_Nov2018[,"Date_Time"], "%m/%d/%y %I:%M:%S %p", tz="America/New_York")
+ggplot(TW_PZ_06_Nov2018, aes(Plot_Times, TW_PZ_06_Nov2018[,"m_below_GS"]))+geom_line(color='royalblue3', size=.6) + xlab("Date") + ylab("Depth to Water Below Ground Surface (m)")+ggtitle("TW_PZ_06")+  scale_x_datetime(breaks = seq(Plot_Times[1], Plot_Times[length(Plot_Times)], "7 days"),date_labels="%b %d")+ scale_y_reverse(limits =c(.6,-.1)) +theme(axis.text.x = element_text(angle=45, vjust = 0.5)) + geom_point(aes(x=Plot_Times, y=TW_PZ_06_Nov2018[,"m_manual"]), color="orange3", size=3)
+ggsave("TW_PZ_06_6-18-18_to_11-29-18_manual.pdf", width = 12, height = 6) 
+
 
 Plot_Times<-as.POSIXct(TW_PZ_06_Jun319[,"Date_Time"], "%m/%d/%y %I:%M:%S %p", tz="America/New_York")
 ggplot(TW_PZ_06_Jun319, aes(Plot_Times, TW_PZ_06_Jun319[,"m_below_GS"]))+geom_line(color='royalblue3', size=.6) + xlab("Date") + ylab("Depth to Water Below Ground Surface (m)")+ggtitle("TW_PZ_06")+  scale_x_datetime(breaks = seq(Plot_Times[1], Plot_Times[length(Plot_Times)], "7 days"),date_labels="%b %d")+ scale_y_reverse(limits =c(0.8,-.1)) +theme(axis.text.x = element_text(angle=45, vjust = 0.5))
@@ -1148,9 +1158,14 @@ ggsave("TW_PZ_06_11-19-18_to_6-3-19_manual.pdf", width = 12, height = 6)
 
 
 # TW_PZ_06_SAND
-Plot_Times<-as.POSIXct(TW_PZ_06_SAND_Nov[,"Date_Time"], "%m/%d/%y %I:%M:%S %p", tz="America/New_York")
-ggplot(TW_PZ_06_SAND_Nov, aes(Plot_Times, TW_PZ_06_SAND_Nov[,"m_below_GS"]))+geom_line(color='royalblue3', size=.6) + xlab("Date") + ylab("Depth to Water Below Ground Surface (m)")+ggtitle("TW_PZ_06_SAND_Nov")+  scale_x_datetime(breaks = seq(Plot_Times[1], Plot_Times[length(Plot_Times)], "7 days"),date_labels="%b %d")+ scale_y_reverse(limits =c(.6,-.1)) +theme(axis.text.x = element_text(angle=45, vjust = 0.5)) + geom_line(aes(x=Plot_Times, y=TW_PZ_06_SAND_Nov[,"denoised"]), color="orange3", size=.6)                                       
-ggsave("TW_PZ_06_SAND_Nov.pdf", width = 12, height = 6)        
+Plot_Times<-as.POSIXct(TW_PZ_06_SAND_Nov2018[,"Date_Time"], "%m/%d/%y %I:%M:%S %p", tz="America/New_York")
+ggplot(TW_PZ_06_SAND_Nov2018, aes(Plot_Times, TW_PZ_06_SAND_Nov2018[,"m_below_GS"]))+geom_line(color='royalblue3', size=.6) + xlab("Date") + ylab("Depth to Water Below Ground Surface (m)")+ggtitle("TW_PZ_06_SAND_Nov")+  scale_x_datetime(breaks = seq(Plot_Times[1], Plot_Times[length(Plot_Times)], "7 days"),date_labels="%b %d")+ scale_y_reverse(limits =c(.6,-.1)) +theme(axis.text.x = element_text(angle=45, vjust = 0.5))                                    
+ggsave("TW_PZ_06_SAND_6-18-18_to_11-19-18_malfunc.pdf", width = 12, height = 6)        
+
+Plot_Times<-as.POSIXct(TW_PZ_06_SAND_Nov2018[,"Date_Time"], "%m/%d/%y %I:%M:%S %p", tz="America/New_York")
+ggplot(TW_PZ_06_SAND_Nov2018, aes(Plot_Times, TW_PZ_06_SAND_Nov2018[,"m_below_GS"]))+geom_line(color='royalblue3', size=.6) + xlab("Date") + ylab("Depth to Water Below Ground Surface (m)")+ggtitle("TW_PZ_06_SAND_Nov")+  scale_x_datetime(breaks = seq(Plot_Times[1], Plot_Times[length(Plot_Times)], "7 days"),date_labels="%b %d")+ scale_y_reverse(limits =c(.6,-.1)) +theme(axis.text.x = element_text(angle=45, vjust = 0.5))  + geom_point(aes(x=Plot_Times, y=TW_PZ_06_SAND_Nov2018[,"m_manual"]), color="orange3", size=3)                                                                                                                
+ggsave("TW_PZ_06_SAND_6-18-18_to_11-19-18_manual_malfunc.pdf", width = 12, height = 6)        
+
 
 Plot_Times<-as.POSIXct(TW_PZ_06_SAND_Jun319[,"Date_Time"], "%m/%d/%y %I:%M:%S %p", tz="America/New_York")
 ggplot(TW_PZ_06_SAND_Jun319, aes(Plot_Times, TW_PZ_06_SAND_Jun319[,"m_below_GS"]))+geom_line(color='royalblue3', size=.6) + xlab("Date") + ylab("Depth to Water Below Ground Surface (m)")+ggtitle("TW_PZ_06_SAND_Nov")+  scale_x_datetime(breaks = seq(Plot_Times[1], Plot_Times[length(Plot_Times)], "7 days"),date_labels="%b %d")+ scale_y_reverse(limits =c(1,-.5)) +theme(axis.text.x = element_text(angle=45, vjust = 0.5)) 
