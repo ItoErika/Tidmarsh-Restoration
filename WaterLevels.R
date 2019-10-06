@@ -479,6 +479,7 @@ TW_PZ_03_Jun319[which(TW_PZ_03_Jun319[,"Date_Time"]=="06/03/19 12:30:00 PM"),"m_
 write.csv(TW_PZ_03_Jun319, file="TWPZ03_11-20-18_to_6-3-19.csv", row.names=FALSE)      
 
 ############## TW_SW_03 ##############     
+# November 2018
 # Correct based on manual stream measurements
 TW_SW_03_Nov2018[,"m_above_GS"]<-TW_SW_03_Nov2018[,"m_water"]-2
 # Add manual data
@@ -486,8 +487,8 @@ TW_SW_03_Nov2018[which(TW_SW_03_Nov2018[,"Date_Time"]=="07/11/18 12:00:00 PM"),"
 TW_SW_03_Nov2018[which(TW_SW_03_Nov2018[,"Date_Time"]=="11/20/18 10:30:00 AM"),"m_manual"]<-0.342
 # Save as CSV  
 write.csv(TW_SW_03_Nov2018, file="TWSW03_6-18-18_to_11-20-18_MALFUNC.csv", row.names=FALSE)                               
-                       
-                      
+         
+# June 2019                               
 # Correct based on manual stream measurements
 TW_SW_03_Jun319[,"m_above_GS"]<-TW_SW_03_Jun319[,"m_water"]-2
 # Add manual data
@@ -1031,9 +1032,8 @@ ggsave("TW_PZ_02_11-20-18_to_6-3-19_manual.pdf", width = 12, height = 6)
 
 ################ TW_Grad_02 ################
 Plot_Times<-as.POSIXct(TW_Grad_02_Nov2018[,"Date_Time"], "%m/%d/%y %I:%M:%S %p", tz="America/New_York")
-ggplot(TW_Grad_02_Nov2018, aes(Plot_Times, TW_Grad_02_Nov2018[,"dh/dz"]))+geom_line(color='green4', size=.6) + xlab("Date") + ylab("Vertical Hydraulic Gradient")+ scale_y_reverse(limits =c(0,-.3))+ ggtitle("TW_Gradient_02")+  scale_x_datetime(breaks = seq(Plot_Times[1], Plot_Times[length(Plot_Times)], "7 days"),date_labels="%b %d")+theme(axis.text.x = element_text(angle=45, vjust = 0.5))
+ggplot(TW_Grad_02_Nov2018, aes(Plot_Times, TW_Grad_02_Nov2018[,"dh/dz"]))+geom_line(color='darkgreen', size=0.5) + xlab("Date") + ylab("Vertical Hydraulic Gradient")+ scale_y_reverse(limits =c(0,-.3))+ ggtitle("TW_Gradient_02")+  scale_x_datetime(breaks = seq(Plot_Times[1], Plot_Times[length(Plot_Times)], "7 days"),date_labels="%b %d")+theme(axis.text.x = element_text(angle=45, vjust = 0.5))
 ggsave("TW_Grad_02_7-12-18_to_11-20-18.pdf", width = 12, height = 6) 
-
 
 Plot_Times<-as.POSIXct(TW_Grad_02_Jun319[,"Date_Time"], "%m/%d/%y %I:%M:%S %p", tz="America/New_York")
 ggplot(TW_Grad_02_Jun319, aes(Plot_Times, TW_Grad_02_Jun319[,"dh/dz"]))+geom_line(color='darkgreen', size=0.5) + xlab("Date") + ylab("Vertical Hydraulic Gradient")+ scale_y_reverse(limits =c(0,-.3))+ ggtitle("TW_Gradient_02")+  scale_x_datetime(breaks = seq(Plot_Times[1], Plot_Times[length(Plot_Times)], "7 days"),date_labels="%b %d")+theme(axis.text.x = element_text(angle=45, vjust = 0.5))
