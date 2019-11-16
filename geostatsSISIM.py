@@ -1,3 +1,11 @@
+# -*- coding: utf-8 -*-
+"""
+Created on Sun Sep 15 18:41:42 2019
+
+@author: erikai94
+"""
+# Example taken from: https://github.com/GeostatsGuy/PythonNumericalDemos/blob/master/GeostatsPy_sisim.ipynb
+
 import os                                                 
 import numpy as np                                      
 import pandas as pd  
@@ -30,6 +38,13 @@ def expand(x, y):
         
     return sim_ex
   
+# Function to crop simulations to create hummock topography
+def humcrop(sim, ymax, height): 
+    sim2=sim[0:(ymax+height),:];
+    for i in dist:
+        sim2[0:(ymax+height)-top_surf_int[i],i]=np.nan     
+    return sim2
+
 ####################################################################################
 ##################################### NO MICROTOPO #################################
 ####################################################################################    
@@ -554,6 +569,7 @@ plt.savefig('sim75flat_Cv.png', bbox_inches='tight', dpi=300, frameon='false', p
 
 ####################################################################################
 ######################### H / 25 peat / 75 sand / hummocks  ########################
+############################ 20 cm height / 25 cm width ############################
 ####################################################################################
 # Sequential Indicator Simulation with Simple Kriging Multiple Realizations 
 # A: 0.2421 / 0.7579 = PEAT / SAND
@@ -606,7 +622,7 @@ bot_surf = np.repeat(0, sim25hum2025_exA.shape[1])
 # Create cosine wave for disturbed bottom surface 
 
 #def integrand(dist):
-#    return (hum_h*np.sin((2/hum_p)*np.pi*dist)+50)- (10*np.sin((2/50)*np.pi*dist)+10)
+#    return (hum_h*np.sin((2/hum_p)*np.pi*dist)+40)
 #integrate.quad(integrand, 0, 2000)
 
 # Plot and save surfaces for COMSOL import
@@ -679,6 +695,7 @@ plt.savefig('sim25hum2025_C.png', bbox_inches='tight', dpi=300, frameon='false',
 
 ####################################################################################
 ######################### H / 50 peat / 50 sand / hummocks  ########################
+############################ 20 cm height / 25 cm width ############################
 ####################################################################################
 # Sequential Indicator Simulation with Simple Kriging Multiple Realizations 
 # A: 0.4947 / 0.5053 = PEAT / SAND
@@ -742,11 +759,11 @@ bot_surf = np.repeat(0, sim50hum2025_exA.shape[1])
 # Create cosine wave for disturbed bottom surface 
 
 #def integrand(dist):
-#    return (hum_h*np.sin((2/hum_p)*np.pi*dist)+50)- (10*np.sin((2/50)*np.pi*dist)+10)
+#    return (hum_h*np.sin((2/hum_p)*np.pi*dist)+60)
 #integrate.quad(integrand, 0, 2000)
 
 # Plot and save surfaces for COMSOL import
-plt.figure(figsize=(20*1.8395879323031639,0.50*1.8410852713178292))                                    # plot the results
+plt.figure(figsize=(20*1.8395879323031639,0.70*1.8410852713178292))                                    # plot the results
 fig=plt.plot(dist, bot_surf, 'k', linewidth=0.5)
 plt.plot(dist, top_surf, 'k', linewidth=0.5)
 plt.axis('off')
@@ -824,137 +841,74 @@ fig=plt.imshow(sim50hum2025_exD, cmap='Greys_r')
 plt.savefig('sim50hum2025_D.png', bbox_inches='tight', dpi=300, frameon='false', pad_inches=0)
 
 
-
 ####################################################################################
 ######################### H / 75 peat / 25 sand / hummocks  ########################
+############################ 20 cm height / 25 cm width ############################
 ####################################################################################
 # Sequential Indicator Simulation with Simple Kriging Multiple Realizations 
-# A:  = PEAT / SAND
-# B: 
-# C: 
+# A: 0.7476 / 0.2524 = PEAT / SAND
+# B: 0.7451 / 0.2549
+# C: 0.7577 / 0.2423
 
-nx = 500; ny = 18; xsiz =1; ysiz = 1; xmn = 0.5; ymn = 0.5; nxdis = 1; nydis = 1
+nx = 500; ny = 33; xsiz =1; ysiz = 1; xmn = 0.5; ymn = 0.5; nxdis = 1; nydis = 1
 ndmin = 0; ndmax = 10; nodmax = 10; radius =25; skmean = 0
 tmin = -999; tmax = 999
 dummy_trend = np.zeros((10,10))            # the current version requires trend input - if wrong size it is ignored 
 
 ncut = 2                                   # number of facies
 thresh = [0,1]                             # the facies categories (use consisten order)
-gcdf = [0.50,0.50]                         # the global proportions of the categories
+gcdf = [0.75,0.25]                         # the global proportions of the categories
 varios = []                                # the variogram list
-varios.append(GSLIB.make_variogram(nug=0,nst=1,it1=1,cc1=1,azi1=90,hmaj1=25,hmin1=8)) # shale indicator variogram
-varios.append(GSLIB.make_variogram(nug=0,nst=1,it1=1,cc1=1,azi1=90,hmaj1=25,hmin1=8))#sand indicator variogram
+varios.append(GSLIB.make_variogram(nug=0,nst=1,it1=1,cc1=1,azi1=90,hmaj1=25,hmin1=8)) # sand indicator variogram
+varios.append(GSLIB.make_variogram(nug=0,nst=1,it1=1,cc1=1,azi1=90,hmaj1=25,hmin1=8)) # peat indicator variogram
 
-sim50hum2025A = geostats.sisim(df,'X','Y','Facies',ivtype=0,koption=0,ncut=2,thresh=thresh,gcdf=gcdf,trend=dummy_trend,
+sim75hum2025A = geostats.sisim(df,'X','Y','Facies',ivtype=0,koption=0,ncut=2,thresh=thresh,gcdf=gcdf,trend=dummy_trend,
                tmin=tmin,tmax=tmax,zmin=0.0,zmax=1.0,ltail=1,ltpar=1,middle=1,mpar=0,utail=1,utpar=1,
-               nx=nx,xmn=xmn,xsiz=xsiz,ny=ny,ymn=ymn,ysiz=ysiz,seed = 65343,
+               nx=nx,xmn=xmn,xsiz=xsiz,ny=ny,ymn=ymn,ysiz=ysiz,seed = 65007,
                ndmin=ndmin,ndmax=ndmax,nodmax=nodmax,mults=1,nmult=3,noct=-1,radius=radius,ktype=0,vario=varios)
 
-sim50hum2025C = geostats.sisim(df,'X','Y','Facies',ivtype=0,koption=0,ncut=2,thresh=thresh,gcdf=gcdf,trend=dummy_trend,
+sim75hum2025B = geostats.sisim(df,'X','Y','Facies',ivtype=0,koption=0,ncut=2,thresh=thresh,gcdf=gcdf,trend=dummy_trend,
                tmin=tmin,tmax=tmax,zmin=0.0,zmax=1.0,ltail=1,ltpar=1,middle=1,mpar=0,utail=1,utpar=1,
-               nx=nx,xmn=xmn,xsiz=xsiz,ny=ny,ymn=ymn,ysiz=ysiz,seed = 67315,
+               nx=nx,xmn=xmn,xsiz=xsiz,ny=ny,ymn=ymn,ysiz=ysiz,seed = 65975,
                ndmin=ndmin,ndmax=ndmax,nodmax=nodmax,mults=1,nmult=3,noct=-1,radius=radius,ktype=0,vario=varios)
 
-sim50hum2025D = geostats.sisim(df,'X','Y','Facies',ivtype=0,koption=0,ncut=2,thresh=thresh,gcdf=gcdf,trend=dummy_trend,
+sim75hum2025C = geostats.sisim(df,'X','Y','Facies',ivtype=0,koption=0,ncut=2,thresh=thresh,gcdf=gcdf,trend=dummy_trend,
                tmin=tmin,tmax=tmax,zmin=0.0,zmax=1.0,ltail=1,ltpar=1,middle=1,mpar=0,utail=1,utpar=1,
-               nx=nx,xmn=xmn,xsiz=xsiz,ny=ny,ymn=ymn,ysiz=ysiz,seed = 67363,
+               nx=nx,xmn=xmn,xsiz=xsiz,ny=ny,ymn=ymn,ysiz=ysiz,seed = 75145,
                ndmin=ndmin,ndmax=ndmax,nodmax=nodmax,mults=1,nmult=3,noct=-1,radius=radius,ktype=0,vario=varios)
 
-sim50hum2025E = geostats.sisim(df,'X','Y','Facies',ivtype=0,koption=0,ncut=2,thresh=thresh,gcdf=gcdf,trend=dummy_trend,
+sim75hum2025D = geostats.sisim(df,'X','Y','Facies',ivtype=0,koption=0,ncut=2,thresh=thresh,gcdf=gcdf,trend=dummy_trend,
                tmin=tmin,tmax=tmax,zmin=0.0,zmax=1.0,ltail=1,ltpar=1,middle=1,mpar=0,utail=1,utpar=1,
-               nx=nx,xmn=xmn,xsiz=xsiz,ny=ny,ymn=ymn,ysiz=ysiz,seed = 75309,
+               nx=nx,xmn=xmn,xsiz=xsiz,ny=ny,ymn=ymn,ysiz=ysiz,seed = 65979,
                ndmin=ndmin,ndmax=ndmax,nodmax=nodmax,mults=1,nmult=3,noct=-1,radius=radius,ktype=0,vario=varios)
 
-sim50hum2025F = geostats.sisim(df,'X','Y','Facies',ivtype=0,koption=0,ncut=2,thresh=thresh,gcdf=gcdf,trend=dummy_trend,
-               tmin=tmin,tmax=tmax,zmin=0.0,zmax=1.0,ltail=1,ltpar=1,middle=1,mpar=0,utail=1,utpar=1,
-               nx=nx,xmn=xmn,xsiz=xsiz,ny=ny,ymn=ymn,ysiz=ysiz,seed = 75135,
-               ndmin=ndmin,ndmax=ndmax,nodmax=nodmax,mults=1,nmult=3,noct=-1,radius=radius,ktype=0,vario=varios)
-
-sim50hum2025G = geostats.sisim(df,'X','Y','Facies',ivtype=0,koption=0,ncut=2,thresh=thresh,gcdf=gcdf,trend=dummy_trend,
-               tmin=tmin,tmax=tmax,zmin=0.0,zmax=1.0,ltail=1,ltpar=1,middle=1,mpar=0,utail=1,utpar=1,
-               nx=nx,xmn=xmn,xsiz=xsiz,ny=ny,ymn=ymn,ysiz=ysiz,seed = 65351,
-               ndmin=ndmin,ndmax=ndmax,nodmax=nodmax,mults=1,nmult=3,noct=-1,radius=radius,ktype=0,vario=varios)
-
-sim50hum2025H = geostats.sisim(df,'X','Y','Facies',ivtype=0,koption=0,ncut=2,thresh=thresh,gcdf=gcdf,trend=dummy_trend,
-               tmin=tmin,tmax=tmax,zmin=0.0,zmax=1.0,ltail=1,ltpar=1,middle=1,mpar=0,utail=1,utpar=1,
-               nx=nx,xmn=xmn,xsiz=xsiz,ny=ny,ymn=ymn,ysiz=ysiz,seed = 65901,
-               ndmin=ndmin,ndmax=ndmax,nodmax=nodmax,mults=1,nmult=3,noct=-1,radius=radius,ktype=0,vario=varios)
-
-sim50hum2025I = geostats.sisim(df,'X','Y','Facies',ivtype=0,koption=0,ncut=2,thresh=thresh,gcdf=gcdf,trend=dummy_trend,
-               tmin=tmin,tmax=tmax,zmin=0.0,zmax=1.0,ltail=1,ltpar=1,middle=1,mpar=0,utail=1,utpar=1,
-               nx=nx,xmn=xmn,xsiz=xsiz,ny=ny,ymn=ymn,ysiz=ysiz,seed = 67335,
-               ndmin=ndmin,ndmax=ndmax,nodmax=nodmax,mults=1,nmult=3,noct=-1,radius=radius,ktype=0,vario=varios)
-
-sim50hum2025J = geostats.sisim(df,'X','Y','Facies',ivtype=0,koption=0,ncut=2,thresh=thresh,gcdf=gcdf,trend=dummy_trend,
-               tmin=tmin,tmax=tmax,zmin=0.0,zmax=1.0,ltail=1,ltpar=1,middle=1,mpar=0,utail=1,utpar=1,
-               nx=nx,xmn=xmn,xsiz=xsiz,ny=ny,ymn=ymn,ysiz=ysiz,seed = 75917,
-               ndmin=ndmin,ndmax=ndmax,nodmax=nodmax,mults=1,nmult=3,noct=-1,radius=radius,ktype=0,vario=varios)
-
-sim50hum2025K = geostats.sisim(df,'X','Y','Facies',ivtype=0,koption=0,ncut=2,thresh=thresh,gcdf=gcdf,trend=dummy_trend,
-               tmin=tmin,tmax=tmax,zmin=0.0,zmax=1.0,ltail=1,ltpar=1,middle=1,mpar=0,utail=1,utpar=1,
-               nx=nx,xmn=xmn,xsiz=xsiz,ny=ny,ymn=ymn,ysiz=ysiz,seed = 75971,
-               ndmin=ndmin,ndmax=ndmax,nodmax=nodmax,mults=1,nmult=3,noct=-1,radius=radius,ktype=0,vario=varios)
-
-sim50hum2025L = geostats.sisim(df,'X','Y','Facies',ivtype=0,koption=0,ncut=2,thresh=thresh,gcdf=gcdf,trend=dummy_trend,
-               tmin=tmin,tmax=tmax,zmin=0.0,zmax=1.0,ltail=1,ltpar=1,middle=1,mpar=0,utail=1,utpar=1,
-               nx=nx,xmn=xmn,xsiz=xsiz,ny=ny,ymn=ymn,ysiz=ysiz,seed = 65381,
-               ndmin=ndmin,ndmax=ndmax,nodmax=nodmax,mults=1,nmult=3,noct=-1,radius=radius,ktype=0,vario=varios)
-
-sim50hum2025M = geostats.sisim(df,'X','Y','Facies',ivtype=0,koption=0,ncut=2,thresh=thresh,gcdf=gcdf,trend=dummy_trend,
-               tmin=tmin,tmax=tmax,zmin=0.0,zmax=1.0,ltail=1,ltpar=1,middle=1,mpar=0,utail=1,utpar=1,
-               nx=nx,xmn=xmn,xsiz=xsiz,ny=ny,ymn=ymn,ysiz=ysiz,seed = 75309,
-               ndmin=ndmin,ndmax=ndmax,nodmax=nodmax,mults=1,nmult=3,noct=-1,radius=radius,ktype=0,vario=varios)
-
-sim50hum2025N = geostats.sisim(df,'X','Y','Facies',ivtype=0,koption=0,ncut=2,thresh=thresh,gcdf=gcdf,trend=dummy_trend,
-               tmin=tmin,tmax=tmax,zmin=0.0,zmax=1.0,ltail=1,ltpar=1,middle=1,mpar=0,utail=1,utpar=1,
-               nx=nx,xmn=xmn,xsiz=xsiz,ny=ny,ymn=ymn,ysiz=ysiz,seed = 75667,
-               ndmin=ndmin,ndmax=ndmax,nodmax=nodmax,mults=1,nmult=3,noct=-1,radius=radius,ktype=0,vario=varios)
-
-sim50hum2025O = geostats.sisim(df,'X','Y','Facies',ivtype=0,koption=0,ncut=2,thresh=thresh,gcdf=gcdf,trend=dummy_trend,
-               tmin=tmin,tmax=tmax,zmin=0.0,zmax=1.0,ltail=1,ltpar=1,middle=1,mpar=0,utail=1,utpar=1,
-               nx=nx,xmn=xmn,xsiz=xsiz,ny=ny,ymn=ymn,ysiz=ysiz,seed = 67373,
-               ndmin=ndmin,ndmax=ndmax,nodmax=nodmax,mults=1,nmult=3,noct=-1,radius=radius,ktype=0,vario=varios)
-
-
-# 65343, 65973, 67315, 67363, 75309, 75135
-# 65351, 65381, 65901, 67335, 75917, 75971, 75361
+# PICK B, C, AND D
+# 65971, 65979, 67345, 65019, 65063, 65323, 65339, 65385, 61003, 61057, 61077, 61085, 63023, 63027, 63057, 63071
+# 63515, 63571, 75603, 75619, 75699
 
 # Expand the simulation by a factor of 4
-sim50hum2025_exA = expand(sim50hum2025A,4)
-sim50hum2025_exB = expand(sim50hum2025B,4)
-sim50hum2025_exC = expand(sim50hum2025C,4)
-sim50hum2025_exD = expand(sim50hum2025A,4)
-sim50hum2025_exE = expand(sim50hum2025B,4)
-sim50hum2025_exF = expand(sim50hum2025C,4)
-sim50hum2025_exG = expand(sim50hum2025A,4)
-sim50hum2025_exH = expand(sim50hum2025B,4)
-sim50hum2025_exI = expand(sim50hum2025C,4)
-sim50hum2025_exJ = expand(sim50hum2025A,4)
-sim50hum2025_exK = expand(sim50hum2025B,4)
-sim50hum2025_exL = expand(sim50hum2025C,4)
-sim50hum2025_exM = expand(sim50hum2025A,4)
-sim50hum2025_exN = expand(sim50hum2025B,4)
-sim50hum2025_exO = expand(sim50hum2025C,4)
-sim50hum2025_exP = expand(sim50hum2025A,4)
-
+sim75hum2025_exA = expand(sim75hum2025A,4)
+sim75hum2025_exB = expand(sim75hum2025B,4)
+sim75hum2025_exC = expand(sim75hum2025C,4)
+sim75hum2025_exD = expand(sim75hum2025D,4)
 
 # Make hummocks
-dist  = np.arange(0, sim25hum2025_exA.shape[1], 1)  # Assign sine wave x values (1 per cm)
+dist  = np.arange(0, sim75hum2025_exA.shape[1], 1)  # Assign sine wave x values (1 per cm)
 hum_h=10                                            # Define hummock height (in cm)
 hum_p=50                                            # Define hummock period 
-top_surf  = hum_h*np.sin((2/hum_p)*np.pi*dist)+60   # Create sine wave for hummocky top surface
-bot_surf = np.repeat(0, sim25hum2025_exA.shape[1])
+top_surf  = hum_h*np.sin((2/hum_p)*np.pi*dist)+120   # Create sine wave for hummocky top surface
+bot_surf = np.repeat(0, sim75hum2025_exA.shape[1])
 # Plot a sine wave using time and amplitude obtained for the sine wave
 #plt.plot(dist, top_surf)
 # Create a disturbed peat surface to match the hummock geometry
 # Create cosine wave for disturbed bottom surface 
 
 #def integrand(dist):
-#    return (hum_h*np.sin((2/hum_p)*np.pi*dist)+50)- (10*np.sin((2/50)*np.pi*dist)+10)
+#    return (hum_h*np.sin((2/hum_p)*np.pi*dist)+120)
 #integrate.quad(integrand, 0, 2000)
 
 # Plot and save surfaces for COMSOL import
-plt.figure(figsize=(20*1.8395879323031639,0.50*1.8410852713178292))                                    # plot the results
+plt.figure(figsize=(20,1.30))                                    # plot the results
 fig=plt.plot(dist, bot_surf, 'k', linewidth=0.5)
 plt.plot(dist, top_surf, 'k', linewidth=0.5)
 plt.axis('off')
@@ -964,247 +918,322 @@ plt.savefig('hum2025.png', bbox_inches='tight', dpi=300, frameon='false', pad_in
 top_surf_int=np.rint(top_surf).astype(int)
 #bot_surf_int=np.rint(bot_surf).astype(int)
 
-# Make a copy of the simulation to removes hummocks from
-sim25hum2025_exA2=sim25hum2025_exA[0:70,:]
-# Remove the area above hummocky top surface frpm the geostatistical simulations
-for i in dist:
-   sim25hum2025_exA2[0:70-top_surf_int[i],i]=np.nan   
-
-# Make a copy of the simulation to removes hummocks from
-sim25hum2025_exB2=sim25hum2025_exB[0:70,:]
-# Remove the area above hummocky top surface frpm the geostatistical simulations
-for i in dist:
-   sim25hum2025_exB2[0:70-top_surf_int[i],i]=np.nan   
-   
-# Make a copy of the simulation to removes hummocks from
-sim25hum2025_exC2=sim25hum2025_exC[0:70,:]
-# Remove the area above hummocky top surface frpm the geostatistical simulations
-for i in dist:
-   sim25hum2025_exC2[0:70-top_surf_int[i],i]=np.nan
-   
-# Make a copy of the simulation to removes hummocks from
-sim25hum2025_exD2=sim25hum2025_exD[0:70,:]
-# Remove the area above hummocky top surface frpm the geostatistical simulations
-for i in dist:
-   sim25hum2025_exD2[0:70-top_surf_int[i],i]=np.nan
-   
-# Make a copy of the simulation to removes hummocks from
-sim25hum2025_exE2=sim25hum2025_exE[0:70,:]
-# Remove the area above hummocky top surface frpm the geostatistical simulations
-for i in dist:
-   sim25hum2025_exE2[0:70-top_surf_int[i],i]=np.nan
-
-# Make a copy of the simulation to removes hummocks from
-sim25hum2025_exF2=sim25hum2025_exF[0:70,:]
-# Remove the area above hummocky top surface frpm the geostatistical simulations
-for i in dist:
-   sim25hum2025_exF2[0:70-top_surf_int[i],i]=np.nan
-   
-# Make a copy of the simulation to removes hummocks from
-sim25hum2025_exG2=sim25hum2025_exG[0:70,:]
-# Remove the area above hummocky top surface frpm the geostatistical simulations
-for i in dist:
-   sim25hum2025_exG2[0:70-top_surf_int[i],i]=np.nan
-   
-# Make a copy of the simulation to removes hummocks from
-sim25hum2025_exH2=sim25hum2025_exH[0:70,:]
-# Remove the area above hummocky top surface frpm the geostatistical simulations
-for i in dist:
-   sim25hum2025_exH2[0:70-top_surf_int[i],i]=np.nan
-   
-# Make a copy of the simulation to removes hummocks from
-sim25hum2025_exI2=sim25hum2025_exI[0:70,:]
-# Remove the area above hummocky top surface frpm the geostatistical simulations
-for i in dist:
-   sim25hum2025_exCI[0:70-top_surf_int[i],i]=np.nan
-   
-# Make a copy of the simulation to removes hummocks from
-sim25hum2025_exJ2=sim25hum2025_exJ[0:70,:]
-# Remove the area above hummocky top surface frpm the geostatistical simulations
-for i in dist:
-   sim25hum2025_exJ2[0:70-top_surf_int[i],i]=np.nan
-   
-# Make a copy of the simulation to removes hummocks from
-sim25hum2025_exK2=sim25hum2025_exK[0:70,:]
-# Remove the area above hummocky top surface frpm the geostatistical simulations
-for i in dist:
-   sim25hum2025_exK2[0:70-top_surf_int[i],i]=np.nan
-   
-# Make a copy of the simulation to removes hummocks from
-sim25hum2025_exL2=sim25hum2025_exL[0:70,:]
-# Remove the area above hummocky top surface frpm the geostatistical simulations
-for i in dist:
-   sim25hum2025_exL2[0:70-top_surf_int[i],i]=np.nan
-   
-# Make a copy of the simulation to removes hummocks from
-sim25hum2025_exM2=sim25hum2025_exM[0:70,:]
-# Remove the area above hummocky top surface frpm the geostatistical simulations
-for i in dist:
-   sim25hum2025_exM2[0:70-top_surf_int[i],i]=np.nan
-   
-# Make a copy of the simulation to removes hummocks from
-sim25hum2025_exN2=sim25hum2025_exN[0:70,:]
-# Remove the area above hummocky top surface frpm the geostatistical simulations
-for i in dist:
-   sim25hum2025_exN2[0:70-top_surf_int[i],i]=np.nan
-   
-# Make a copy of the simulation to removes hummocks from
-sim25hum2025_exO2=sim25hum2025_exO[0:70,:]
-# Remove the area above hummocky top surface frpm the geostatistical simulations
-for i in dist:
-   sim25hum2025_exO2[0:70-top_surf_int[i],i]=np.nan
-   
-# Make a copy of the simulation to removes hummocks from
-sim25hum2025_exP2=sim25hum2025_exP[0:70,:]
-# Remove the area above hummocky top surface frpm the geostatistical simulations
-for i in dist:
-   sim25hum2025_exP2[0:70-top_surf_int[i],i]=np.nan
+sim75hum2025_exA2=humcrop(sim75hum2025_exA, 120, 10)
+sim75hum2025_exB2=humcrop(sim75hum2025_exB, 120, 10)
+sim75hum2025_exC2=humcrop(sim75hum2025_exC, 120, 10)
+sim75hum2025_exD2=humcrop(sim75hum2025_exD, 120, 10)
 
 # Plot the simulations for the dxf conversion
-plt.figure(figsize=(20,0.7))                                    # plot the results
-fig=plt.imshow(sim25hum2025_exA2, cmap='Greys_r')
+plt.figure(figsize=(20,1.3))                                    # plot the results
+fig=plt.imshow(sim75hum2025_exA[0:130,:], cmap='Greys_r')
 plt.axis('off')
 fig.axes.get_xaxis().set_visible(False)
-plt.savefig('TEST_A.png', bbox_inches='tight', dpi=300, frameon='false', pad_inches=0)
+plt.savefig('sim75hum2025_ink_A.png', bbox_inches='tight', dpi=300, frameon='false', pad_inches=0)
 
-# Plot the simulations for the dxf conversion
-plt.figure(figsize=(20,0.7))                                    # plot the results
-fig=plt.imshow(sim25hum2025_exB2, cmap='Greys_r')
+plt.figure(figsize=(20,1.3))                                    # plot the results
+fig=plt.imshow(sim75hum2025_exB[0:130,:], cmap='Greys_r')
 plt.axis('off')
 fig.axes.get_xaxis().set_visible(False)
-plt.savefig('TEST_B.png', bbox_inches='tight', dpi=300, frameon='false', pad_inches=0)
+plt.savefig('sim75hum2025_ink_B.png', bbox_inches='tight', dpi=300, frameon='false', pad_inches=0)
 
-# Plot the simulations for the dxf conversion
-plt.figure(figsize=(20,0.7))                                    # plot the results
-fig=plt.imshow(sim25hum2025_exC2, cmap='Greys_r')
+plt.figure(figsize=(20,1.3))                                    # plot the results
+fig=plt.imshow(sim75hum2025_exC[0:130,:], cmap='Greys_r')
 plt.axis('off')
 fig.axes.get_xaxis().set_visible(False)
-plt.savefig('TEST_C.png', bbox_inches='tight', dpi=300, frameon='false', pad_inches=0)
+plt.savefig('sim75hum2025_ink_C.png', bbox_inches='tight', dpi=300, frameon='false', pad_inches=0)
 
-# Plot the simulations for the dxf conversion
-plt.figure(figsize=(20,0.7))                                    # plot the results
-fig=plt.imshow(sim25hum2025_exD2, cmap='Greys_r')
+plt.figure(figsize=(20,1.3))                                    # plot the results
+fig=plt.imshow(sim75hum2025_exD[0:130,:], cmap='Greys_r')
 plt.axis('off')
 fig.axes.get_xaxis().set_visible(False)
-plt.savefig('TEST_D.png', bbox_inches='tight', dpi=300, frameon='false', pad_inches=0)
+plt.savefig('sim75hum2025_ink_D.png', bbox_inches='tight', dpi=300, frameon='false', pad_inches=0)
 
-# Plot the simulations for the dxf conversion
-plt.figure(figsize=(20,0.7))                                    # plot the results
-fig=plt.imshow(sim25hum2025_exE2, cmap='Greys_r')
-plt.axis('off')
-fig.axes.get_xaxis().set_visible(False)
-plt.savefig('TEST_E.png', bbox_inches='tight', dpi=300, frameon='false', pad_inches=0)
-
-# Plot the simulations for the dxf conversion
-plt.figure(figsize=(20,0.7))                                    # plot the results
-fig=plt.imshow(sim25hum2025_exF2, cmap='Greys_r')
-plt.axis('off')
-fig.axes.get_xaxis().set_visible(False)
-plt.savefig('TEST_F.png', bbox_inches='tight', dpi=300, frameon='false', pad_inches=0)
-
-# Plot the simulations for the dxf conversion
-plt.figure(figsize=(20,0.7))                                    # plot the results
-fig=plt.imshow(sim25hum2025_exG2, cmap='Greys_r')
-plt.axis('off')
-fig.axes.get_xaxis().set_visible(False)
-plt.savefig('TEST_G.png', bbox_inches='tight', dpi=300, frameon='false', pad_inches=0)
-
-# Plot the simulations for the dxf conversion
-plt.figure(figsize=(20,0.7))                                    # plot the results
-fig=plt.imshow(sim25hum2025_exH2, cmap='Greys_r')
-plt.axis('off')
-fig.axes.get_xaxis().set_visible(False)
-plt.savefig('TEST_H.png', bbox_inches='tight', dpi=300, frameon='false', pad_inches=0)
-
-# Plot the simulations for the dxf conversion
-plt.figure(figsize=(20,0.7))                                    # plot the results
-fig=plt.imshow(sim25hum2025_exI2, cmap='Greys_r')
-plt.axis('off')
-fig.axes.get_xaxis().set_visible(False)
-plt.savefig('TEST_I.png', bbox_inches='tight', dpi=300, frameon='false', pad_inches=0)
-
-# Plot the simulations for the dxf conversion
-plt.figure(figsize=(20,0.7))                                    # plot the results
-fig=plt.imshow(sim25hum2025_exJ2, cmap='Greys_r')
-plt.axis('off')
-fig.axes.get_xaxis().set_visible(False)
-plt.savefig('TEST_J.png', bbox_inches='tight', dpi=300, frameon='false', pad_inches=0)
-
-# Plot the simulations for the dxf conversion
-plt.figure(figsize=(20,0.7))                                    # plot the results
-fig=plt.imshow(sim25hum2025_exK2, cmap='Greys_r')
-plt.axis('off')
-fig.axes.get_xaxis().set_visible(False)
-plt.savefig('TEST_K.png', bbox_inches='tight', dpi=300, frameon='false', pad_inches=0)
-
-# Plot the simulations for the dxf conversion
-plt.figure(figsize=(20,0.7))                                    # plot the results
-fig=plt.imshow(sim25hum2025_exL2, cmap='Greys_r')
-plt.axis('off')
-fig.axes.get_xaxis().set_visible(False)
-plt.savefig('TEST_L.png', bbox_inches='tight', dpi=300, frameon='false', pad_inches=0)
-
-# Plot the simulations for the dxf conversion
-plt.figure(figsize=(20,0.7))                                    # plot the results
-fig=plt.imshow(sim25hum2025_exM2, cmap='Greys_r')
-plt.axis('off')
-fig.axes.get_xaxis().set_visible(False)
-plt.savefig('TEST_M.png', bbox_inches='tight', dpi=300, frameon='false', pad_inches=0)
-
-# Plot the simulations for the dxf conversion
-plt.figure(figsize=(20,0.7))                                    # plot the results
-fig=plt.imshow(sim25hum2025_exN2, cmap='Greys_r')
-plt.axis('off')
-fig.axes.get_xaxis().set_visible(False)
-plt.savefig('TEST_N.png', bbox_inches='tight', dpi=300, frameon='false', pad_inches=0)
-
-# Plot the simulations for the dxf conversion
-plt.figure(figsize=(20,0.7))                                    # plot the results
-fig=plt.imshow(sim25hum2025_exO2, cmap='Greys_r')
-plt.axis('off')
-fig.axes.get_xaxis().set_visible(False)
-plt.savefig('TEST_O.png', bbox_inches='tight', dpi=300, frameon='false', pad_inches=0)
-
-
-
-   
-
-# Plot the simulations for the dxf conversion
-plt.figure(figsize=(20,0.5))                                    # plot the results
-fig=plt.imshow(sim25hum2025_exA, cmap='Greys_r')
-plt.axis('off')
-fig.axes.get_xaxis().set_visible(False)
-plt.savefig('sim25hum2025_ink_A.png', bbox_inches='tight', dpi=300, frameon='false', pad_inches=0)
-
-plt.figure(figsize=(20,0.5))                                    # plot the results
-fig=plt.imshow(sim25hum2025_exB, cmap='Greys_r')
-plt.axis('off')
-fig.axes.get_xaxis().set_visible(False)
-plt.savefig('sim25hum2025_ink_B.png', bbox_inches='tight', dpi=300, frameon='false', pad_inches=0)
-
-plt.figure(figsize=(20,0.5))                                    # plot the results
-fig=plt.imshow(sim25hum2025_exC, cmap='Greys_r')
-plt.axis('off')
-fig.axes.get_xaxis().set_visible(False)
-plt.savefig('sim25hum2025_ink_C.png', bbox_inches='tight', dpi=300, frameon='false', pad_inches=0)
 
 # Plot the simulations for potential figures
-plt.figure(figsize=(20,0.50))                                    # plot the results
-fig=plt.imshow(sim25hum2025_exA, cmap='Greys_r')
+plt.figure(figsize=(20,1.3))                                    # plot the results
+fig=plt.imshow(sim75hum2025_exA2, cmap='Greys_r')
 # Save as a png
-plt.savefig('sim25hum2025_A.png', bbox_inches='tight', dpi=300, frameon='false', pad_inches=0)
+plt.savefig('sim75hum2025_A.png', bbox_inches='tight', dpi=300, frameon='false', pad_inches=0)
 
 # Plot the simulation
-plt.figure(figsize=(20,0.50))                                    # plot the results
-fig=plt.imshow(sim25hum2025_exB, cmap='Greys_r')
+plt.figure(figsize=(20,1.3))                                    # plot the results
+fig=plt.imshow(sim75hum2025_exB2, cmap='Greys_r')
 # Save as a png
-plt.savefig('sim25hum2025_B.png', bbox_inches='tight', dpi=300, frameon='false', pad_inches=0)
+plt.savefig('sim75hum2025_B.png', bbox_inches='tight', dpi=300, frameon='false', pad_inches=0)
 
 # Plot the simulation
-plt.figure(figsize=(20,0.50))                                    # plot the results
-fig=plt.imshow(sim25hum2025_exC, cmap='Greys_r')
+plt.figure(figsize=(20,1.30))                                    # plot the results
+fig=plt.imshow(sim75hum2025_exC2, cmap='Greys_r')
 # Save as a png
-plt.savefig('sim25hum2025_C.png', bbox_inches='tight', dpi=300, frameon='false', pad_inches=0)
+plt.savefig('sim75hum2025_C.png', bbox_inches='tight', dpi=300, frameon='false', pad_inches=0)
+
+# Plot the simulation
+plt.figure(figsize=(20,1.30))                                    # plot the results
+fig=plt.imshow(sim75hum2025_exD2, cmap='Greys_r')
+# Save as a png
+plt.savefig('sim75hum2025_D.png', bbox_inches='tight', dpi=300, frameon='false', pad_inches=0)
+
+
+####################################################################################
+######################### H / 25 peat / 75 sand / hummocks  ########################
+############################ 20 cm height / 100 cm width ############################
+####################################################################################
+# Sequential Indicator Simulation with Simple Kriging Multiple Realizations 
+# A:  = PEAT / SAND
+# B: 
+# C: 
+
+nx = 500; ny = 13; xsiz =1; ysiz = 1; xmn = 0.5; ymn = 0.5; nxdis = 1; nydis = 1
+ndmin = 0; ndmax = 10; nodmax = 10; radius =25; skmean = 0
+tmin = -999; tmax = 999
+dummy_trend = np.zeros((10,10))            # the current version requires trend input - if wrong size it is ignored 
+
+ncut = 2                                   # number of facies
+thresh = [0,1]                             # the facies categories (use consisten order)
+gcdf = [0.25,0.75]                         # the global proportions of the categories
+varios = []                                # the variogram list
+varios.append(GSLIB.make_variogram(nug=0,nst=1,it1=1,cc1=1,azi1=90,hmaj1=25,hmin1=8)) # shale indicator variogram
+varios.append(GSLIB.make_variogram(nug=0,nst=1,it1=1,cc1=1,azi1=90,hmaj1=25,hmin1=8))#sand indicator variogram
+
+sim25hum20100A = geostats.sisim(df,'X','Y','Facies',ivtype=0,koption=0,ncut=2,thresh=thresh,gcdf=gcdf,trend=dummy_trend,
+               tmin=tmin,tmax=tmax,zmin=0.0,zmax=1.0,ltail=1,ltpar=1,middle=1,mpar=0,utail=1,utpar=1,
+               nx=nx,xmn=xmn,xsiz=xsiz,ny=ny,ymn=ymn,ysiz=ysiz,seed = 63013,
+               ndmin=ndmin,ndmax=ndmax,nodmax=nodmax,mults=1,nmult=3,noct=-1,radius=radius,ktype=0,vario=varios)
+
+sim25hum20100B = geostats.sisim(df,'X','Y','Facies',ivtype=0,koption=0,ncut=2,thresh=thresh,gcdf=gcdf,trend=dummy_trend,
+               tmin=tmin,tmax=tmax,zmin=0.0,zmax=1.0,ltail=1,ltpar=1,middle=1,mpar=0,utail=1,utpar=1,
+               nx=nx,xmn=xmn,xsiz=xsiz,ny=ny,ymn=ymn,ysiz=ysiz,seed = 61065,
+               ndmin=ndmin,ndmax=ndmax,nodmax=nodmax,mults=1,nmult=3,noct=-1,radius=radius,ktype=0,vario=varios)
+
+sim25hum20100C = geostats.sisim(df,'X','Y','Facies',ivtype=0,koption=0,ncut=2,thresh=thresh,gcdf=gcdf,trend=dummy_trend,
+               tmin=tmin,tmax=tmax,zmin=0.0,zmax=1.0,ltail=1,ltpar=1,middle=1,mpar=0,utail=1,utpar=1,
+               nx=nx,xmn=xmn,xsiz=xsiz,ny=ny,ymn=ymn,ysiz=ysiz,seed = 63549,
+               ndmin=ndmin,ndmax=ndmax,nodmax=nodmax,mults=1,nmult=3,noct=-1,radius=radius,ktype=0,vario=varios) 
+
+# 61029, 61047, 63013, 61065, 63549, 65335, 65975
+
+
+# Expand the simulation by a factor of 4
+sim25hum20100_exA = expand(sim25hum20100A,4)
+sim25hum20100_exB = expand(sim25hum20100B,4)
+sim25hum20100_exC = expand(sim25hum20100C,4)
+
+# Make hummocks
+dist  = np.arange(0, sim25hum20100_exA.shape[1], 1)  # Assign sine wave x values (1 per cm)
+hum_h=10                                             # Define hummock height (in cm)
+hum_p=200                                            # Define hummock period 
+top_surf  = hum_h*np.sin((2/hum_p)*np.pi*dist)+40   # Create sine wave for hummocky top surface
+bot_surf = np.repeat(0, sim25hum20100_exA.shape[1])
+# Plot a sine wave using time and amplitude obtained for the sine wave
+#plt.plot(dist, top_surf)
+# Create a disturbed peat surface to match the hummock geometry
+# Create cosine wave for disturbed bottom surface 
+
+#def integrand(dist):
+#    return (hum_h*np.sin((2/hum_p)*np.pi*dist)+40)
+#integrate.quad(integrand, 0, 2000)
+
+# Plot and save surfaces for COMSOL import
+plt.figure(figsize=(20,1.30))                                    # plot the results
+fig=plt.plot(dist, bot_surf, 'k', linewidth=0.5)
+plt.plot(dist, top_surf, 'k', linewidth=0.5)
+plt.axis('off')
+plt.savefig('hum2025.png', bbox_inches='tight', dpi=300, frameon='false', pad_inches=0)
+
+# Round each element in the top and bottom surface array to the nearest integer
+top_surf_int=np.rint(top_surf).astype(int)
+#bot_surf_int=np.rint(bot_surf).astype(int)
+
+sim25hum20100_exA2=humcrop(sim25hum20100_exA, 40, 10)
+sim25hum20100_exB2=humcrop(sim25hum20100_exB, 40, 10)
+sim25hum20100_exC2=humcrop(sim25hum20100_exC, 40, 10)
+
+# Plot the simulations for the dxf conversion
+plt.figure(figsize=(20,0.5))                                    # plot the results
+fig=plt.imshow(sim25hum20100_exA[0:50,:], cmap='Greys_r')
+plt.axis('off')
+fig.axes.get_xaxis().set_visible(False)
+plt.savefig('sim25hum20100_ink_A.png', bbox_inches='tight', dpi=300, frameon='false', pad_inches=0)
+
+plt.figure(figsize=(20,0.5))                                    # plot the results
+fig=plt.imshow(sim25hum20100_exB[0:50,:], cmap='Greys_r')
+plt.axis('off')
+fig.axes.get_xaxis().set_visible(False)
+plt.savefig('sim25hum20100_ink_B.png', bbox_inches='tight', dpi=300, frameon='false', pad_inches=0)
+
+plt.figure(figsize=(20,0.5))                                    # plot the results
+fig=plt.imshow(sim25hum20100_exC[0:50,:], cmap='Greys_r')
+plt.axis('off')
+fig.axes.get_xaxis().set_visible(False)
+plt.savefig('sim25hum20100_ink_C.png', bbox_inches='tight', dpi=300, frameon='false', pad_inches=0)
+
+# Plot the simulations for potential figures
+plt.figure(figsize=(20,0.5))                                    # plot the results
+fig=plt.imshow(sim25hum20100_exA2, cmap='Greys_r')
+# Save as a png
+plt.savefig('sim25hum20100_A.png', bbox_inches='tight', dpi=300, frameon='false', pad_inches=0)
+
+# Plot the simulation
+plt.figure(figsize=(20,0.5))                                    # plot the results
+fig=plt.imshow(sim25hum20100_exB2, cmap='Greys_r')
+# Save as a png
+plt.savefig('sim25hum20100_B.png', bbox_inches='tight', dpi=300, frameon='false', pad_inches=0)
+
+# Plot the simulation
+plt.figure(figsize=(20,0.5))                                    # plot the results
+fig=plt.imshow(sim25hum20100_exC2, cmap='Greys_r')
+# Save as a png
+plt.savefig('sim25hum20100_C.png', bbox_inches='tight', dpi=300, frameon='false', pad_inches=0)
+
+
+
+
+####################################################################################
+######################### V / 25 peat / 75 sand / hummocks  ########################
+############################ 20 cm height / 100 cm width ############################
+####################################################################################
+# Sequential Indicator Simulation with Simple Kriging Multiple Realizations 
+# A:  = PEAT / SAND
+# B: 
+# C: 
+
+nx = 500; ny = 13; xsiz =1; ysiz = 1; xmn = 0.5; ymn = 0.5; nxdis = 1; nydis = 1
+ndmin = 0; ndmax = 10; nodmax = 10; radius =25; skmean = 0
+tmin = -999; tmax = 999
+dummy_trend = np.zeros((10,10))            # the current version requires trend input - if wrong size it is ignored 
+
+ncut = 2                                   # number of facies
+thresh = [0,1]                             # the facies categories (use consisten order)
+gcdf = [0.25,0.75]                         # the global proportions of the categories
+varios = []                                # the variogram list
+varios.append(GSLIB.make_variogram(nug=0,nst=1,it1=1,cc1=1,azi1=180,hmaj1=25,hmin1=8)) # shale indicator variogram
+varios.append(GSLIB.make_variogram(nug=0,nst=1,it1=1,cc1=1,azi1=180,hmaj1=25,hmin1=8))#sand indicator variogram
+
+sim25hum20100A = geostats.sisim(df,'X','Y','Facies',ivtype=0,koption=0,ncut=2,thresh=thresh,gcdf=gcdf,trend=dummy_trend,
+               tmin=tmin,tmax=tmax,zmin=0.0,zmax=1.0,ltail=1,ltpar=1,middle=1,mpar=0,utail=1,utpar=1,
+               nx=nx,xmn=xmn,xsiz=xsiz,ny=ny,ymn=ymn,ysiz=ysiz,seed = 63013,
+               ndmin=ndmin,ndmax=ndmax,nodmax=nodmax,mults=1,nmult=3,noct=-1,radius=radius,ktype=0,vario=varios)
+
+sim25hum20100B = geostats.sisim(df,'X','Y','Facies',ivtype=0,koption=0,ncut=2,thresh=thresh,gcdf=gcdf,trend=dummy_trend,
+               tmin=tmin,tmax=tmax,zmin=0.0,zmax=1.0,ltail=1,ltpar=1,middle=1,mpar=0,utail=1,utpar=1,
+               nx=nx,xmn=xmn,xsiz=xsiz,ny=ny,ymn=ymn,ysiz=ysiz,seed = 61065,
+               ndmin=ndmin,ndmax=ndmax,nodmax=nodmax,mults=1,nmult=3,noct=-1,radius=radius,ktype=0,vario=varios)
+
+sim25hum20100C = geostats.sisim(df,'X','Y','Facies',ivtype=0,koption=0,ncut=2,thresh=thresh,gcdf=gcdf,trend=dummy_trend,
+               tmin=tmin,tmax=tmax,zmin=0.0,zmax=1.0,ltail=1,ltpar=1,middle=1,mpar=0,utail=1,utpar=1,
+               nx=nx,xmn=xmn,xsiz=xsiz,ny=ny,ymn=ymn,ysiz=ysiz,seed = 63549,
+               ndmin=ndmin,ndmax=ndmax,nodmax=nodmax,mults=1,nmult=3,noct=-1,radius=radius,ktype=0,vario=varios) 
+
+# Expand the simulation by a factor of 4
+sim25hum20100_exA = expand(sim25hum20100A,4)
+sim25hum20100_exB = expand(sim25hum20100B,4)
+sim25hum20100_exC = expand(sim25hum20100C,4)
+
+# Make hummocks
+dist  = np.arange(0, sim25hum20100_exA.shape[1], 1)  # Assign sine wave x values (1 per cm)
+hum_h=10                                             # Define hummock height (in cm)
+hum_p=200                                            # Define hummock period 
+top_surf  = hum_h*np.sin((2/hum_p)*np.pi*dist)+40   # Create sine wave for hummocky top surface
+bot_surf = np.repeat(0, sim25hum20100_exA.shape[1])
+# Plot a sine wave using time and amplitude obtained for the sine wave
+#plt.plot(dist, top_surf)
+# Create a disturbed peat surface to match the hummock geometry
+# Create cosine wave for disturbed bottom surface 
+
+#def integrand(dist):
+#    return (hum_h*np.sin((2/hum_p)*np.pi*dist)+40)
+#integrate.quad(integrand, 0, 2000)
+
+# Plot and save surfaces for COMSOL import
+plt.figure(figsize=(20,1.30))                                    # plot the results
+fig=plt.plot(dist, bot_surf, 'k', linewidth=0.5)
+plt.plot(dist, top_surf, 'k', linewidth=0.5)
+plt.axis('off')
+plt.savefig('hum2025.png', bbox_inches='tight', dpi=300, frameon='false', pad_inches=0)
+
+# Round each element in the top and bottom surface array to the nearest integer
+top_surf_int=np.rint(top_surf).astype(int)
+#bot_surf_int=np.rint(bot_surf).astype(int)
+
+sim25hum20100_exA2=humcrop(sim25hum20100_exA, 40, 10)
+sim25hum20100_exB2=humcrop(sim25hum20100_exB, 40, 10)
+sim25hum20100_exC2=humcrop(sim25hum20100_exC, 40, 10)
+
+# Plot the simulations for the dxf conversion
+plt.figure(figsize=(20,0.5))                                    # plot the results
+fig=plt.imshow(sim25hum20100_exA[0:50,:], cmap='Greys_r')
+plt.axis('off')
+fig.axes.get_xaxis().set_visible(False)
+plt.savefig('sim25hum20100_ink_A.png', bbox_inches='tight', dpi=300, frameon='false', pad_inches=0)
+
+plt.figure(figsize=(20,0.5))                                    # plot the results
+fig=plt.imshow(sim25hum20100_exB[0:50,:], cmap='Greys_r')
+plt.axis('off')
+fig.axes.get_xaxis().set_visible(False)
+plt.savefig('sim25hum20100_ink_B.png', bbox_inches='tight', dpi=300, frameon='false', pad_inches=0)
+
+plt.figure(figsize=(20,0.5))                                    # plot the results
+fig=plt.imshow(sim25hum20100_exC[0:50,:], cmap='Greys_r')
+plt.axis('off')
+fig.axes.get_xaxis().set_visible(False)
+plt.savefig('sim25hum20100_ink_C.png', bbox_inches='tight', dpi=300, frameon='false', pad_inches=0)
+
+# Plot the simulations for potential figures
+plt.figure(figsize=(20,0.5))                                    # plot the results
+fig=plt.imshow(sim25hum20100_exA2, cmap='Greys_r')
+# Save as a png
+plt.savefig('sim25hum20100_A.png', bbox_inches='tight', dpi=300, frameon='false', pad_inches=0)
+
+# Plot the simulation
+plt.figure(figsize=(20,0.5))                                    # plot the results
+fig=plt.imshow(sim25hum20100_exB2, cmap='Greys_r')
+# Save as a png
+plt.savefig('sim25hum20100_B.png', bbox_inches='tight', dpi=300, frameon='false', pad_inches=0)
+
+# Plot the simulation
+plt.figure(figsize=(20,0.5))                                    # plot the results
+fig=plt.imshow(sim25hum20100_exC2, cmap='Greys_r')
+# Save as a png
+plt.savefig('sim25hum20100_C.png', bbox_inches='tight', dpi=300, frameon='false', pad_inches=0)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -1293,6 +1322,15 @@ fig=plt.plot(dist, bot_surf, 'k', linewidth=0.5)
 plt.plot(dist, top_surf, 'k', linewidth=0.5)
 plt.axis('off')
 plt.savefig('hum1025_75PEAT.png', bbox_inches='tight', dpi=300, frameon='false', pad_inches=0)
+
+
+
+
+
+
+
+
+
 
 ############################################################
 # Make hummocks
@@ -1900,6 +1938,32 @@ fig=plt.plot(dist, bot_surf, 'k', linewidth=0.5)
 plt.plot(dist, top_surf, 'k', linewidth=0.5)
 plt.axis('off')
 plt.savefig('hum1025.png', bbox_inches='tight', dpi=300, frameon='false', pad_inches=0)
+
+
+
+
+
+
+# Make hummocks
+dist  = np.arange(0, sim25hum1025_exA.shape[1], 1)  # Assign sine wave x values (1 per cm)
+hum_h=40                                            # Define hummock height (in cm)
+hum_p=200                                        # Define hummock period 
+top_surf  = hum_h*np.sin((2/hum_p)*np.pi*dist)+50   # Create sine wave for hummocky top surface 
+
+# Plot a sine wave using time and amplitude obtained for the sine wave
+plt.plot(dist, top_surf)
+
+# Create a disturbed peat surface to match the hummock geometry
+# Create cosine wave for disturbed bottom surface 
+bot_surf  = hum_h*np.cos((2/hum_p)*np.pi*dist-0.7)+10
+def integrand(dist):
+    return (hum_h*np.sin((2/hum_p)*np.pi*dist)+50)- (hum_h*np.cos((2/hum_p)*np.pi*dist-0.5)+10)
+integrate.quad(integrand, 0, 2000)
+
+plt.figure(figsize=(20*1.8395879323031639,1*1.8410852713178292))                                    # plot the results
+fig=plt.plot(dist, bot_surf, 'k', linewidth=0.5)
+plt.plot(dist, top_surf, 'k', linewidth=0.5)
+plt.savefig('large_hums.png', bbox_inches='tight', dpi=300, frameon='false', pad_inches=0)
 
 
 
