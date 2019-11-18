@@ -1,9 +1,3 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Sun Sep 15 18:41:42 2019
-
-@author: erikai94
-"""
 # Example taken from: https://github.com/GeostatsGuy/PythonNumericalDemos/blob/master/GeostatsPy_sisim.ipynb
 
 import os                                                 
@@ -1093,9 +1087,9 @@ plt.savefig('sim25hum20100_C.png', bbox_inches='tight', dpi=300, frameon='false'
 ############################ 20 cm height / 100 cm width ############################
 ####################################################################################
 # Sequential Indicator Simulation with Simple Kriging Multiple Realizations 
-# A:  = PEAT / SAND
-# B: 
-# C: 
+# A: 0.2480 / 0.7520 = PEAT / SAND
+# B: 0.2423 / 0.7577
+# C: 0.2573 / 0.7427
 
 nx = 500; ny = 13; xsiz =1; ysiz = 1; xmn = 0.5; ymn = 0.5; nxdis = 1; nydis = 1
 ndmin = 0; ndmax = 10; nodmax = 10; radius =25; skmean = 0
@@ -1109,32 +1103,168 @@ varios = []                                # the variogram list
 varios.append(GSLIB.make_variogram(nug=0,nst=1,it1=1,cc1=1,azi1=180,hmaj1=25,hmin1=8)) # shale indicator variogram
 varios.append(GSLIB.make_variogram(nug=0,nst=1,it1=1,cc1=1,azi1=180,hmaj1=25,hmin1=8))#sand indicator variogram
 
-sim25hum20100A = geostats.sisim(df,'X','Y','Facies',ivtype=0,koption=0,ncut=2,thresh=thresh,gcdf=gcdf,trend=dummy_trend,
+sim25hum20100Av = geostats.sisim(df,'X','Y','Facies',ivtype=0,koption=0,ncut=2,thresh=thresh,gcdf=gcdf,trend=dummy_trend,
                tmin=tmin,tmax=tmax,zmin=0.0,zmax=1.0,ltail=1,ltpar=1,middle=1,mpar=0,utail=1,utpar=1,
-               nx=nx,xmn=xmn,xsiz=xsiz,ny=ny,ymn=ymn,ysiz=ysiz,seed = 63013,
+               nx=nx,xmn=xmn,xsiz=xsiz,ny=ny,ymn=ymn,ysiz=ysiz,seed = 63021,
                ndmin=ndmin,ndmax=ndmax,nodmax=nodmax,mults=1,nmult=3,noct=-1,radius=radius,ktype=0,vario=varios)
 
-sim25hum20100B = geostats.sisim(df,'X','Y','Facies',ivtype=0,koption=0,ncut=2,thresh=thresh,gcdf=gcdf,trend=dummy_trend,
+sim25hum20100Bv = geostats.sisim(df,'X','Y','Facies',ivtype=0,koption=0,ncut=2,thresh=thresh,gcdf=gcdf,trend=dummy_trend,
                tmin=tmin,tmax=tmax,zmin=0.0,zmax=1.0,ltail=1,ltpar=1,middle=1,mpar=0,utail=1,utpar=1,
-               nx=nx,xmn=xmn,xsiz=xsiz,ny=ny,ymn=ymn,ysiz=ysiz,seed = 61065,
+               nx=nx,xmn=xmn,xsiz=xsiz,ny=ny,ymn=ymn,ysiz=ysiz,seed = 75675,
                ndmin=ndmin,ndmax=ndmax,nodmax=nodmax,mults=1,nmult=3,noct=-1,radius=radius,ktype=0,vario=varios)
 
-sim25hum20100C = geostats.sisim(df,'X','Y','Facies',ivtype=0,koption=0,ncut=2,thresh=thresh,gcdf=gcdf,trend=dummy_trend,
+sim25hum20100Cv = geostats.sisim(df,'X','Y','Facies',ivtype=0,koption=0,ncut=2,thresh=thresh,gcdf=gcdf,trend=dummy_trend,
                tmin=tmin,tmax=tmax,zmin=0.0,zmax=1.0,ltail=1,ltpar=1,middle=1,mpar=0,utail=1,utpar=1,
-               nx=nx,xmn=xmn,xsiz=xsiz,ny=ny,ymn=ymn,ysiz=ysiz,seed = 63549,
+               nx=nx,xmn=xmn,xsiz=xsiz,ny=ny,ymn=ymn,ysiz=ysiz,seed = 75615,
                ndmin=ndmin,ndmax=ndmax,nodmax=nodmax,mults=1,nmult=3,noct=-1,radius=radius,ktype=0,vario=varios) 
 
+sim25hum20100Dv = geostats.sisim(df,'X','Y','Facies',ivtype=0,koption=0,ncut=2,thresh=thresh,gcdf=gcdf,trend=dummy_trend,
+               tmin=tmin,tmax=tmax,zmin=0.0,zmax=1.0,ltail=1,ltpar=1,middle=1,mpar=0,utail=1,utpar=1,
+               nx=nx,xmn=xmn,xsiz=xsiz,ny=ny,ymn=ymn,ysiz=ysiz,seed = 63559,
+               ndmin=ndmin,ndmax=ndmax,nodmax=nodmax,mults=1,nmult=3,noct=-1,radius=radius,ktype=0,vario=varios)
+
+
+# 63559, 75609
+# 61001, 63517, 75947,75995, 75327, 75603, 75673
+
 # Expand the simulation by a factor of 4
-sim25hum20100_exA = expand(sim25hum20100A,4)
-sim25hum20100_exB = expand(sim25hum20100B,4)
-sim25hum20100_exC = expand(sim25hum20100C,4)
+sim25hum20100_exAv = expand(sim25hum20100Av,4)
+sim25hum20100_exBv = expand(sim25hum20100Bv,4)
+sim25hum20100_exCv = expand(sim25hum20100Cv,4)
+sim25hum20100_exDv = expand(sim25hum20100Dv,4)
+
 
 # Make hummocks
-dist  = np.arange(0, sim25hum20100_exA.shape[1], 1)  # Assign sine wave x values (1 per cm)
+dist  = np.arange(0, sim25hum20100_exAv.shape[1], 1)  # Assign sine wave x values (1 per cm)
 hum_h=10                                             # Define hummock height (in cm)
 hum_p=200                                            # Define hummock period 
 top_surf  = hum_h*np.sin((2/hum_p)*np.pi*dist)+40   # Create sine wave for hummocky top surface
-bot_surf = np.repeat(0, sim25hum20100_exA.shape[1])
+bot_surf = np.repeat(0, sim25hum20100_exAv.shape[1])
+# Plot a sine wave using time and amplitude obtained for the sine wave
+#plt.plot(dist, top_surf)
+# Create a disturbed peat surface to match the hummock geometry
+# Create cosine wave for disturbed bottom surface 
+
+#def integrand(dist):
+#    return (hum_h*np.sin((2/hum_p)*np.pi*dist)+40)
+#integrate.quad(integrand, 0, 2000)
+
+# Plot and save surfaces for COMSOL import
+plt.figure(figsize=(20,0.50))                                    # plot the results
+fig=plt.plot(dist, bot_surf, 'k', linewidth=0.5)
+plt.plot(dist, top_surf, 'k', linewidth=0.5)
+plt.axis('off')
+plt.savefig('hum20100.png', bbox_inches='tight', dpi=300, frameon='false', pad_inches=0)
+
+# Round each element in the top and bottom surface array to the nearest integer
+top_surf_int=np.rint(top_surf).astype(int)
+#bot_surf_int=np.rint(bot_surf).astype(int)
+
+sim25hum20100_exA2v=humcrop(sim25hum20100_exAv, 40, 10)
+sim25hum20100_exB2v=humcrop(sim25hum20100_exBv, 40, 10)
+sim25hum20100_exC2v=humcrop(sim25hum20100_exCv, 40, 10)
+sim25hum20100_exD2v=humcrop(sim25hum20100_exDv, 40, 10)
+
+
+# Plot the simulations for the dxf conversion
+plt.figure(figsize=(20,0.5))                                    # plot the results
+fig=plt.imshow(sim25hum20100_exAv[0:50,:], cmap='Greys_r')
+plt.axis('off')
+fig.axes.get_xaxis().set_visible(False)
+plt.savefig('sim25hum20100_ink_Av.png', bbox_inches='tight', dpi=300, frameon='false', pad_inches=0)
+
+plt.figure(figsize=(20,0.5))                                    # plot the results
+fig=plt.imshow(sim25hum20100_exBv[0:50,:], cmap='Greys_r')
+plt.axis('off')
+fig.axes.get_xaxis().set_visible(False)
+plt.savefig('sim25hum20100_ink_Bv.png', bbox_inches='tight', dpi=300, frameon='false', pad_inches=0)
+
+plt.figure(figsize=(20,0.5))                                    # plot the results
+fig=plt.imshow(sim25hum20100_exCv[0:50,:], cmap='Greys_r')
+plt.axis('off')
+fig.axes.get_xaxis().set_visible(False)
+plt.savefig('sim25hum20100_ink_Cv.png', bbox_inches='tight', dpi=300, frameon='false', pad_inches=0)
+
+plt.figure(figsize=(20,0.5))                                    # plot the results
+fig=plt.imshow(sim25hum20100_exDv[0:50,:], cmap='Greys_r')
+plt.axis('off')
+fig.axes.get_xaxis().set_visible(False)
+plt.savefig('sim25hum20100_ink_Dv.png', bbox_inches='tight', dpi=300, frameon='false', pad_inches=0)
+
+# Plot the simulations for potential figures
+plt.figure(figsize=(20,0.5))                                    # plot the results
+fig=plt.imshow(sim25hum20100_exA2v, cmap='Greys_r')
+# Save as a png
+plt.savefig('sim25hum20100_Av.png', bbox_inches='tight', dpi=300, frameon='false', pad_inches=0)
+
+# Plot the simulation
+plt.figure(figsize=(20,0.5))                                    # plot the results
+fig=plt.imshow(sim25hum20100_exB2v, cmap='Greys_r')
+# Save as a png
+plt.savefig('sim25hum20100_Bv.png', bbox_inches='tight', dpi=300, frameon='false', pad_inches=0)
+
+# Plot the simulation
+plt.figure(figsize=(20,0.5))                                    # plot the results
+fig=plt.imshow(sim25hum20100_exC2v, cmap='Greys_r')
+# Save as a png
+plt.savefig('sim25hum20100_Cv.png', bbox_inches='tight', dpi=300, frameon='false', pad_inches=0)
+
+# Plot the simulation
+plt.figure(figsize=(20,0.5))                                    # plot the results
+fig=plt.imshow(sim25hum20100_exD2v, cmap='Greys_r')
+# Save as a png
+plt.savefig('sim25hum20100_Dv.png', bbox_inches='tight', dpi=300, frameon='false', pad_inches=0)
+
+
+####################################################################################
+######################### H / 25 peat / 75 sand / hummocks  ########################
+############################ 100 cm height / 125 cm width ############################
+####################################################################################
+# Sequential Indicator Simulation with Simple Kriging Multiple Realizations 
+# A: 0.2422 / 0.7578 = PEAT / SAND
+# B: 0.2590 / 0.7410
+# C: 0.2509 / 0.7491
+
+nx = 500; ny = 22; xsiz =1; ysiz = 1; xmn = 0.5; ymn = 0.5; nxdis = 1; nydis = 1
+ndmin = 0; ndmax = 10; nodmax = 10; radius =25; skmean = 0
+tmin = -999; tmax = 999
+dummy_trend = np.zeros((10,10))            # the current version requires trend input - if wrong size it is ignored 
+
+ncut = 2                                   # number of facies
+thresh = [0,1]                             # the facies categories (use consisten order)
+gcdf = [0.25,0.75]                         # the global proportions of the categories
+varios = []                                # the variogram list
+varios.append(GSLIB.make_variogram(nug=0,nst=1,it1=1,cc1=1,azi1=90,hmaj1=25,hmin1=8)) # shale indicator variogram
+varios.append(GSLIB.make_variogram(nug=0,nst=1,it1=1,cc1=1,azi1=90,hmaj1=25,hmin1=8))#sand indicator variogram
+
+sim25hum100125A = geostats.sisim(df,'X','Y','Facies',ivtype=0,koption=0,ncut=2,thresh=thresh,gcdf=gcdf,trend=dummy_trend,
+               tmin=tmin,tmax=tmax,zmin=0.0,zmax=1.0,ltail=1,ltpar=1,middle=1,mpar=0,utail=1,utpar=1,
+               nx=nx,xmn=xmn,xsiz=xsiz,ny=ny,ymn=ymn,ysiz=ysiz,seed = 63007,
+               ndmin=ndmin,ndmax=ndmax,nodmax=nodmax,mults=1,nmult=3,noct=-1,radius=radius,ktype=0,vario=varios)
+
+sim25hum100125B = geostats.sisim(df,'X','Y','Facies',ivtype=0,koption=0,ncut=2,thresh=thresh,gcdf=gcdf,trend=dummy_trend,
+               tmin=tmin,tmax=tmax,zmin=0.0,zmax=1.0,ltail=1,ltpar=1,middle=1,mpar=0,utail=1,utpar=1,
+               nx=nx,xmn=xmn,xsiz=xsiz,ny=ny,ymn=ymn,ysiz=ysiz,seed = 63099,
+               ndmin=ndmin,ndmax=ndmax,nodmax=nodmax,mults=1,nmult=3,noct=-1,radius=radius,ktype=0,vario=varios)
+
+sim25hum100125C = geostats.sisim(df,'X','Y','Facies',ivtype=0,koption=0,ncut=2,thresh=thresh,gcdf=gcdf,trend=dummy_trend,
+               tmin=tmin,tmax=tmax,zmin=0.0,zmax=1.0,ltail=1,ltpar=1,middle=1,mpar=0,utail=1,utpar=1,
+               nx=nx,xmn=xmn,xsiz=xsiz,ny=ny,ymn=ymn,ysiz=ysiz,seed = 67307,
+               ndmin=ndmin,ndmax=ndmax,nodmax=nodmax,mults=1,nmult=3,noct=-1,radius=radius,ktype=0,vario=varios) 
+
+# 61031, 63505,63511, 63575, 63577, 63513, 63597, 75193, 75313, 75353!, 75399, 67321, 67389
+
+# Expand the simulation by a factor of 4
+sim25hum100125_exA = expand(sim25hum100125A,4)
+sim25hum100125_exB = expand(sim25hum100125B,4)
+sim25hum100125_exC = expand(sim25hum100125C,4)
+
+# Make hummocks
+dist  = np.arange(0, sim25hum100125_exA.shape[1], 1)  # Assign sine wave x values (1 per cm)
+hum_h=50                                             # Define hummock height (in cm)
+hum_p=250                                            # Define hummock period 
+top_surf = hum_h*np.sin((2/hum_p)*np.pi*dist)+38.27535    # Create sine wave for hummocky top surface
+bot_surf = np.repeat(0, sim25hum100125_exA.shape[1])
 # Plot a sine wave using time and amplitude obtained for the sine wave
 #plt.plot(dist, top_surf)
 # Create a disturbed peat surface to match the hummock geometry
@@ -1152,818 +1282,333 @@ plt.axis('off')
 plt.savefig('hum2025.png', bbox_inches='tight', dpi=300, frameon='false', pad_inches=0)
 
 # Round each element in the top and bottom surface array to the nearest integer
-top_surf_int=np.rint(top_surf).astype(int)
+top_surf2 = hum_h*np.sin((2/hum_p)*np.pi*dist)+38.26    # Create sine wave for hummocky top surface
+top_surf_int=np.rint(top_surf2).astype(int)
+# Remove the portion of the sine wave that falls below the peat/sand interface
+top_surf_int[top_surf_int<0]=0
 #bot_surf_int=np.rint(bot_surf).astype(int)
 
-sim25hum20100_exA2=humcrop(sim25hum20100_exA, 40, 10)
-sim25hum20100_exB2=humcrop(sim25hum20100_exB, 40, 10)
-sim25hum20100_exC2=humcrop(sim25hum20100_exC, 40, 10)
+sim25hum100125_exA2=humcrop(sim25hum100125_exA, 38, 50)
+sim25hum100125_exB2=humcrop(sim25hum100125_exB, 38, 50)
+sim25hum100125_exC2=humcrop(sim25hum100125_exC, 38, 50)
+
+sim25hum100125_exB2=sim25hum100125_exB[0:(38+50),:];
+for i in dist:
+    sim25hum100125_exB2[0:(38+50)-top_surf_int[i],i]=1
+    
+for i in dist:
+    sim25hum100125_exB2[(38+50)-top_surf_int[i]:88,i]=0
+    
+sum(sum(sim25hum100125_exB2==0))
+
 
 # Plot the simulations for the dxf conversion
-plt.figure(figsize=(20,0.5))                                    # plot the results
-fig=plt.imshow(sim25hum20100_exA[0:50,:], cmap='Greys_r')
+plt.figure(figsize=(20,0.88))                                    # plot the results
+fig=plt.imshow(sim25hum100125_exA[0:88,:], cmap='Greys_r')
 plt.axis('off')
 fig.axes.get_xaxis().set_visible(False)
-plt.savefig('sim25hum20100_ink_A.png', bbox_inches='tight', dpi=300, frameon='false', pad_inches=0)
+plt.savefig('sim25hum100125_ink_A.png', bbox_inches='tight', dpi=300, frameon='false', pad_inches=0)
 
-plt.figure(figsize=(20,0.5))                                    # plot the results
-fig=plt.imshow(sim25hum20100_exB[0:50,:], cmap='Greys_r')
+plt.figure(figsize=(20,0.88))                                    # plot the results
+fig=plt.imshow(sim25hum100125_exB[0:88,:], cmap='Greys_r')
 plt.axis('off')
 fig.axes.get_xaxis().set_visible(False)
-plt.savefig('sim25hum20100_ink_B.png', bbox_inches='tight', dpi=300, frameon='false', pad_inches=0)
+plt.savefig('sim25hum100125_ink_B.png', bbox_inches='tight', dpi=300, frameon='false', pad_inches=0)
 
-plt.figure(figsize=(20,0.5))                                    # plot the results
-fig=plt.imshow(sim25hum20100_exC[0:50,:], cmap='Greys_r')
+plt.figure(figsize=(20,0.88))                                    # plot the results
+fig=plt.imshow(sim25hum100125_exC[0:88,:], cmap='Greys_r')
 plt.axis('off')
 fig.axes.get_xaxis().set_visible(False)
-plt.savefig('sim25hum20100_ink_C.png', bbox_inches='tight', dpi=300, frameon='false', pad_inches=0)
+plt.savefig('sim25hum100125_ink_C.png', bbox_inches='tight', dpi=300, frameon='false', pad_inches=0)
 
 # Plot the simulations for potential figures
-plt.figure(figsize=(20,0.5))                                    # plot the results
-fig=plt.imshow(sim25hum20100_exA2, cmap='Greys_r')
+plt.figure(figsize=(20,0.88))                                    # plot the results
+fig=plt.imshow(sim25hum100125_exA2, cmap='Greys_r')
+plt.yticks(np.arange(0, 90, 20))
+plt.xticks(np.arange(0, 2100, 100))
 # Save as a png
-plt.savefig('sim25hum20100_A.png', bbox_inches='tight', dpi=300, frameon='false', pad_inches=0)
+plt.savefig('sim25hum100125_A.png', bbox_inches='tight', dpi=300, frameon='false', pad_inches=0)
 
 # Plot the simulation
-plt.figure(figsize=(20,0.5))                                    # plot the results
-fig=plt.imshow(sim25hum20100_exB2, cmap='Greys_r')
+plt.figure(figsize=(20,0.88))                                    # plot the results
+fig=plt.imshow(sim25hum100125_exB2, cmap='Greys_r')
+plt.yticks(np.arange(0, 90, 20))
+plt.xticks(np.arange(0, 2100, 100))
 # Save as a png
-plt.savefig('sim25hum20100_B.png', bbox_inches='tight', dpi=300, frameon='false', pad_inches=0)
+plt.savefig('sim25hum100125_B.png', bbox_inches='tight', dpi=300, frameon='false', pad_inches=0)
 
 # Plot the simulation
-plt.figure(figsize=(20,0.5))                                    # plot the results
-fig=plt.imshow(sim25hum20100_exC2, cmap='Greys_r')
+plt.figure(figsize=(20,0.88))                                    # plot the results
+fig=plt.imshow(sim25hum100125_exC2, cmap='Greys_r')
+plt.yticks(np.arange(0, 90, 20))
+plt.xticks(np.arange(0, 2100, 100))
 # Save as a png
-plt.savefig('sim25hum20100_C.png', bbox_inches='tight', dpi=300, frameon='false', pad_inches=0)
+plt.savefig('sim25hum100125_C.png', bbox_inches='tight', dpi=300, frameon='false', pad_inches=0)
 
 
+####################################################################################
+######################### V / 25 peat / 75 sand / hummocks  ########################
+############################ 100 cm height / 125 cm width ############################
+####################################################################################
+# Sequential Indicator Simulation with Simple Kriging Multiple Realizations 
+# A: 0.2438 / 0.7562 = PEAT / SAND
+# B: 0.2581 / 0.7419
+# C: 0.2454 / 0.7546
 
+nx = 500; ny = 22; xsiz =1; ysiz = 1; xmn = 0.5; ymn = 0.5; nxdis = 1; nydis = 1
+ndmin = 0; ndmax = 10; nodmax = 10; radius =25; skmean = 0
+tmin = -999; tmax = 999
+dummy_trend = np.zeros((10,10))            # the current version requires trend input - if wrong size it is ignored 
 
+ncut = 2                                   # number of facies
+thresh = [0,1]                             # the facies categories (use consisten order)
+gcdf = [0.25,0.75]                         # the global proportions of the categories
+varios = []                                # the variogram list
+varios.append(GSLIB.make_variogram(nug=0,nst=1,it1=1,cc1=1,azi1=180,hmaj1=25,hmin1=8)) # shale indicator variogram
+varios.append(GSLIB.make_variogram(nug=0,nst=1,it1=1,cc1=1,azi1=180,hmaj1=25,hmin1=8))#sand indicator variogram
 
+sim25hum100125Av = geostats.sisim(df,'X','Y','Facies',ivtype=0,koption=0,ncut=2,thresh=thresh,gcdf=gcdf,trend=dummy_trend,
+               tmin=tmin,tmax=tmax,zmin=0.0,zmax=1.0,ltail=1,ltpar=1,middle=1,mpar=0,utail=1,utpar=1,
+               nx=nx,xmn=xmn,xsiz=xsiz,ny=ny,ymn=ymn,ysiz=ysiz,seed = 63003,
+               ndmin=ndmin,ndmax=ndmax,nodmax=nodmax,mults=1,nmult=3,noct=-1,radius=radius,ktype=0,vario=varios)
 
+sim25hum100125Bv = geostats.sisim(df,'X','Y','Facies',ivtype=0,koption=0,ncut=2,thresh=thresh,gcdf=gcdf,trend=dummy_trend,
+               tmin=tmin,tmax=tmax,zmin=0.0,zmax=1.0,ltail=1,ltpar=1,middle=1,mpar=0,utail=1,utpar=1,
+               nx=nx,xmn=xmn,xsiz=xsiz,ny=ny,ymn=ymn,ysiz=ysiz,seed = 75961,
+               ndmin=ndmin,ndmax=ndmax,nodmax=nodmax,mults=1,nmult=3,noct=-1,radius=radius,ktype=0,vario=varios)
 
+sim25hum100125Cv = geostats.sisim(df,'X','Y','Facies',ivtype=0,koption=0,ncut=2,thresh=thresh,gcdf=gcdf,trend=dummy_trend,
+               tmin=tmin,tmax=tmax,zmin=0.0,zmax=1.0,ltail=1,ltpar=1,middle=1,mpar=0,utail=1,utpar=1,
+               nx=nx,xmn=xmn,xsiz=xsiz,ny=ny,ymn=ymn,ysiz=ysiz,seed = 75959,
+               ndmin=ndmin,ndmax=ndmax,nodmax=nodmax,mults=1,nmult=3,noct=-1,radius=radius,ktype=0,vario=varios) 
 
+# 63003,65087,  63091, 63041, 65367, 65045, 65087, 65317, 65355!, 65375, 67311, 73567, 75933, 75961!, 75959
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-############################################################
-# Make hummocks
-dist  = np.arange(0, 2000, 1)  # Assign sine wave x values (1 per cm)
-hum_h=10                                            # Define hummock height (in cm)
-hum_p=50                                            # Define hummock period 
-top_surf  = hum_h*np.sin((2/hum_p)*np.pi*dist)+40   # Create sine wave for hummocky top surface
-# Plot a sine wave using time and amplitude obtained for the sine wave
-plt.plot(dist, top_surf)
-# Create a disturbed peat surface to match the hummock geometry
-# Create cosine wave for disturbed bottom surface 
-bot_surf  = np.repeat(0,2000)
-plt.figure(figsize=(20*1.8395879323031639,0.50*1.8410852713178292))                                    # plot the results
-fig=plt.plot(dist, bot_surf, 'k', linewidth=0.5)
-plt.plot(dist, top_surf, 'k', linewidth=0.5)
-plt.axis('off')
-plt.savefig('hum1025_25PEAT.png', bbox_inches='tight', dpi=300, frameon='false', pad_inches=0)
+# Expand the simulation by a factor of 4
+sim25hum100125_exAv = expand(sim25hum100125Av,4)
+sim25hum100125_exBv = expand(sim25hum100125Bv,4)
+sim25hum100125_exCv = expand(sim25hum100125Cv,4)
 
 # Make hummocks
-dist  = np.arange(0, 2000, 1)  # Assign sine wave x values (1 per cm)
-hum_h=10                                            # Define hummock height (in cm)
-hum_p=50                                            # Define hummock period 
-top_surf  = hum_h*np.sin((2/hum_p)*np.pi*dist)+60   # Create sine wave for hummocky top surface
-# Plot a sine wave using time and amplitude obtained for the sine wave
-plt.plot(dist, top_surf)
-# Create a disturbed peat surface to match the hummock geometry
-# Create cosine wave for disturbed bottom surface 
-bot_surf  = np.repeat(0,2000)
-plt.figure(figsize=(20*1.8395879323031639,0.70*1.8410852713178292))                                    # plot the results
-fig=plt.plot(dist, bot_surf, 'k', linewidth=0.5)
-plt.plot(dist, top_surf, 'k', linewidth=0.5)
-plt.axis('off')
-plt.savefig('hum1025_50PEAT.png', bbox_inches='tight', dpi=300, frameon='false', pad_inches=0)
-
-# Make hummocks
-dist  = np.arange(0, 2000, 1)  # Assign sine wave x values (1 per cm)
-hum_h=10                                            # Define hummock height (in cm)
-hum_p=50                                            # Define hummock period 
-top_surf  = hum_h*np.sin((2/hum_p)*np.pi*dist)+120   # Create sine wave for hummocky top surface
-# Plot a sine wave using time and amplitude obtained for the sine wave
-plt.plot(dist, top_surf)
-# Create a disturbed peat surface to match the hummock geometry
-# Create cosine wave for disturbed bottom surface 
-bot_surf  = np.repeat(0,2000)
-plt.figure(figsize=(20*1.8395879323031639,1.3*1.8410852713178292))                                    # plot the results
-fig=plt.plot(dist, bot_surf, 'k', linewidth=0.5)
-plt.plot(dist, top_surf, 'k', linewidth=0.5)
-plt.axis('off')
-plt.savefig('hum1025_75PEAT.png', bbox_inches='tight', dpi=300, frameon='false', pad_inches=0)
-
-
-############################################################
-
-# Make hummocks
-dist  = np.arange(0, 2000, 1)  # Assign sine wave x values (1 per cm)
-hum_h=10                                            # Define hummock height (in cm)
-hum_p=50                                            # Define hummock period 
-top_surf  = hum_h*np.sin((2/hum_p)*np.pi*dist)+60   # Create sine wave for hummocky top surface
-# Plot a sine wave using time and amplitude obtained for the sine wave
-plt.plot(dist, top_surf)
-# Create a disturbed peat surface to match the hummock geometry
-# Create cosine wave for disturbed bottom surface 
-bot_surf  = np.repeat(0,2000)
-plt.figure(figsize=(20*1.8395879323031639,0.70*1.8410852713178292))                                    # plot the results
-fig=plt.plot(dist, bot_surf, 'k', linewidth=0.5)
-plt.plot(dist, top_surf, 'k', linewidth=0.5)
-plt.axis('off')
-plt.savefig('hum1025_50PEAT.png', bbox_inches='tight', dpi=300, frameon='false', pad_inches=0)
-
-# Make hummocks
-dist  = np.arange(0, 2000, 1)  # Assign sine wave x values (1 per cm)
-hum_h=10                                            # Define hummock height (in cm)
-hum_p=50                                            # Define hummock period 
-top_surf  = hum_h*np.sin((2/hum_p)*np.pi*dist)+120   # Create sine wave for hummocky top surface
-# Plot a sine wave using time and amplitude obtained for the sine wave
-plt.plot(dist, top_surf)
-# Create a disturbed peat surface to match the hummock geometry
-# Create cosine wave for disturbed bottom surface 
-bot_surf  = np.repeat(0,2000)
-plt.figure(figsize=(20*1.8395879323031639,1.3*1.8410852713178292))                                    # plot the results
-fig=plt.plot(dist, bot_surf, 'k', linewidth=0.5)
-plt.plot(dist, top_surf, 'k', linewidth=0.5)
-plt.axis('off')
-plt.savefig('hum1025_75PEAT.png', bbox_inches='tight', dpi=300, frameon='false', pad_inches=0)
-
-
-
-
-
-
-
-
-
-
-############################################################
-# Make hummocks
-dist  = np.arange(0, 2000, 1)  # Assign sine wave x values (1 per cm)
-hum_h=10                                            # Define hummock height (in cm)
-hum_p=50                                            # Define hummock period 
-top_surf  = hum_h*np.sin((2/hum_p)*np.pi*dist)+40   # Create sine wave for hummocky top surface
-# Plot a sine wave using time and amplitude obtained for the sine wave
-plt.plot(dist, top_surf)
-# Create a disturbed peat surface to match the hummock geometry
-# Create cosine wave for disturbed bottom surface 
-bot_surf  = np.repeat(0,2000)
-plt.figure(figsize=(20*1.8395879323031639,0.50*1.8410852713178292))  
-plt.margins(0)                                  # plot the results
-fig=plt.plot(dist, bot_surf, 'k', linewidth=0.5)
-plt.plot(dist, top_surf, 'k', linewidth=0.5)
-plt.savefig('hum20_25_25PEAT.png', bbox_inches='tight', dpi=300, frameon='false', pad_inches=0)
-
-# Make hummocks
-dist  = np.arange(0, 2000, 1)  # Assign sine wave x values (1 per cm)
-hum_h=10                                            # Define hummock height (in cm)
-hum_p=50                                            # Define hummock period 
-top_surf  = hum_h*np.sin((2/hum_p)*np.pi*dist)+60   # Create sine wave for hummocky top surface
-# Plot a sine wave using time and amplitude obtained for the sine wave
-plt.plot(dist, top_surf)
-# Create a disturbed peat surface to match the hummock geometry
-# Create cosine wave for disturbed bottom surface 
-bot_surf  = np.repeat(0,2000)
-plt.figure(figsize=(20*1.8395879323031639,0.70*1.8410852713178292))   
-plt.margins(0)                                  # plot the results                                 # plot the results
-fig=plt.plot(dist, bot_surf, 'k', linewidth=0.5)
-plt.plot(dist, top_surf, 'k', linewidth=0.5)
-plt.savefig('hum20_25_50PEAT.png', bbox_inches='tight', dpi=300, frameon='false', pad_inches=0)
-
-# Make hummocks
-dist  = np.arange(0, 2000, 1)  # Assign sine wave x values (1 per cm)
-hum_h=10                                            # Define hummock height (in cm)
-hum_p=50                                            # Define hummock period 
-top_surf  = hum_h*np.sin((2/hum_p)*np.pi*dist)+120   # Create sine wave for hummocky top surface
-# Plot a sine wave using time and amplitude obtained for the sine wave
-plt.plot(dist, top_surf)
-# Create a disturbed peat surface to match the hummock geometry
-# Create cosine wave for disturbed bottom surface 
-bot_surf  = np.repeat(0,2000)
-plt.figure(figsize=(20*1.8395879323031639,1.3*1.8410852713178292))   
-plt.margins(0)                                  # plot the results                                 # plot the results
-fig=plt.plot(dist, bot_surf, 'k', linewidth=0.5)
-plt.plot(dist, top_surf, 'k', linewidth=0.5)
-plt.savefig('hum20_25_75PEAT.png', bbox_inches='tight', dpi=300, frameon='false', pad_inches=0)
-
-
-# Make hummocks
-dist  = np.arange(0, 2000, 1)  # Assign sine wave x values (1 per cm)
-hum_h=10                                            # Define hummock height (in cm)
-hum_p=200                                            # Define hummock period 
-top_surf  = hum_h*np.sin((2/hum_p)*np.pi*dist)+40   # Create sine wave for hummocky top surface
-# Plot a sine wave using time and amplitude obtained for the sine wave
-plt.plot(dist, top_surf)
-# Create a disturbed peat surface to match the hummock geometry
-# Create cosine wave for disturbed bottom surface 
-bot_surf  = np.repeat(0,2000)
-plt.figure(figsize=(20*1.8395879323031639,0.50*1.8410852713178292))    
-plt.margins(0)                                  # plot the results                                # plot the results
-fig=plt.plot(dist, bot_surf, 'k', linewidth=0.5)
-plt.plot(dist, top_surf, 'k', linewidth=0.5)
-plt.savefig('hum20_100_25PEAT.png', bbox_inches='tight', dpi=300, frameon='false', pad_inches=0)
-
-# Make hummocks
-dist  = np.arange(0, 2000, 1)  # Assign sine wave x values (1 per cm)
-hum_h=10                                            # Define hummock height (in cm)
-hum_p=200                                            # Define hummock period 
-top_surf  = hum_h*np.sin((2/hum_p)*np.pi*dist)+60   # Create sine wave for hummocky top surface
-# Plot a sine wave using time and amplitude obtained for the sine wave
-plt.plot(dist, top_surf)
-# Create a disturbed peat surface to match the hummock geometry
-# Create cosine wave for disturbed bottom surface 
-bot_surf  = np.repeat(0,2000)
-plt.figure(figsize=(20*1.8395879323031639,0.70*1.8410852713178292))    
-plt.margins(0)                                  # plot the results                                # plot the results
-fig=plt.plot(dist, bot_surf, 'k', linewidth=0.5)
-plt.plot(dist, top_surf, 'k', linewidth=0.5)
-plt.savefig('hum20_100_50PEAT.png', bbox_inches='tight', dpi=300, frameon='false', pad_inches=0)
-
-# Make hummocks
-dist  = np.arange(0, 2000, 1)  # Assign sine wave x values (1 per cm)
-hum_h=10                                            # Define hummock height (in cm)
-hum_p=200                                            # Define hummock period 
-top_surf  = hum_h*np.sin((2/hum_p)*np.pi*dist)+120   # Create sine wave for hummocky top surface
-# Plot a sine wave using time and amplitude obtained for the sine wave
-plt.plot(dist, top_surf)
-# Create a disturbed peat surface to match the hummock geometry
-# Create cosine wave for disturbed bottom surface 
-bot_surf  = np.repeat(0,2000)
-plt.figure(figsize=(20*1.8395879323031639,1.3*1.8410852713178292))        
-plt.margins(0)                                  # plot the results                            # plot the results
-fig=plt.plot(dist, bot_surf, 'k', linewidth=0.5)
-plt.plot(dist, top_surf, 'k', linewidth=0.5)
-plt.savefig('hum20_100_75PEAT.png', bbox_inches='tight', dpi=300, frameon='false', pad_inches=0)
-
-
-# Make hummocks
-dist  = np.arange(0, 2000, 1)  # Assign sine wave x values (1 per cm)
-hum_h=10                                            # Define hummock height (in cm)
-hum_p=1000                                            # Define hummock period 
-top_surf  = hum_h*np.sin((2/hum_p)*np.pi*dist)+40   # Create sine wave for hummocky top surface
-# Plot a sine wave using time and amplitude obtained for the sine wave
-plt.plot(dist, top_surf)
-# Create a disturbed peat surface to match the hummock geometry
-# Create cosine wave for disturbed bottom surface 
-bot_surf  = np.repeat(0,2000)
-plt.figure(figsize=(20*1.8395879323031639,0.50*1.8410852713178292))     
-plt.margins(0)                                  # plot the results                               # plot the results
-fig=plt.plot(dist, bot_surf, 'k', linewidth=0.5)
-plt.plot(dist, top_surf, 'k', linewidth=0.5)
-plt.savefig('hum20_500_25PEAT.png', bbox_inches='tight', dpi=300, frameon='false', pad_inches=0)
-
-# Make hummocks
-dist  = np.arange(0, 2000, 1)  # Assign sine wave x values (1 per cm)
-hum_h=10                                            # Define hummock height (in cm)
-hum_p=1000                                            # Define hummock period 
-top_surf  = hum_h*np.sin((2/hum_p)*np.pi*dist)+60   # Create sine wave for hummocky top surface
-# Plot a sine wave using time and amplitude obtained for the sine wave
-plt.plot(dist, top_surf)
-# Create a disturbed peat surface to match the hummock geometry
-# Create cosine wave for disturbed bottom surface 
-bot_surf  = np.repeat(0,2000)
-plt.figure(figsize=(20*1.8395879323031639,0.70*1.8410852713178292))      
-plt.margins(0)                                  # plot the results                              # plot the results
-fig=plt.plot(dist, bot_surf, 'k', linewidth=0.5)
-plt.plot(dist, top_surf, 'k', linewidth=0.5)
-plt.savefig('hum20_500_50PEAT.png', bbox_inches='tight', dpi=300, frameon='false', pad_inches=0)
-
-# Make hummocks
-dist  = np.arange(0, 2000, 1)  # Assign sine wave x values (1 per cm)
-hum_h=10                                            # Define hummock height (in cm)
-hum_p=1000                                            # Define hummock period 
-top_surf  = hum_h*np.sin((2/hum_p)*np.pi*dist)+120   # Create sine wave for hummocky top surface
-# Plot a sine wave using time and amplitude obtained for the sine wave
-plt.plot(dist, top_surf)
-# Create a disturbed peat surface to match the hummock geometry
-# Create cosine wave for disturbed bottom surface 
-bot_surf  = np.repeat(0,2000)
-plt.figure(figsize=(20*1.8395879323031639,1.3*1.8410852713178292))     
-plt.margins(0)                                  # plot the results                               # plot the results
-fig=plt.plot(dist, bot_surf, 'k', linewidth=0.5)
-plt.plot(dist, top_surf, 'k', linewidth=0.5)
-plt.savefig('hum20_500_75PEAT.png', bbox_inches='tight', dpi=300, frameon='false', pad_inches=0)
-
-
-
-
-
-
-
-
-
-
-
-
-
-############################################################
-# Make hummocks
-dist  = np.arange(0, 2000, 1)  # Assign sine wave x values (1 per cm)
-hum_h=50                                            # Define hummock height (in cm)
-hum_p=50                                            # Define hummock period 
-top_surf  = hum_h*np.sin((2/hum_p)*np.pi*dist)+40   # Create sine wave for hummocky top surface
-# Plot a sine wave using time and amplitude obtained for the sine wave
-plt.plot(dist, top_surf)
-# Create a disturbed peat surface to match the hummock geometry
-# Create cosine wave for disturbed bottom surface 
-bot_surf  = np.repeat(0,2000)
-plt.figure(figsize=(20*1.8395879323031639,1.0*1.8410852713178292))  
-plt.margins(0)                                  # plot the results
-fig=plt.plot(dist, bot_surf, 'k', linewidth=0.5)
-plt.plot(dist, top_surf, 'k', linewidth=0.5)
-plt.savefig('hum100_25_25PEAT.png', bbox_inches='tight', dpi=300, frameon='false', pad_inches=0)
-
-# Make hummocks
-dist  = np.arange(0, 2000, 1)  # Assign sine wave x values (1 per cm)
-hum_h=50                                            # Define hummock height (in cm)
-hum_p=50                                            # Define hummock period 
-top_surf  = hum_h*np.sin((2/hum_p)*np.pi*dist)+60   # Create sine wave for hummocky top surface
-# Plot a sine wave using time and amplitude obtained for the sine wave
-plt.plot(dist, top_surf)
-# Create a disturbed peat surface to match the hummock geometry
-# Create cosine wave for disturbed bottom surface 
-bot_surf  = np.repeat(0,2000)
-plt.figure(figsize=(20*1.8395879323031639,1.0*1.8410852713178292))   
-plt.margins(0)                                  # plot the results                                 # plot the results
-fig=plt.plot(dist, bot_surf, 'k', linewidth=0.5)
-plt.plot(dist, top_surf, 'k', linewidth=0.5)
-plt.savefig('hum100_25_50PEAT.png', bbox_inches='tight', dpi=300, frameon='false', pad_inches=0)
-
-# Make hummocks
-dist  = np.arange(0, 2000, 1)  # Assign sine wave x values (1 per cm)
-hum_h=50                                            # Define hummock height (in cm)
-hum_p=50                                            # Define hummock period 
-top_surf  = hum_h*np.sin((2/hum_p)*np.pi*dist)+120   # Create sine wave for hummocky top surface
-# Plot a sine wave using time and amplitude obtained for the sine wave
-plt.plot(dist, top_surf)
-# Create a disturbed peat surface to match the hummock geometry
-# Create cosine wave for disturbed bottom surface 
-bot_surf  = np.repeat(0,2000)
-plt.figure(figsize=(20*1.8395879323031639,1.5*1.8410852713178292))   
-plt.margins(0)                                  # plot the results                                 # plot the results
-fig=plt.plot(dist, bot_surf, 'k', linewidth=0.5)
-plt.plot(dist, top_surf, 'k', linewidth=0.5)
-plt.savefig('hum100_25_75PEAT.png', bbox_inches='tight', dpi=300, frameon='false', pad_inches=0)
-
-#PROP
-# Make hummocks
-dist  = np.arange(0, 2000, 1)  # Assign sine wave x values (1 per cm)
-hum_h=50                                            # Define hummock height (in cm)
+dist  = np.arange(0, sim25hum100125_exAv.shape[1], 1)  # Assign sine wave x values (1 per cm)
+hum_h=50                                             # Define hummock height (in cm)
 hum_p=250                                            # Define hummock period 
-top_surf  = hum_h*np.sin((2/hum_p)*np.pi*dist)+40   # Create sine wave for hummocky top surface
+top_surf = hum_h*np.sin((2/hum_p)*np.pi*dist)+38.27535    # Create sine wave for hummocky top surface
+bot_surf = np.repeat(0, sim25hum100125_exAv.shape[1])
 # Plot a sine wave using time and amplitude obtained for the sine wave
-plt.plot(dist, top_surf)
+#plt.plot(dist, top_surf)
 # Create a disturbed peat surface to match the hummock geometry
 # Create cosine wave for disturbed bottom surface 
-bot_surf  = np.repeat(0,2000)
-plt.figure(figsize=(20*1.8395879323031639,1.0*1.8410852713178292))  
-plt.margins(0)                                  # plot the results
-fig=plt.plot(dist, bot_surf, 'k', linewidth=0.5)
-plt.plot(dist, top_surf, 'k', linewidth=0.5)
-plt.savefig('hum100_25_25PEAT_prop.png', bbox_inches='tight', dpi=300, frameon='false', pad_inches=0)
 
-# Make hummocks
-dist  = np.arange(0, 2000, 1)  # Assign sine wave x values (1 per cm)
-hum_h=50                                            # Define hummock height (in cm)
-hum_p=250                                            # Define hummock period 
-top_surf  = hum_h*np.sin((2/hum_p)*np.pi*dist)+60   # Create sine wave for hummocky top surface
-# Plot a sine wave using time and amplitude obtained for the sine wave
-plt.plot(dist, top_surf)
-# Create a disturbed peat surface to match the hummock geometry
-# Create cosine wave for disturbed bottom surface 
-bot_surf  = np.repeat(0,2000)
-plt.figure(figsize=(20*1.8395879323031639,1.0*1.8410852713178292))   
-plt.margins(0)                                  # plot the results                                 # plot the results
-fig=plt.plot(dist, bot_surf, 'k', linewidth=0.5)
-plt.plot(dist, top_surf, 'k', linewidth=0.5)
-plt.savefig('hum100_25_50PEAT_prop.png', bbox_inches='tight', dpi=300, frameon='false', pad_inches=0)
+#def integrand(dist):
+#    return (hum_h*np.sin((2/hum_p)*np.pi*dist)+40)
+#integrate.quad(integrand, 0, 2000)
 
-# Make hummocks
-dist  = np.arange(0, 2000, 1)  # Assign sine wave x values (1 per cm)
-hum_h=50                                            # Define hummock height (in cm)
-hum_p=250                                            # Define hummock period 
-top_surf  = hum_h*np.sin((2/hum_p)*np.pi*dist)+120   # Create sine wave for hummocky top surface
-# Plot a sine wave using time and amplitude obtained for the sine wave
-plt.plot(dist, top_surf)
-# Create a disturbed peat surface to match the hummock geometry
-# Create cosine wave for disturbed bottom surface 
-bot_surf  = np.repeat(0,2000)
-plt.figure(figsize=(20*1.8395879323031639,1.5*1.8410852713178292))   
-plt.margins(0)                                  # plot the results                                 # plot the results
-fig=plt.plot(dist, bot_surf, 'k', linewidth=0.5)
-plt.plot(dist, top_surf, 'k', linewidth=0.5)
-plt.savefig('hum100_25_75PEAT_prop.png', bbox_inches='tight', dpi=300, frameon='false', pad_inches=0)
-
-
-############################################################
-# Make hummocks
-dist  = np.arange(0, 2000, 1)  # Assign sine wave x values (1 per cm)
-hum_h=50                                            # Define hummock height (in cm)
-hum_p=200                                            # Define hummock period 
-top_surf  = hum_h*np.sin((2/hum_p)*np.pi*dist)+40   # Create sine wave for hummocky top surface
-# Plot a sine wave using time and amplitude obtained for the sine wave
-plt.plot(dist, top_surf)
-# Create a disturbed peat surface to match the hummock geometry
-# Create cosine wave for disturbed bottom surface 
-bot_surf  = np.repeat(0,2000)
-plt.figure(figsize=(20*1.8395879323031639,1.0*1.8410852713178292))  
-plt.margins(0)                                  # plot the results
-fig=plt.plot(dist, bot_surf, 'k', linewidth=0.5)
-plt.plot(dist, top_surf, 'k', linewidth=0.5)
-plt.savefig('hum100_100_25PEAT.png', bbox_inches='tight', dpi=300, frameon='false', pad_inches=0)
-
-# Make hummocks
-dist  = np.arange(0, 2000, 1)  # Assign sine wave x values (1 per cm)
-hum_h=50                                            # Define hummock height (in cm)
-hum_p=200                                            # Define hummock period 
-top_surf  = hum_h*np.sin((2/hum_p)*np.pi*dist)+60   # Create sine wave for hummocky top surface
-# Plot a sine wave using time and amplitude obtained for the sine wave
-plt.plot(dist, top_surf)
-# Create a disturbed peat surface to match the hummock geometry
-# Create cosine wave for disturbed bottom surface 
-bot_surf  = np.repeat(0,2000)
-plt.figure(figsize=(20*1.8395879323031639,1.0*1.8410852713178292))   
-plt.margins(0)                                  # plot the results                                 # plot the results
-fig=plt.plot(dist, bot_surf, 'k', linewidth=0.5)
-plt.plot(dist, top_surf, 'k', linewidth=0.5)
-plt.savefig('hum100_100_50PEAT.png', bbox_inches='tight', dpi=300, frameon='false', pad_inches=0)
-
-# Make hummocks
-dist  = np.arange(0, 2000, 1)  # Assign sine wave x values (1 per cm)
-hum_h=50                                            # Define hummock height (in cm)
-hum_p=200                                            # Define hummock period 
-top_surf  = hum_h*np.sin((2/hum_p)*np.pi*dist)+120   # Create sine wave for hummocky top surface
-# Plot a sine wave using time and amplitude obtained for the sine wave
-plt.plot(dist, top_surf)
-# Create a disturbed peat surface to match the hummock geometry
-# Create cosine wave for disturbed bottom surface 
-bot_surf  = np.repeat(0,2000)
-plt.figure(figsize=(20*1.8395879323031639,1.5*1.8410852713178292))   
-plt.margins(0)                                  # plot the results                                 # plot the results
-fig=plt.plot(dist, bot_surf, 'k', linewidth=0.5)
-plt.plot(dist, top_surf, 'k', linewidth=0.5)
-plt.savefig('hum100_100_75PEAT.png', bbox_inches='tight', dpi=300, frameon='false', pad_inches=0)
-
-#PROP
-# Make hummocks
-dist  = np.arange(0, 2000, 1)  # Assign sine wave x values (1 per cm)
-hum_h=50                                            # Define hummock height (in cm)
-hum_p=1000                                            # Define hummock period 
-top_surf  = hum_h*np.sin((2/hum_p)*np.pi*dist)+40   # Create sine wave for hummocky top surface
-# Plot a sine wave using time and amplitude obtained for the sine wave
-plt.plot(dist, top_surf)
-# Create a disturbed peat surface to match the hummock geometry
-# Create cosine wave for disturbed bottom surface 
-bot_surf  = np.repeat(0,2000)
-plt.figure(figsize=(20*1.8395879323031639,1.0*1.8410852713178292))  
-plt.margins(0)                                  # plot the results
-fig=plt.plot(dist, bot_surf, 'k', linewidth=0.5)
-plt.plot(dist, top_surf, 'k', linewidth=0.5)
-plt.savefig('hum100_500_25PEAT_prop.png', bbox_inches='tight', dpi=300, frameon='false', pad_inches=0)
-
-# Make hummocks
-dist  = np.arange(0, 2000, 1)  # Assign sine wave x values (1 per cm)
-hum_h=50                                            # Define hummock height (in cm)
-hum_p=1000                                            # Define hummock period 
-top_surf  = hum_h*np.sin((2/hum_p)*np.pi*dist)+60   # Create sine wave for hummocky top surface
-# Plot a sine wave using time and amplitude obtained for the sine wave
-plt.plot(dist, top_surf)
-# Create a disturbed peat surface to match the hummock geometry
-# Create cosine wave for disturbed bottom surface 
-bot_surf  = np.repeat(0,2000)
-plt.figure(figsize=(20*1.8395879323031639,1.0*1.8410852713178292))   
-plt.margins(0)                                  # plot the results                                 # plot the results
-fig=plt.plot(dist, bot_surf, 'k', linewidth=0.5)
-plt.plot(dist, top_surf, 'k', linewidth=0.5)
-plt.savefig('hum100_500_50PEAT_prop.png', bbox_inches='tight', dpi=300, frameon='false', pad_inches=0)
-
-# Make hummocks
-dist  = np.arange(0, 2000, 1)  # Assign sine wave x values (1 per cm)
-hum_h=50                                            # Define hummock height (in cm)
-hum_p=1000                                            # Define hummock period 
-top_surf  = hum_h*np.sin((2/hum_p)*np.pi*dist)+120   # Create sine wave for hummocky top surface
-# Plot a sine wave using time and amplitude obtained for the sine wave
-plt.plot(dist, top_surf)
-# Create a disturbed peat surface to match the hummock geometry
-# Create cosine wave for disturbed bottom surface 
-bot_surf  = np.repeat(0,2000)
-plt.figure(figsize=(20*1.8395879323031639,1.5*1.8410852713178292))   
-plt.margins(0)                                  # plot the results                                 # plot the results
-fig=plt.plot(dist, bot_surf, 'k', linewidth=0.5)
-plt.plot(dist, top_surf, 'k', linewidth=0.5)
-plt.savefig('hum100_500_75PEAT_prop.png', bbox_inches='tight', dpi=300, frameon='false', pad_inches=0)
-
-
-############################################################
-# Make hummocks
-dist  = np.arange(0, 2000, 1)  # Assign sine wave x values (1 per cm)
-hum_h=50                                            # Define hummock height (in cm)
-hum_p=1000                                            # Define hummock period 
-top_surf  = hum_h*np.sin((2/hum_p)*np.pi*dist)+40   # Create sine wave for hummocky top surface
-# Plot a sine wave using time and amplitude obtained for the sine wave
-plt.plot(dist, top_surf)
-# Create a disturbed peat surface to match the hummock geometry
-# Create cosine wave for disturbed bottom surface 
-bot_surf  = np.repeat(0,2000)
-plt.figure(figsize=(20*1.8395879323031639,1.0*1.8410852713178292))  
-plt.margins(0)                                  # plot the results
-fig=plt.plot(dist, bot_surf, 'k', linewidth=0.5)
-plt.plot(dist, top_surf, 'k', linewidth=0.5)
-plt.savefig('hum100_500_25PEAT.png', bbox_inches='tight', dpi=300, frameon='false', pad_inches=0)
-
-# Make hummocks
-dist  = np.arange(0, 2000, 1)  # Assign sine wave x values (1 per cm)
-hum_h=50                                            # Define hummock height (in cm)
-hum_p=1000                                            # Define hummock period 
-top_surf  = hum_h*np.sin((2/hum_p)*np.pi*dist)+60   # Create sine wave for hummocky top surface
-# Plot a sine wave using time and amplitude obtained for the sine wave
-plt.plot(dist, top_surf)
-# Create a disturbed peat surface to match the hummock geometry
-# Create cosine wave for disturbed bottom surface 
-bot_surf  = np.repeat(0,2000)
-plt.figure(figsize=(20*1.8395879323031639,1.0*1.8410852713178292))   
-plt.margins(0)                                  # plot the results                                 # plot the results
-fig=plt.plot(dist, bot_surf, 'k', linewidth=0.5)
-plt.plot(dist, top_surf, 'k', linewidth=0.5)
-plt.savefig('hum100_500_50PEAT.png', bbox_inches='tight', dpi=300, frameon='false', pad_inches=0)
-
-# Make hummocks
-dist  = np.arange(0, 2000, 1)  # Assign sine wave x values (1 per cm)
-hum_h=50                                            # Define hummock height (in cm)
-hum_p=1000                                            # Define hummock period 
-top_surf  = hum_h*np.sin((2/hum_p)*np.pi*dist)+120   # Create sine wave for hummocky top surface
-# Plot a sine wave using time and amplitude obtained for the sine wave
-plt.plot(dist, top_surf)
-# Create a disturbed peat surface to match the hummock geometry
-# Create cosine wave for disturbed bottom surface 
-bot_surf  = np.repeat(0,2000)
-plt.figure(figsize=(20*1.8395879323031639,1.5*1.8410852713178292))   
-plt.margins(0)                                  # plot the results                                 # plot the results
-fig=plt.plot(dist, bot_surf, 'k', linewidth=0.5)
-plt.plot(dist, top_surf, 'k', linewidth=0.5)
-plt.savefig('hum100_500_75PEAT.png', bbox_inches='tight', dpi=300, frameon='false', pad_inches=0)
-
-#PROP
-# Make hummocks
-dist  = np.arange(0, 2000, 1)  # Assign sine wave x values (1 per cm)
-hum_h=50                                            # Define hummock height (in cm)
-hum_p=5000                                            # Define hummock period 
-top_surf  = hum_h*np.sin((2/hum_p)*np.pi*dist)+40   # Create sine wave for hummocky top surface
-# Plot a sine wave using time and amplitude obtained for the sine wave
-plt.plot(dist, top_surf)
-# Create a disturbed peat surface to match the hummock geometry
-# Create cosine wave for disturbed bottom surface 
-bot_surf  = np.repeat(0,2000)
-plt.figure(figsize=(20*1.8395879323031639,1.0*1.8410852713178292))  
-plt.margins(0)                                  # plot the results
-fig=plt.plot(dist, bot_surf, 'k', linewidth=0.5)
-plt.plot(dist, top_surf, 'k', linewidth=0.5)
-plt.savefig('hum100_500_25PEAT_prop.png', bbox_inches='tight', dpi=300, frameon='false', pad_inches=0)
-
-# Make hummocks
-dist  = np.arange(0, 2000, 1)  # Assign sine wave x values (1 per cm)
-hum_h=50                                            # Define hummock height (in cm)
-hum_p=1000                                            # Define hummock period 
-top_surf  = hum_h*np.sin((2/hum_p)*np.pi*dist)+60   # Create sine wave for hummocky top surface
-# Plot a sine wave using time and amplitude obtained for the sine wave
-plt.plot(dist, top_surf)
-# Create a disturbed peat surface to match the hummock geometry
-# Create cosine wave for disturbed bottom surface 
-bot_surf  = np.repeat(0,2000)
-plt.figure(figsize=(20*1.8395879323031639,1.0*1.8410852713178292))   
-plt.margins(0)                                  # plot the results                                 # plot the results
-fig=plt.plot(dist, bot_surf, 'k', linewidth=0.5)
-plt.plot(dist, top_surf, 'k', linewidth=0.5)
-plt.savefig('hum100_500_50PEAT_prop.png', bbox_inches='tight', dpi=300, frameon='false', pad_inches=0)
-
-# Make hummocks
-dist  = np.arange(0, 2000, 1)  # Assign sine wave x values (1 per cm)
-hum_h=50                                            # Define hummock height (in cm)
-hum_p=1000                                            # Define hummock period 
-top_surf  = hum_h*np.sin((2/hum_p)*np.pi*dist)+120   # Create sine wave for hummocky top surface
-# Plot a sine wave using time and amplitude obtained for the sine wave
-plt.plot(dist, top_surf)
-# Create a disturbed peat surface to match the hummock geometry
-# Create cosine wave for disturbed bottom surface 
-bot_surf  = np.repeat(0,2000)
-plt.figure(figsize=(20*1.8395879323031639,1.5*1.8410852713178292))   
-plt.margins(0)                                  # plot the results                                 # plot the results
-fig=plt.plot(dist, bot_surf, 'k', linewidth=0.5)
-plt.plot(dist, top_surf, 'k', linewidth=0.5)
-plt.savefig('hum100_500_75PEAT_prop.png', bbox_inches='tight', dpi=300, frameon='false', pad_inches=0)
-
-
-
-
-
-
-
-
-
-
-
-
-
-# Make hummocks
-dist  = np.arange(0, 2000, 1)  # Assign sine wave x values (1 per cm)
-hum_h=10                                            # Define hummock height (in cm)
-hum_p=200                                            # Define hummock period 
-top_surf  = hum_h*np.sin((2/hum_p)*np.pi*dist)+40   # Create sine wave for hummocky top surface
-# Plot a sine wave using time and amplitude obtained for the sine wave
-plt.plot(dist, top_surf)
-# Create a disturbed peat surface to match the hummock geometry
-# Create cosine wave for disturbed bottom surface 
-bot_surf  = np.repeat(0,2000)
-plt.figure(figsize=(20*1.8395879323031639,0.50*1.8410852713178292))    
-plt.margins(0)                                  # plot the results                                # plot the results
-fig=plt.plot(dist, bot_surf, 'k', linewidth=0.5)
-plt.plot(dist, top_surf, 'k', linewidth=0.5)
-plt.savefig('hum20_100_25PEAT.png', bbox_inches='tight', dpi=300, frameon='false', pad_inches=0)
-
-# Make hummocks
-dist  = np.arange(0, 2000, 1)  # Assign sine wave x values (1 per cm)
-hum_h=10                                            # Define hummock height (in cm)
-hum_p=200                                            # Define hummock period 
-top_surf  = hum_h*np.sin((2/hum_p)*np.pi*dist)+60   # Create sine wave for hummocky top surface
-# Plot a sine wave using time and amplitude obtained for the sine wave
-plt.plot(dist, top_surf)
-# Create a disturbed peat surface to match the hummock geometry
-# Create cosine wave for disturbed bottom surface 
-bot_surf  = np.repeat(0,2000)
-plt.figure(figsize=(20*1.8395879323031639,0.70*1.8410852713178292))    
-plt.margins(0)                                  # plot the results                                # plot the results
-fig=plt.plot(dist, bot_surf, 'k', linewidth=0.5)
-plt.plot(dist, top_surf, 'k', linewidth=0.5)
-plt.savefig('hum20_100_50PEAT.png', bbox_inches='tight', dpi=300, frameon='false', pad_inches=0)
-
-# Make hummocks
-dist  = np.arange(0, 2000, 1)  # Assign sine wave x values (1 per cm)
-hum_h=10                                            # Define hummock height (in cm)
-hum_p=200                                            # Define hummock period 
-top_surf  = hum_h*np.sin((2/hum_p)*np.pi*dist)+120   # Create sine wave for hummocky top surface
-# Plot a sine wave using time and amplitude obtained for the sine wave
-plt.plot(dist, top_surf)
-# Create a disturbed peat surface to match the hummock geometry
-# Create cosine wave for disturbed bottom surface 
-bot_surf  = np.repeat(0,2000)
-plt.figure(figsize=(20*1.8395879323031639,1.3*1.8410852713178292))        
-plt.margins(0)                                  # plot the results                            # plot the results
-fig=plt.plot(dist, bot_surf, 'k', linewidth=0.5)
-plt.plot(dist, top_surf, 'k', linewidth=0.5)
-plt.savefig('hum20_100_75PEAT.png', bbox_inches='tight', dpi=300, frameon='false', pad_inches=0)
-
-
-# Make hummocks
-dist  = np.arange(0, 2000, 1)  # Assign sine wave x values (1 per cm)
-hum_h=10                                            # Define hummock height (in cm)
-hum_p=800                                            # Define hummock period 
-top_surf  = hum_h*np.sin((2/hum_p)*np.pi*dist)+40   # Create sine wave for hummocky top surface
-# Plot a sine wave using time and amplitude obtained for the sine wave
-plt.plot(dist, top_surf)
-# Create a disturbed peat surface to match the hummock geometry
-# Create cosine wave for disturbed bottom surface 
-bot_surf  = np.repeat(0,2000)
-plt.figure(figsize=(20*1.8395879323031639,0.50*1.8410852713178292))     
-plt.margins(0)                                  # plot the results                               # plot the results
-fig=plt.plot(dist, bot_surf, 'k', linewidth=0.5)
-plt.plot(dist, top_surf, 'k', linewidth=0.5)
-plt.savefig('hum20_400_25PEAT.png', bbox_inches='tight', dpi=300, frameon='false', pad_inches=0)
-
-# Make hummocks
-dist  = np.arange(0, 2000, 1)  # Assign sine wave x values (1 per cm)
-hum_h=10                                            # Define hummock height (in cm)
-hum_p=800                                            # Define hummock period 
-top_surf  = hum_h*np.sin((2/hum_p)*np.pi*dist)+60   # Create sine wave for hummocky top surface
-# Plot a sine wave using time and amplitude obtained for the sine wave
-plt.plot(dist, top_surf)
-# Create a disturbed peat surface to match the hummock geometry
-# Create cosine wave for disturbed bottom surface 
-bot_surf  = np.repeat(0,2000)
-plt.figure(figsize=(20*1.8395879323031639,0.70*1.8410852713178292))      
-plt.margins(0)                                  # plot the results                              # plot the results
-fig=plt.plot(dist, bot_surf, 'k', linewidth=0.5)
-plt.plot(dist, top_surf, 'k', linewidth=0.5)
-plt.savefig('hum20_400_50PEAT.png', bbox_inches='tight', dpi=300, frameon='false', pad_inches=0)
-
-# Make hummocks
-dist  = np.arange(0, 2000, 1)  # Assign sine wave x values (1 per cm)
-hum_h=10                                            # Define hummock height (in cm)
-hum_p=800                                            # Define hummock period 
-top_surf  = hum_h*np.sin((2/hum_p)*np.pi*dist)+120   # Create sine wave for hummocky top surface
-# Plot a sine wave using time and amplitude obtained for the sine wave
-plt.plot(dist, top_surf)
-# Create a disturbed peat surface to match the hummock geometry
-# Create cosine wave for disturbed bottom surface 
-bot_surf  = np.repeat(0,2000)
-plt.figure(figsize=(20*1.8395879323031639,1.3*1.8410852713178292))     
-plt.margins(0)                                  # plot the results                               # plot the results
-fig=plt.plot(dist, bot_surf, 'k', linewidth=0.5)
-plt.plot(dist, top_surf, 'k', linewidth=0.5)
-plt.savefig('hum20_400_75PEAT.png', bbox_inches='tight', dpi=300, frameon='false', pad_inches=0)
-
-
-
-
-
-
-
-
-
-
-
-
-# Make hummocks
-dist  = np.arange(0, 2000, 1)  # Assign sine wave x values (1 per cm)
-hum_h=10                                            # Define hummock height (in cm)
-hum_p=200                                            # Define hummock period 
-top_surf  = hum_h*np.sin((2/hum_p)*np.pi*dist)+40   # Create sine wave for hummocky top surface
-# Plot a sine wave using time and amplitude obtained for the sine wave
-plt.plot(dist, top_surf)
-# Create a disturbed peat surface to match the hummock geometry
-# Create cosine wave for disturbed bottom surface 
-bot_surf  = np.repeat(0,2000)
-plt.figure(figsize=(20*1.8395879323031639,0.60*1.8410852713178292))                                    # plot the results
+# Plot and save surfaces for COMSOL import
+plt.figure(figsize=(20,1.30))                                    # plot the results
 fig=plt.plot(dist, bot_surf, 'k', linewidth=0.5)
 plt.plot(dist, top_surf, 'k', linewidth=0.5)
 plt.axis('off')
-plt.savefig('hum1025.png', bbox_inches='tight', dpi=300, frameon='false', pad_inches=0)
+plt.savefig('hum2025.png', bbox_inches='tight', dpi=300, frameon='false', pad_inches=0)
+
+# Round each element in the top and bottom surface array to the nearest integer
+top_surf2 = hum_h*np.sin((2/hum_p)*np.pi*dist)+38.26    # Create sine wave for hummocky top surface
+top_surf_int=np.rint(top_surf2).astype(int)
+# Remove the portion of the sine wave that falls below the peat/sand interface
+top_surf_int[top_surf_int<0]=0
+#bot_surf_int=np.rint(bot_surf).astype(int)
+
+sim25hum100125_exA2v=humcrop(sim25hum100125_exAv, 38, 50)
+sim25hum100125_exB2v=humcrop(sim25hum100125_exBv, 38, 50)
+sim25hum100125_exC2v=humcrop(sim25hum100125_exCv, 38, 50)
+
+sim25hum100125_exB2=sim25hum100125_exB[0:(38+50),:];
+for i in dist:
+    sim25hum100125_exB2[0:(38+50)-top_surf_int[i],i]=1
+    
+for i in dist:
+    sim25hum100125_exB2[(38+50)-top_surf_int[i]:88,i]=0
+    
+sum(sum(sim25hum100125_exB2==0))
+
+
+# Plot the simulations for the dxf conversion
+plt.figure(figsize=(20,0.88))                                    # plot the results
+fig=plt.imshow(sim25hum100125_exAv[0:88,:], cmap='Greys_r')
+plt.axis('off')
+fig.axes.get_xaxis().set_visible(False)
+plt.savefig('sim25hum100125_ink_Av.png', bbox_inches='tight', dpi=300, frameon='false', pad_inches=0)
+
+plt.figure(figsize=(20,0.88))                                    # plot the results
+fig=plt.imshow(sim25hum100125_exBv[0:88,:], cmap='Greys_r')
+plt.axis('off')
+fig.axes.get_xaxis().set_visible(False)
+plt.savefig('sim25hum100125_ink_Bv.png', bbox_inches='tight', dpi=300, frameon='false', pad_inches=0)
+
+plt.figure(figsize=(20,0.88))                                    # plot the results
+fig=plt.imshow(sim25hum100125_exCv[0:88,:], cmap='Greys_r')
+plt.axis('off')
+fig.axes.get_xaxis().set_visible(False)
+plt.savefig('sim25hum100125_ink_Cv.png', bbox_inches='tight', dpi=300, frameon='false', pad_inches=0)
+
+# Plot the simulations for potential figures
+plt.figure(figsize=(20,0.88))                                    # plot the results
+fig=plt.imshow(sim25hum100125_exA2v, cmap='Greys_r')
+plt.yticks(np.arange(0, 90, 20))
+plt.xticks(np.arange(0, 2100, 100))
+# Save as a png
+plt.savefig('sim25hum100125_Av.png', bbox_inches='tight', dpi=300, frameon='false', pad_inches=0)
+
+# Plot the simulation
+plt.figure(figsize=(20,0.88))                                    # plot the results
+fig=plt.imshow(sim25hum100125_exB2v, cmap='Greys_r')
+plt.yticks(np.arange(0, 90, 20))
+plt.xticks(np.arange(0, 2100, 100))
+# Save as a png
+plt.savefig('sim25hum100125_Bv.png', bbox_inches='tight', dpi=300, frameon='false', pad_inches=0)
+
+# Plot the simulation
+plt.figure(figsize=(20,0.88))                                    # plot the results
+fig=plt.imshow(sim25hum100125_exC2v, cmap='Greys_r')
+plt.yticks(np.arange(0, 90, 20))
+plt.xticks(np.arange(0, 2100, 100))
+# Save as a png
+plt.savefig('sim25hum100125_Cv.png', bbox_inches='tight', dpi=300, frameon='false', pad_inches=0)
+
+
+####################################################################################
+######################### H / 25 peat / 75 sand / hummocks  ########################
+############################ 100 cm height / 500 cm width ############################
+####################################################################################
+# Sequential Indicator Simulation with Simple Kriging Multiple Realizations 
+# A:  = PEAT / SAND
+# B: 
+# C: 
+
+nx = 500; ny = 22; xsiz =1; ysiz = 1; xmn = 0.5; ymn = 0.5; nxdis = 1; nydis = 1
+ndmin = 0; ndmax = 10; nodmax = 10; radius =25; skmean = 0
+tmin = -999; tmax = 999
+dummy_trend = np.zeros((10,10))            # the current version requires trend input - if wrong size it is ignored 
+
+ncut = 2                                   # number of facies
+thresh = [0,1]                             # the facies categories (use consisten order)
+gcdf = [0.25,0.75]                         # the global proportions of the categories
+varios = []                                # the variogram list
+varios.append(GSLIB.make_variogram(nug=0,nst=1,it1=1,cc1=1,azi1=90,hmaj1=25,hmin1=8)) # shale indicator variogram
+varios.append(GSLIB.make_variogram(nug=0,nst=1,it1=1,cc1=1,azi1=90,hmaj1=25,hmin1=8))#sand indicator variogram
+
+sim25hum100500A = geostats.sisim(df,'X','Y','Facies',ivtype=0,koption=0,ncut=2,thresh=thresh,gcdf=gcdf,trend=dummy_trend,
+               tmin=tmin,tmax=tmax,zmin=0.0,zmax=1.0,ltail=1,ltpar=1,middle=1,mpar=0,utail=1,utpar=1,
+               nx=nx,xmn=xmn,xsiz=xsiz,ny=ny,ymn=ymn,ysiz=ysiz,seed = 63007,
+               ndmin=ndmin,ndmax=ndmax,nodmax=nodmax,mults=1,nmult=3,noct=-1,radius=radius,ktype=0,vario=varios)
+
+sim25hum100500B = geostats.sisim(df,'X','Y','Facies',ivtype=0,koption=0,ncut=2,thresh=thresh,gcdf=gcdf,trend=dummy_trend,
+               tmin=tmin,tmax=tmax,zmin=0.0,zmax=1.0,ltail=1,ltpar=1,middle=1,mpar=0,utail=1,utpar=1,
+               nx=nx,xmn=xmn,xsiz=xsiz,ny=ny,ymn=ymn,ysiz=ysiz,seed = 63099,
+               ndmin=ndmin,ndmax=ndmax,nodmax=nodmax,mults=1,nmult=3,noct=-1,radius=radius,ktype=0,vario=varios)
+
+sim25hum100500C = geostats.sisim(df,'X','Y','Facies',ivtype=0,koption=0,ncut=2,thresh=thresh,gcdf=gcdf,trend=dummy_trend,
+               tmin=tmin,tmax=tmax,zmin=0.0,zmax=1.0,ltail=1,ltpar=1,middle=1,mpar=0,utail=1,utpar=1,
+               nx=nx,xmn=xmn,xsiz=xsiz,ny=ny,ymn=ymn,ysiz=ysiz,seed = 67307,
+               ndmin=ndmin,ndmax=ndmax,nodmax=nodmax,mults=1,nmult=3,noct=-1,radius=radius,ktype=0,vario=varios) 
+
+
+# Expand the simulation by a factor of 4
+sim25hum100500_exA = expand(sim25hum100500A,4)
+sim25hum100500_exB = expand(sim25hum100500B,4)
+sim25hum100500_exC = expand(sim25hum100500C,4)
 
 # Make hummocks
-dist  = np.arange(0, 2000, 1)  # Assign sine wave x values (1 per cm)
-hum_h=10                                            # Define hummock height (in cm)
-hum_p=50                                            # Define hummock period 
-top_surf  = hum_h*np.sin((2/hum_p)*np.pi*dist)+40   # Create sine wave for hummocky top surface
+dist  = np.arange(0, sim25hum100500_exA.shape[1], 1)  # Assign sine wave x values (1 per cm)
+hum_h=50                                             # Define hummock height (in cm)
+hum_p=1000                                       # Define hummock period 
+top_surf = hum_h*np.sin((2/hum_p)*np.pi*dist)+38.27535    # Create sine wave for hummocky top surface
+bot_surf = np.repeat(0, sim25hum100500_exA.shape[1])
 # Plot a sine wave using time and amplitude obtained for the sine wave
-plt.plot(dist, top_surf)
+#plt.plot(dist, top_surf)
 # Create a disturbed peat surface to match the hummock geometry
 # Create cosine wave for disturbed bottom surface 
-bot_surf  = np.repeat(0,2000)
-plt.figure(figsize=(20*1.8395879323031639,0.60*1.8410852713178292))                                    # plot the results
+
+#def integrand(dist):
+#    return (hum_h*np.sin((2/hum_p)*np.pi*dist)+40)
+#integrate.quad(integrand, 0, 2000)
+
+# Plot and save surfaces for COMSOL import
+plt.figure(figsize=(20,0.88))                                    # plot the results
 fig=plt.plot(dist, bot_surf, 'k', linewidth=0.5)
 plt.plot(dist, top_surf, 'k', linewidth=0.5)
 plt.axis('off')
-plt.savefig('hum1025.png', bbox_inches='tight', dpi=300, frameon='false', pad_inches=0)
+plt.savefig('hum2025.png', bbox_inches='tight', dpi=300, frameon='false', pad_inches=0)
+
+# Round each element in the top and bottom surface array to the nearest integer
+top_surf2 = hum_h*np.sin((2/hum_p)*np.pi*dist)+38.276    # Create sine wave for hummocky top surface
+top_surf_int=np.rint(top_surf2).astype(int)
+# Remove the portion of the sine wave that falls below the peat/sand interface
+top_surf_int[top_surf_int<0]=0
+#bot_surf_int=np.rint(bot_surf).astype(int)
+
+sim25hum100500_exA2=humcrop(sim25hum100500_exA, 38, 50)
+sim25hum100500_exB2=humcrop(sim25hum100500_exB, 38, 50)
+sim25hum100500_exC2=humcrop(sim25hum100500_exC, 38, 50)
+
+sim25hum100500_exB2=sim25hum100500_exB[0:(38+50),:];
+for i in dist:
+    sim25hum100500_exB2[0:(38+50)-top_surf_int[i],i]=1
+    
+for i in dist:
+    sim25hum100500_exB2[(38+50)-top_surf_int[i]:88,i]=0
+    
+sum(sum(sim25hum100500_exB2==0))
+
+
+# Plot the simulations for the dxf conversion
+plt.figure(figsize=(20,0.88))                                    # plot the results
+fig=plt.imshow(sim25hum100125_exA[0:88,:], cmap='Greys_r')
+plt.axis('off')
+fig.axes.get_xaxis().set_visible(False)
+plt.savefig('sim25hum100125_ink_A.png', bbox_inches='tight', dpi=300, frameon='false', pad_inches=0)
+
+plt.figure(figsize=(20,0.88))                                    # plot the results
+fig=plt.imshow(sim25hum100125_exB[0:88,:], cmap='Greys_r')
+plt.axis('off')
+fig.axes.get_xaxis().set_visible(False)
+plt.savefig('sim25hum100125_ink_B.png', bbox_inches='tight', dpi=300, frameon='false', pad_inches=0)
+
+plt.figure(figsize=(20,0.88))                                    # plot the results
+fig=plt.imshow(sim25hum100125_exC[0:88,:], cmap='Greys_r')
+plt.axis('off')
+fig.axes.get_xaxis().set_visible(False)
+plt.savefig('sim25hum100125_ink_C.png', bbox_inches='tight', dpi=300, frameon='false', pad_inches=0)
+
+# Plot the simulations for potential figures
+plt.figure(figsize=(20,0.88))                                    # plot the results
+fig=plt.imshow(sim25hum100125_exA2, cmap='Greys_r')
+plt.yticks(np.arange(0, 90, 20))
+plt.xticks(np.arange(0, 2100, 100))
+# Save as a png
+plt.savefig('sim25hum100125_A.png', bbox_inches='tight', dpi=300, frameon='false', pad_inches=0)
+
+# Plot the simulation
+plt.figure(figsize=(20,0.88))                                    # plot the results
+fig=plt.imshow(sim25hum100125_exB2, cmap='Greys_r')
+plt.yticks(np.arange(0, 90, 20))
+plt.xticks(np.arange(0, 2100, 100))
+# Save as a png
+plt.savefig('sim25hum100125_B.png', bbox_inches='tight', dpi=300, frameon='false', pad_inches=0)
+
+# Plot the simulation
+plt.figure(figsize=(20,0.88))                                    # plot the results
+fig=plt.imshow(sim25hum100125_exC2, cmap='Greys_r')
+plt.yticks(np.arange(0, 90, 20))
+plt.xticks(np.arange(0, 2100, 100))
+# Save as a png
+plt.savefig('sim25hum100125_C.png', bbox_inches='tight', dpi=300, frameon='false', pad_inches=0)
 
 
 
 
 
 
-# Make hummocks
-dist  = np.arange(0, sim25hum1025_exA.shape[1], 1)  # Assign sine wave x values (1 per cm)
-hum_h=40                                            # Define hummock height (in cm)
-hum_p=200                                        # Define hummock period 
-top_surf  = hum_h*np.sin((2/hum_p)*np.pi*dist)+50   # Create sine wave for hummocky top surface 
-
-# Plot a sine wave using time and amplitude obtained for the sine wave
-plt.plot(dist, top_surf)
-
-# Create a disturbed peat surface to match the hummock geometry
-# Create cosine wave for disturbed bottom surface 
-bot_surf  = hum_h*np.cos((2/hum_p)*np.pi*dist-0.7)+10
-def integrand(dist):
-    return (hum_h*np.sin((2/hum_p)*np.pi*dist)+50)- (hum_h*np.cos((2/hum_p)*np.pi*dist-0.5)+10)
-integrate.quad(integrand, 0, 2000)
-
-plt.figure(figsize=(20*1.8395879323031639,1*1.8410852713178292))                                    # plot the results
-fig=plt.plot(dist, bot_surf, 'k', linewidth=0.5)
-plt.plot(dist, top_surf, 'k', linewidth=0.5)
-plt.savefig('large_hums.png', bbox_inches='tight', dpi=300, frameon='false', pad_inches=0)
 
 
 
