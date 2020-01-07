@@ -1,0 +1,8 @@
+x2  = np.arange(10,36, 1)
+y2=np.repeat(1, 26)
+x1  = np.arange(0,11, 1)
+y1=1*(1.5*(x1/10)-0.5*((x1/10)**3))
+plt.plot(x1,y1,color = 'green',label = '090')
+plt.plot(x2,y2,color = 'green',label = 'vario')
+plt.ylim([0,1.1])
+plt.xlim([0,35])
