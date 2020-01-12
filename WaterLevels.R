@@ -32,8 +32,7 @@ TW_PZ_02_5_6<-read.csv("TW_WL_2018_05_06/TW_PZ_02.csv", skip=1, row.names=1)
 TW_PZ_09_5_6<-read.csv("TW_WL_2018_05_06/TW-PZ-09.csv", skip=1, row.names=1)
 
 # JUNE 18, 2018 LOGGER RETRIEVAL
-TW_PZ_01_Jun2018<-read.csv("Tidmarsh_TW_WL_2018_11_20/TW-PZ-01_sn10499234_2018_11_20.csv", skip=1, row.names=1)
-
+TW_PZ_01_Jun2018<-read.csv("TW_WL_2018_06_18/TW-PZ-01_sn10499234.csv", skip=1, row.names=1)
 
 # NOVEMBER 20, 2018 LOGGER RETRIEVAL
 TW_PZ_01_Nov2018<-read.csv("Tidmarsh_TW_WL_2018_11_20/TW-PZ-01_sn10499234_2018_11_20.csv", skip=1, row.names=1)
@@ -233,7 +232,30 @@ TW_PZ_07_3_19<-loggerProcess(TW_PZ_07_3_19)
  
 TW_PZ_09_5_6<-loggerProcess(TW_PZ_09_5_6)  
 TW_PZ_02_5_6<-loggerProcess(TW_PZ_02_5_6)
+               
+# JUNE 2018 DATA                       
+TW_PZ_01_Jun2018<-loggerProcess(TW_PZ_01_Jun2018)
 
+# NOVEMBER 2018 DATA                      
+TW_PZ_01_Nov2018<-loggerProcess(TW_PZ_01_Nov2018)
+TW_PZ_02_Nov2018<-loggerProcess(TW_PZ_02_Nov2018)
+TW_PZ_03_Nov2018<-loggerProcess(TW_PZ_03_Nov2018)
+TW_PZ_03_8_17<-loggerProcess(TW_PZ_03_8_17)                      
+TW_PZ_04_Nov2018<-loggerProcess(TW_PZ_04_Nov2018)
+TW_PZ_05_Nov2018<-loggerProcess(TW_PZ_05_Nov2018)
+TW_PZ_06_Nov2018<-loggerProcess(TW_PZ_06_Nov2018)
+TW_PZ_07_Nov2018<-loggerProcess(TW_PZ_07_Nov2018)
+TW_PZ_08_Nov2018<-loggerProcess(TW_PZ_08_Nov2018)
+TW_PZ_09_Nov2018<-loggerProcess(TW_PZ_09_Nov2018)
+TW_SW_02_Nov2018<-loggerProcess(TW_SW_02_Nov2018)
+TW_SW_03_Nov2018<-loggerProcess(TW_SW_03_Nov2018)
+TW_SW_04_Nov2018<-loggerProcess(TW_SW_04_Nov2018)
+TW_SW_07_Nov2018<-loggerProcess(TW_SW_07_Nov2018)
+TW_SW_10_Nov2018<-loggerProcess(TW_SW_10_Nov2018)
+TW_PZ_05_SAND_Nov2018<-loggerProcess(TW_PZ_05_SAND_Nov2018)
+TW_PZ_06_SAND_Nov2018<-loggerProcess(TW_PZ_06_SAND_Nov2018)                                     
+
+# JUNE 2018 DATA
 TW_PZ_01_Jun319<-loggerProcess(TW_PZ_01_Jun319)  
 TW_PZ_01_SAND_Jun319<-loggerProcess(TW_PZ_01_SAND_Jun319)
 TW_PZ_02_Jun319<-loggerProcess(TW_PZ_02_Jun319)  
@@ -252,26 +274,7 @@ TW_PZ_08_Jun319<-loggerProcess(TW_PZ_08_Jun319)
 TW_PZ_08_SAND_Jun319<-loggerProcess(TW_PZ_08_SAND_Jun319)  
 TW_PZ_09_Jun319<-loggerProcess(TW_PZ_09_Jun319)
 TW_SW_10_Jun319<-loggerProcess(TW_SW_10_Jun319)
-                      
-                    
-TW_PZ_01_Nov2018<-loggerProcess(TW_PZ_01_Nov2018)
-TW_PZ_02_Nov2018<-loggerProcess(TW_PZ_02_Nov2018)
-TW_PZ_03_Nov2018<-loggerProcess(TW_PZ_03_Nov2018)
-TW_PZ_03_8_17<-loggerProcess(TW_PZ_03_8_17)                      
-TW_PZ_04_Nov2018<-loggerProcess(TW_PZ_04_Nov2018)
-TW_PZ_05_Nov2018<-loggerProcess(TW_PZ_05_Nov2018)
-TW_PZ_06_Nov2018<-loggerProcess(TW_PZ_06_Nov2018)
-TW_PZ_07_Nov2018<-loggerProcess(TW_PZ_07_Nov2018)
-TW_PZ_08_Nov2018<-loggerProcess(TW_PZ_08_Nov2018)
-TW_PZ_09_Nov2018<-loggerProcess(TW_PZ_09_Nov2018)
-TW_SW_02_Nov2018<-loggerProcess(TW_SW_02_Nov2018)
-TW_SW_03_Nov2018<-loggerProcess(TW_SW_03_Nov2018)
-TW_SW_04_Nov2018<-loggerProcess(TW_SW_04_Nov2018)
-TW_SW_07_Nov2018<-loggerProcess(TW_SW_07_Nov2018)
-TW_SW_10_Nov2018<-loggerProcess(TW_SW_10_Nov2018)
-TW_PZ_05_SAND_Nov2018<-loggerProcess(TW_PZ_05_SAND_Nov2018)
-TW_PZ_06_SAND_Nov2018<-loggerProcess(TW_PZ_06_SAND_Nov2018)                      
-                       
+                                               
 ##################################################### CORRECT BASED ON MANUAL MEASUREMENTS ####################################################################################
 
 ############## TW_PZ_01 ##############       
@@ -303,6 +306,21 @@ TW_PZ_01_3_19<-TW_PZ_01_3_19[-1,]
 # Save as CSV  
 write.csv(TW_PZ_01_3_19, file="TWPZ01_8-10-17_to_33-19-18.csv", row.names=FALSE)           
                        
+# JUNE 2018 
+# Create a column for the depth to water below ground surface
+# The top of piezometer casing to ground surface = 25.8 cm
+TW_PZ_01_Jun2018[,"m_below_GS"]<-128.3/100-(25.8/100+TW_PZ_01_Jun2018[,"m_water"]) 
+# Remove the beginning of the dataset (where logger was not submerged) 
+TW_PZ_01_Jun2018<-TW_PZ_01_Jun2018[which(TW_PZ_01_Jun2018[,"Date_Time"]=="05/06/18 05:15:00 PM"):nrow(TW_PZ_01_Jun2018),]                       
+# Remove the last rows of the data set where the logger was not submerged
+Logger_not_Submerged<-which(TW_PZ_01_Jun2018[,"Date_Time"]=="06/18/18 10:00:00 AM")
+TW_PZ_01_Jun2018<-TW_PZ_01_Jun2018[-(Logger_not_Submerged:nrow(TW_PZ_01_Jun2018)),]         
+# Add manual data
+TW_PZ_01_Jun2018[which(TW_PZ_01_Jun2018[,"Date_Time"]=="06/18/18 09:45:00 AM"),"m_manual"]<-14.5    
+# Save as CSV  
+write.csv(TW_PZ_01_3_19, file="TWPZ01_5-6-18_to_6-18-18.csv", row.names=FALSE)          
+                       
+# NOVEMBER 2018                       
 # Create a column for the depth to water below ground surface
 # The top of piezometer casing to ground surface = 25.8 cm
 TW_PZ_01_Nov2018[,"m_below_GS"]<-131/100-(25.8/100+TW_PZ_01_Nov2018[,"m_water"])
@@ -330,7 +348,7 @@ TW_PZ_01_Nov2018[which(TW_PZ_01_Nov2018[,"Date_Time"]=="11/20/18 10:00:00 AM"),"
 # Save as CSV  
 write.csv(TW_PZ_01_Nov, file="TWPZ01_6-18-18_to_11-20-18.csv", row.names=FALSE)  
                        
-# JUNE
+# JUNE 2019
 TW_PZ_01_Jun319[,"m_below_GS"]<-130.4/100-(25.8/100+TW_PZ_01_Jun319[,"m_water"]) 
 # Smooth the spikes in the data caused by logger removal during data downloading
 # Interpolate between the 7/11 spike                       
@@ -1019,12 +1037,22 @@ write.csv(TW_SW_10_Jun319, file="TWSW10_11-19-18_to_6-3-19.csv", row.names=FALSE
 Plot_Times<-as.POSIXct(TW_PZ_01_3_19[,"Date_Time"], "%m/%d/%y %I:%M:%S %p", tz="America/New_York")
 ggplot(TW_PZ_01_3_19, aes(Plot_Times, TW_PZ_01_3_19[,"m_below_GS"]))+geom_line(color='royalblue3', size=.6) + xlab("Date") + ylab("Depth to Water Below Ground Surface (m)")+ggtitle("TW_PZ_01")+  scale_x_datetime(breaks = seq(Plot_Times[1], Plot_Times[length(Plot_Times)], "7 days"),date_labels="%b %d")+ scale_y_reverse(limits =c(1.2,-.1)) +theme(axis.text.x = element_text(angle=45, vjust = 0.5))
 ggsave("TW_PZ_01_3_19.pdf", width = 12, height = 6)  
-  
+                       
 # cut off slow rise
 Plot_Times<-as.POSIXct(TW_PZ_01_3_19[which(TW_PZ_01_3_19[,"Date_Time"]=="08/24/17 12:00:00 AM"):nrow(TW_PZ_01_3_19)    ,"Date_Time"], "%m/%d/%y %I:%M:%S %p", tz="America/New_York")
 ggplot(TW_PZ_01_3_19[which(TW_PZ_01_3_19[,"Date_Time"]=="08/24/17 12:00:00 AM"):nrow(TW_PZ_01_3_19),], aes(Plot_Times, TW_PZ_01_3_19[which(TW_PZ_01_3_19[,"Date_Time"]=="08/24/17 12:00:00 AM"):nrow(TW_PZ_01_3_19),"m_below_GS"]))+geom_line(color='royalblue3', size=.6) + xlab("Date") + ylab("Depth to Water Below Ground Surface (m)")+ggtitle("TW_PZ_01")+  scale_x_datetime(breaks = seq(Plot_Times[1], Plot_Times[length(Plot_Times)], "7 days"),date_labels="%b %d")+ scale_y_reverse(limits =c(0.4,-.1)) +theme(axis.text.x = element_text(angle=45, vjust = 0.5))
-ggsave("TW_PZ_01_3_19_2.pdf", width = 12, height = 6)                         
-# November                   
+ggsave("TW_PZ_01_3_19_2.pdf", width = 12, height = 6)               
+
+# June 2018        
+Plot_Times<-as.POSIXct(TW_PZ_01_Jun2018[,"Date_Time"], "%m/%d/%y %I:%M:%S %p", tz="America/New_York")
+ggplot(TW_PZ_01_Jun2018, aes(Plot_Times, TW_PZ_01_Jun2018[,"m_below_GS"]))+geom_line(color='royalblue3', size=.6) + xlab("Date") + ylab("Depth to Water Below Ground Surface (m)")+ggtitle("TW_PZ_01")+  scale_x_datetime(breaks = seq(Plot_Times[1], Plot_Times[length(Plot_Times)], "7 days"),date_labels="%b %d")+ scale_y_reverse(limits =c(.3,0)) +theme(axis.text.x = element_text(angle=45, vjust = 0.5))
+# June with manual
+Plot_Times<-as.POSIXct(TW_PZ_01_Jun2018[,"Date_Time"], "%m/%d/%y %I:%M:%S %p", tz="America/New_York")
+ggplot(TW_PZ_01_Jun2018, aes(Plot_Times, TW_PZ_01_Jun2018[,"m_below_GS"]))+geom_line(color='royalblue3', size=.6) + xlab("Date") + ylab("Depth to Water Below Ground Surface (m)")+ggtitle("TW_PZ_01")+  scale_x_datetime(breaks = seq(Plot_Times[1], Plot_Times[length(Plot_Times)], "7 days"),date_labels="%b %d")+ scale_y_reverse(limits =c(.2,0)) +theme(axis.text.x = element_text(angle=45, vjust = 0.5))+ geom_point(aes(x=Plot_Times, y=TW_PZ_01_Jun2018[,"m_manual"]), color="orange3", size=3) 
+                    
+
+                       
+# November 2018                 
 Plot_Times<-as.POSIXct(TW_PZ_01_Nov2018[,"Date_Time"], "%m/%d/%y %I:%M:%S %p", tz="America/New_York")
 ggplot(TW_PZ_01_Nov2018, aes(Plot_Times, TW_PZ_01_Nov2018[,"m_below_GS"]))+geom_line(color='royalblue3', size=.6) + xlab("Date") + ylab("Depth to Water Below Ground Surface (m)")+ggtitle("TW_PZ_01")+  scale_x_datetime(breaks = seq(Plot_Times[1], Plot_Times[length(Plot_Times)], "7 days"),date_labels="%b %d")+ scale_y_reverse(limits =c(.2,-.1)) +theme(axis.text.x = element_text(angle=45, vjust = 0.5))
 ggsave("TW_PZ_01_Nov.pdf", width = 12, height = 6)
@@ -1033,7 +1061,7 @@ Plot_Times<-as.POSIXct(TW_PZ_01_Nov2018[,"Date_Time"], "%m/%d/%y %I:%M:%S %p", t
 ggplot(TW_PZ_01_Nov2018, aes(Plot_Times, TW_PZ_01_Nov2018[,"m_below_GS"]))+geom_line(color='royalblue3', size=.6) + xlab("Date") + ylab("Depth to Water Below Ground Surface (m)")+ggtitle("TW_PZ_01")+  scale_x_datetime(breaks = seq(Plot_Times[1], Plot_Times[length(Plot_Times)], "7 days"),date_labels="%b %d")+ scale_y_reverse(limits =c(.2,-.1)) +theme(axis.text.x = element_text(angle=45, vjust = 0.5))+ geom_point(aes(x=Plot_Times, y=TW_PZ_01_Nov2018[,"m_manual"]), color="orange3", size=3) 
 ggsave("TW_PZ_01_6-18-18_to_11-20-18_manual.pdf", width = 12, height = 6)                       
                        
-#June                       
+#June 2018                      
 Plot_Times<-as.POSIXct(TW_PZ_01_Jun319[,"Date_Time"], "%m/%d/%y %I:%M:%S %p", tz="America/New_York")
 ggplot(TW_PZ_01_Jun319, aes(Plot_Times, TW_PZ_01_Jun319[,"m_below_GS"]))+geom_line(color='royalblue3', size=.6) + xlab("Date") + ylab("Depth to Water Below Ground Surface (m)")+ggtitle("TW_PZ_01")+  scale_x_datetime(breaks = seq(Plot_Times[1], Plot_Times[length(Plot_Times)], "7 days"),date_labels="%b %d")+ scale_y_reverse(limits =c(.3,-.1)) +theme(axis.text.x = element_text(angle=45, vjust = 0.5))
 ggsave("TW_PZ_01_11-20-18_to_6-3-19.pdf", width = 12, height = 6)  
