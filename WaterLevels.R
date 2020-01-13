@@ -37,10 +37,10 @@ TW_PZ_02_May2018<-read.csv("TW_WL_2018_05_06/TW_PZ_02.csv", skip=1, row.names=1)
 # JUNE 18, 2018 LOGGER RETRIEVAL
 TW_PZ_01_Jun2018<-read.csv("TW_WL_2018_06_18/TW-PZ-01_sn10499234.csv", skip=1, row.names=1)
 TW_PZ_02_Jun2018<-read.csv("TW_WL_2018_06_18/TW_PZ_02.csv", skip=1, row.names=1)
+TW_PZ_04_Jun2018<-read.csv("TW_WL_2018_06_18/TW_PZ_04.csv", skip=1, row.names=1)
 
 # JULY 18, 2018 LOGGER RETRIEVAL
 TW_PZ_02_Jul2018<-read.csv("TW_WL_2018_07_11/TW_PZ_02.csv", skip=1, row.names=1)
-
 
 # NOVEMBER 20, 2018 LOGGER RETRIEVAL
 TW_PZ_01_Nov2018<-read.csv("Tidmarsh_TW_WL_2018_11_20/TW-PZ-01_sn10499234_2018_11_20.csv", skip=1, row.names=1)
@@ -247,6 +247,7 @@ TW_PZ_02_May2018<-loggerProcess(TW_PZ_02_May2018)
 # JUNE 2018 DATA                       
 TW_PZ_01_Jun2018<-loggerProcess(TW_PZ_01_Jun2018)
 TW_PZ_02_Jun2018<-loggerProcess(TW_PZ_02_Jun2018)
+TW_PZ_04_Jun2018<-loggerProcess(TW_PZ_04_Jun2018)
 
 # JULY 2018 DATA
 TW_PZ_02_Jul2018<-loggerProcess(TW_PZ_02_Jul2018)
@@ -366,22 +367,35 @@ write.csv(TW_PZ_01_Nov, file="TWPZ01_6-18-18_to_11-20-18.csv", row.names=FALSE)
 # JUNE 2019
 TW_PZ_01_Jun319[,"m_below_GS"]<-130.4/100-(25.8/100+TW_PZ_01_Jun319[,"m_water"]) 
 # Smooth the spikes in the data caused by logger removal during data downloading
-# Interpolate between the 7/11 spike                       
-Start_Spike<-which(TW_PZ_01_Jun319[,"Date_Time"]=="03/30/19 12:30:00 PM")
-Stop_Spike<-which(TW_PZ_01_Jun319[,"Date_Time"]=="03/31/19 04:00:00 AM")     
-Smoothed_Spike<-seq(TW_PZ_01_Jun319[Start_Spike,"m_below_GS"], TW_PZ_01_Jun319[Stop_Spike,"m_below_GS"], length=Stop_Spike-Start_Spike+1)
+# Will now leave 3/30 spike because it is a real dip due isotope sample retrieval
+# Interpolate between the 3/30 spike                       
+#Start_Spike<-which(TW_PZ_01_Jun319[,"Date_Time"]=="03/30/19 12:30:00 PM")
+#Stop_Spike<-which(TW_PZ_01_Jun319[,"Date_Time"]=="03/31/19 04:00:00 AM")     
+#Smoothed_Spike<-seq(TW_PZ_01_Jun319[Start_Spike,"m_below_GS"], TW_PZ_01_Jun319[Stop_Spike,"m_below_GS"], length=Stop_Spike-Start_Spike+1)
 # Replace the spike with the smoothed interpolated data
-TW_PZ_01_Jun319[Start_Spike:Stop_Spike,"m_below_GS"]<-Smoothed_Spike 
+#TW_PZ_01_Jun319[Start_Spike:Stop_Spike,"m_below_GS"]<-Smoothed_Spike 
 # Add manual data
 TW_PZ_01_Jun319[which(TW_PZ_01_Jun319[,"Date_Time"]=="03/30/19 12:30:00 PM"),"m_manual"]<-0.155 
-TW_PZ_01_Jun319[which(TW_PZ_01_Jun319[,"Date_Time"]=="06/03/19 12:45:00 PM"),"m_manual"]<-0.106 
+TW_PZ_01_Jun319[which(TW_PZ_01_Jun319[,"Date_Time"]=="06/03/19 12:45:00 PM"),"m_manual"]<-0.106   
+# Create a copy without the isotope sample dip:    
+TW_PZ_01_Jun319_NO_ISO <-TW_PZ_01_Jun319 
+Start_Iso<-which(TW_PZ_01_Jun319_NO_ISO[,"Date_Time"]=="03/30/19 12:30:00 PM")
+Stop_Iso<-which(TW_PZ_01_Jun319_NO_ISO[,"Date_Time"]=="03/31/19 04:00:00 AM") 
+# Replace the isotope dip with NA
+TW_PZ_01_Jun319_NO_ISO[Start_Spike:Stop_Spike,"m_below_GS"]<-NA                   
 # Save as CSV  
-write.csv(TW_PZ_01_Jun319, file="TWPZ01_11-20-18_to_6-3-19.csv", row.names=FALSE)                         
-  
+write.csv(TW_PZ_01_Jun319, file="TW-WL_2019_06_03/June_6_19_Processed/TWPZ01_11-20-18_to_6-3-19.csv", row.names=FALSE)                         
+write.csv(TW_PZ_01_Jun319_NO_ISO, file="TW-WL_2019_06_03/June_6_19_Processed/TWPZ01_11-20-18_to_6-3-19.csv", row.names=FALSE)                         
+
 # Bind all of the data frames together...                  
 TW_PZ_01_FULL<-rbind(TW_PZ_01_Jun2018, TW_PZ_01_Nov2018, TW_PZ_01_Jun319[1:which(TW_PZ_01_Jun319[,"Date_Time"]=="06/03/19 12:45:00 PM"),])                        
 # Save as CSV  
-write.csv(TW_PZ_01_FULL, file="TWPZ01_FULL.csv", row.names=FALSE)          
+write.csv(TW_PZ_01_FULL, file="TWPZ01_FULL.csv", row.names=FALSE)     
+
+# Bind without dips from isotope samples:      
+TW_PZ_01_FULL_NO_ISO<-rbind(TW_PZ_01_Jun2018, TW_PZ_01_Nov2018, TW_PZ_01_Jun319_NO_ISO[1:which(TW_PZ_01_Jun319_NO_ISO[,"Date_Time"]=="06/03/19 12:45:00 PM"),])                        
+# Save as CSV  
+write.csv(TW_PZ_01_FULL_NO_ISO, file="TWPZ01_FULL_NO_ISO.csv", row.names=FALSE)    
                       
 ############## TW_PZ_01_SAND ############## 
    
@@ -583,7 +597,11 @@ write.csv(TW_SW_03_Jun319, file="TWSW03_11-20-18_to_6-3-19.csv", row.names=FALSE
 
                        
 ############## TW_PZ_04 ##############  
-# November
+# June 2018
+# Create a column for the depth to water below ground surface
+TW_PZ_04_Jun2018[,"m_above_GS"]<-(TW_PZ_04_Jun2018[,"m_water"])-1.04    
+
+# November 2018
 # Create a column for the depth to water below ground surface
 TW_PZ_04_Nov2018[,"m_above_GS"]<-(TW_PZ_04_Nov2018[,"m_water"])-1.04      
 # Remove the first few rows before logger was submerged       
@@ -596,7 +614,7 @@ TW_PZ_04_Nov2018[which(TW_PZ_04_Nov2018[,"Date_Time"]=="11/20/18 09:45:00 AM"),"
 # Save as CSV  
 write.csv(TW_PZ_04_Nov2018, file="TWPZ04_6-18-18_to_11-20-18.csv", row.names=FALSE)   
 
-# June
+# June 2019
 # Create a column for the depth to water below ground surface
 TW_PZ_04_Jun319[,"m_above_GS"]<-(TW_PZ_04_Jun319[,"m_water"])-1.03
 # Correct the vertical jump in data on 3/30
@@ -1121,7 +1139,7 @@ ggsave("TW_PZ_01_Nov.pdf", width = 12, height = 6)
 Plot_Times<-as.POSIXct(TW_PZ_01_Nov2018[,"Date_Time"], "%m/%d/%y %I:%M:%S %p", tz="America/New_York")
 ggplot(TW_PZ_01_Nov2018, aes(Plot_Times, TW_PZ_01_Nov2018[,"m_below_GS"]))+geom_line(color='royalblue3', size=.6) + xlab("Date") + ylab("Depth to Water Below Ground Surface (m)")+ggtitle("TW_PZ_01")+  scale_x_datetime(breaks = seq(Plot_Times[1], Plot_Times[length(Plot_Times)], "7 days"),date_labels="%b %d")+ scale_y_reverse(limits =c(.2,-.1)) +theme(axis.text.x = element_text(angle=45, vjust = 0.5))+ geom_point(aes(x=Plot_Times, y=TW_PZ_01_Nov2018[,"m_manual"]), color="orange3", size=3) 
           
-#June 2019                     
+#June 2019 - with isotope sample dip                    
 Plot_Times<-as.POSIXct(TW_PZ_01_Jun319[,"Date_Time"], "%m/%d/%y %I:%M:%S %p", tz="America/New_York")
 ggplot(TW_PZ_01_Jun319, aes(Plot_Times, TW_PZ_01_Jun319[,"m_below_GS"]))+geom_line(color='royalblue3', size=.6) + xlab("Date") + ylab("Depth to Water Below Ground Surface (m)")+ggtitle("TW_PZ_01")+  scale_x_datetime(breaks = seq(Plot_Times[1], Plot_Times[length(Plot_Times)], "7 days"),date_labels="%b %d")+ scale_y_reverse(limits =c(.3,-.1)) +theme(axis.text.x = element_text(angle=45, vjust = 0.5))
 ggsave("TW_PZ_01_11-20-18_to_6-3-19.pdf", width = 12, height = 6)  
@@ -1130,13 +1148,32 @@ Plot_Times<-as.POSIXct(TW_PZ_01_Jun319[,"Date_Time"], "%m/%d/%y %I:%M:%S %p", tz
 ggplot(TW_PZ_01_Jun319, aes(Plot_Times, TW_PZ_01_Jun319[,"m_below_GS"]))+geom_line(color='royalblue3', size=.6) + xlab("Date") + ylab("Depth to Water Below Ground Surface (m)")+ggtitle("TW_PZ_01")+  scale_x_datetime(breaks = seq(Plot_Times[1], Plot_Times[length(Plot_Times)], "7 days"),date_labels="%b %d")+ scale_y_reverse(limits =c(.3,-.1)) +theme(axis.text.x = element_text(angle=45, vjust = 0.5))+ geom_point(aes(x=Plot_Times, y=TW_PZ_01_Jun319[,"m_manual"]), color="orange3", size=3)                            
 ggsave("TW_PZ_01_11-20-18_to_6-3-19_manual.pdf", width = 12, height = 6)
                        
+#June 2019  without isotope sample dip                   
+Plot_Times<-as.POSIXct(TW_PZ_01_Jun319_NO_ISO[,"Date_Time"], "%m/%d/%y %I:%M:%S %p", tz="America/New_York")
+ggplot(TW_PZ_01_Jun319_NO_ISO, aes(Plot_Times, TW_PZ_01_Jun319_NO_ISO[,"m_below_GS"]))+geom_line(color='royalblue3', size=.6) + xlab("Date") + ylab("Depth to Water Below Ground Surface (m)")+ggtitle("TW_PZ_01")+  scale_x_datetime(breaks = seq(Plot_Times[1], Plot_Times[length(Plot_Times)], "7 days"),date_labels="%b %d")+ scale_y_reverse(limits =c(.3,-.1)) +theme(axis.text.x = element_text(angle=45, vjust = 0.5))
+ggsave("TW_PZ_01_11-20-18_to_6-3-19_NO_ISO.pdf", width = 12, height = 6)  
+# June with manual
+Plot_Times<-as.POSIXct(TW_PZ_01_Jun319_NO_ISO[,"Date_Time"], "%m/%d/%y %I:%M:%S %p", tz="America/New_York")
+ggplot(TW_PZ_01_Jun319_NO_ISO, aes(Plot_Times, TW_PZ_01_Jun319_NO_ISO[,"m_below_GS"]))+geom_line(color='royalblue3', size=.6) + xlab("Date") + ylab("Depth to Water Below Ground Surface (m)")+ggtitle("TW_PZ_01")+  scale_x_datetime(breaks = seq(Plot_Times[1], Plot_Times[length(Plot_Times)], "7 days"),date_labels="%b %d")+ scale_y_reverse(limits =c(.3,-.1)) +theme(axis.text.x = element_text(angle=45, vjust = 0.5))+ geom_point(aes(x=Plot_Times, y=TW_PZ_01_Jun319_NO_ISO[,"m_manual"]), color="orange3", size=3)                            
+ggsave("TW_PZ_01_11-20-18_to_6-3-19_NO_ISO_manual.pdf", width = 12, height = 6)                             
+                                      
 # Complete PZ_01 dataset
 Plot_Times<-as.POSIXct(TW_PZ_01_FULL[,"Date_Time"], "%m/%d/%y %I:%M:%S %p", tz="America/New_York")
 ggplot(TW_PZ_01_FULL, aes(Plot_Times, TW_PZ_01_FULL[,"m_below_GS"]))+geom_line(color='royalblue3', size=.6) + xlab("Date") + ylab("Depth to Water Below Ground Surface (m)")+ggtitle("TW_PZ_01")+  scale_x_datetime(breaks = seq(Plot_Times[1], Plot_Times[length(Plot_Times)], "1 month"),date_labels="%b %d")+ scale_y_reverse(limits =c(.3,-.1)) +theme(axis.text.x = element_text(angle=45, vjust = 0.5))
+ggsave("TW_PZ_01_FULL.pdf", width = 12, height = 6)                             
 # Complete with manual
 Plot_Times<-as.POSIXct(TW_PZ_01_FULL[,"Date_Time"], "%m/%d/%y %I:%M:%S %p", tz="America/New_York")
 ggplot(TW_PZ_01_FULL, aes(Plot_Times, TW_PZ_01_FULL[,"m_below_GS"]))+geom_line(color='royalblue3', size=.6) + xlab("Date") + ylab("Depth to Water Below Ground Surface (m)")+ggtitle("TW_PZ_01")+  scale_x_datetime(breaks = seq(Plot_Times[1], Plot_Times[length(Plot_Times)], "1 month"),date_labels="%b %d")+ scale_y_reverse(limits =c(.3,-.1)) +theme(axis.text.x = element_text(angle=45, vjust = 0.5))+ geom_point(aes(x=Plot_Times, y=TW_PZ_01_FULL[,"m_manual"]), color="orange3", size=3) 
+ggsave("TW_PZ_01_FULL_manual.pdf", width = 12, height = 6)                             
 
+# Complete PZ_01 dataset - without isotope dip
+Plot_Times<-as.POSIXct(TW_PZ_01_FULL_NO_ISO[,"Date_Time"], "%m/%d/%y %I:%M:%S %p", tz="America/New_York")
+ggplot(TW_PZ_01_FULL_NO_ISO, aes(Plot_Times, TW_PZ_01_FULL_NO_ISO[,"m_below_GS"]))+geom_line(color='royalblue3', size=.6) + xlab("Date") + ylab("Depth to Water Below Ground Surface (m)")+ggtitle("TW_PZ_01")+  scale_x_datetime(breaks = seq(Plot_Times[1], Plot_Times[length(Plot_Times)], "1 month"),date_labels="%b %d")+ scale_y_reverse(limits =c(.3,-.1)) +theme(axis.text.x = element_text(angle=45, vjust = 0.5))
+ggsave("TW_PZ_01_NO_ISO_FULL.pdf", width = 12, height = 6)                             
+# Complete - without isotope dip, with manual
+Plot_Times<-as.POSIXct(TW_PZ_01_FULL_NO_ISO[,"Date_Time"], "%m/%d/%y %I:%M:%S %p", tz="America/New_York")
+ggplot(TW_PZ_01_FULL_NO_ISO, aes(Plot_Times, TW_PZ_01_FULL_NO_ISO[,"m_below_GS"]))+geom_line(color='royalblue3', size=.6) + xlab("Date") + ylab("Depth to Water Below Ground Surface (m)")+ggtitle("TW_PZ_01")+  scale_x_datetime(breaks = seq(Plot_Times[1], Plot_Times[length(Plot_Times)], "1 month"),date_labels="%b %d")+ scale_y_reverse(limits =c(.3,-.1)) +theme(axis.text.x = element_text(angle=45, vjust = 0.5))+ geom_point(aes(x=Plot_Times, y=TW_PZ_01_FULL_NO_ISO[,"m_manual"]), color="orange3", size=3) 
+ggsave("TW_PZ_01_NO_ISO_FULL_manual.pdf", width = 12, height = 6)                             
                        
 #### TW_PZ_01_SAND ####
 Plot_Times<-as.POSIXct(TW_PZ_01_SAND_Jun319[,"Date_Time"], "%m/%d/%y %I:%M:%S %p", tz="America/New_York")
