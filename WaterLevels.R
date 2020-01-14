@@ -38,6 +38,7 @@ TW_PZ_02_May2018<-read.csv("TW_WL_2018_05_06/TW_PZ_02.csv", skip=1, row.names=1)
 TW_PZ_01_Jun2018<-read.csv("TW_WL_2018_06_18/TW-PZ-01_sn10499234.csv", skip=1, row.names=1)
 TW_PZ_02_Jun2018<-read.csv("TW_WL_2018_06_18/TW_PZ_02.csv", skip=1, row.names=1)
 TW_SW_02_Jun2018<-read.csv("TW_WL_2018_06_18/TW-SW-02_sn10499246.csv", skip=1, row.names=1)
+TW_PZ_03_Jun2018<-read.csv("TW_WL_2018_06_18/TW-PZ-03_sn10499228.csv", skip=1, row.names=1)
 TW_PZ_04_Jun2018<-read.csv("TW_WL_2018_06_18/TW_PZ_04.csv", skip=1, row.names=1)
 TW_SW_04_Jun2018<-read.csv("TW_WL_2018_06_18/TW-SW-04_sn10499238.csv", skip=1, row.names=1)
 
@@ -1380,15 +1381,15 @@ ggsave("TW_SW_02_FULL_manual.pdf", width = 12, height = 6)
 
 ################ TW_Grad_02 ################
 Plot_Times<-as.POSIXct(TW_Grad_02_Nov2018[,"Date_Time"], "%m/%d/%y %I:%M:%S %p", tz="America/New_York")
-ggplot(TW_Grad_02_Nov2018, aes(Plot_Times, TW_Grad_02_Nov2018[,"dh/dz"]))+geom_line(color='darkgreen', size=0.5) + xlab("Date") + ylab("Vertical Hydraulic Gradient")+ scale_y_reverse(limits =c(0,-.3))+ ggtitle("TW_Gradient_02")+  scale_x_datetime(breaks = seq(Plot_Times[1], Plot_Times[length(Plot_Times)], "7 days"),date_labels="%b %d")+theme(axis.text.x = element_text(angle=45, vjust = 0.5))
+ggplot(TW_Grad_02_Nov2018, aes(Plot_Times, TW_Grad_02_Nov2018[,"dh/dz"]))+geom_line(color='darkolivegreen', size=0.5) + xlab("Date") + ylab("Vertical Hydraulic Gradient")+ scale_y_reverse(limits =c(0,-.3))+ ggtitle("TW_Gradient_02")+  scale_x_datetime(breaks = seq(Plot_Times[1], Plot_Times[length(Plot_Times)], "7 days"),date_labels="%b %d")+theme(axis.text.x = element_text(angle=45, vjust = 0.5))
 ggsave("TW_Grad_02_7-12-18_to_11-20-18.pdf", width = 12, height = 6) 
 
 Plot_Times<-as.POSIXct(TW_Grad_02_Jun319[,"Date_Time"], "%m/%d/%y %I:%M:%S %p", tz="America/New_York")
-ggplot(TW_Grad_02_Jun319, aes(Plot_Times, TW_Grad_02_Jun319[,"dh/dz"]))+geom_line(color='darkgreen', size=0.5) + xlab("Date") + ylab("Vertical Hydraulic Gradient")+ scale_y_reverse(limits =c(0,-.3))+ ggtitle("TW_Gradient_02")+  scale_x_datetime(breaks = seq(Plot_Times[1], Plot_Times[length(Plot_Times)], "7 days"),date_labels="%b %d")+theme(axis.text.x = element_text(angle=45, vjust = 0.5))
+ggplot(TW_Grad_02_Jun319, aes(Plot_Times, TW_Grad_02_Jun319[,"dh/dz"]))+geom_line(color='darkolivegreen', size=0.5) + xlab("Date") + ylab("Vertical Hydraulic Gradient")+ scale_y_reverse(limits =c(0,-.3))+ ggtitle("TW_Gradient_02")+  scale_x_datetime(breaks = seq(Plot_Times[1], Plot_Times[length(Plot_Times)], "7 days"),date_labels="%b %d")+theme(axis.text.x = element_text(angle=45, vjust = 0.5))
 ggsave("TW_Grad_02_11-20-18_to_6-3-19.pdf", width = 12, height = 6) 
 
 Plot_Times<-as.POSIXct(TW_Grad_02_FULL[,"Date_Time"], "%m/%d/%y %I:%M:%S %p", tz="America/New_York")
-ggplot(TW_Grad_02_FULL, aes(Plot_Times, TW_Grad_02_FULL[,"dh/dz"]))+geom_point(color='darkgreen', size=0.3) + xlab("Date") + ylab("Vertical Hydraulic Gradient")+ scale_y_reverse(limits =c(0,-.3), breaks=(seq(-.3,0,.05)))+ ggtitle("TW_Gradient_02")+  scale_x_datetime(breaks = seq(as.POSIXct("2018-05-01 00:00:00 EDT"), as.POSIXct("2019-09-01 00:00:00 EDT"), "1 month"),date_labels="%b %d, %Y")+theme(axis.text.x = element_text(angle=45, vjust = 0.5))
+ggplot(TW_Grad_02_FULL, aes(Plot_Times, TW_Grad_02_FULL[,"dh/dz"]))+geom_point(color='darkolivegreen', size=0.3) + xlab("Date") + ylab("Vertical Hydraulic Gradient")+ scale_y_reverse(limits =c(0,-.3), breaks=(seq(-.3,0,.05)))+ ggtitle("TW_Gradient_02")+  scale_x_datetime(breaks = seq(as.POSIXct("2018-05-01 00:00:00 EDT"), as.POSIXct("2019-09-01 00:00:00 EDT"), "1 month"),date_labels="%b %d, %Y")+theme(axis.text.x = element_text(angle=45, vjust = 0.5))
 ggsave("TW_Grad_02_FULL.pdf", width = 12, height = 6) 
        
 ################ TW_PZ_03 ################
@@ -1526,7 +1527,7 @@ ggplot(TW_Grad_04_Nov2018, aes(Plot_Times, TW_Grad_04_Nov2018[,"dh/dz"]))+geom_l
 ggsave("TW_Grad_04_7-12-18_to_11-20-18.pdf", width = 12, height = 6) 
           
 Plot_Times<-as.POSIXct(TW_Grad_04_FULL[,"Date_Time"], "%m/%d/%y %I:%M:%S %p", tz="America/New_York")
-ggplot(TW_Grad_04_FULL, aes(Plot_Times, TW_Grad_04_FULL[,"dh/dz"]))+geom_point(color='darkgreen', size=0.3) + xlab("Date") + ylab("Vertical Hydraulic Gradient")+ scale_y_reverse(limits =c(1,-.4), breaks=(seq(-.4,1,.2)))+ ggtitle("TW_Gradient_04")+  scale_x_datetime(breaks = seq(as.POSIXct("2018-05-01 00:00:00 EDT"), as.POSIXct("2019-09-01 00:00:00 EDT"), "1 month"),date_labels="%b %d, %Y")+theme(axis.text.x = element_text(angle=45, vjust = 0.5))
+ggplot(TW_Grad_04_FULL, aes(Plot_Times, TW_Grad_04_FULL[,"dh/dz"]))+geom_point(color='darkolivegreen', size=0.3) + xlab("Date") + ylab("Vertical Hydraulic Gradient")+ scale_y_reverse(limits =c(1,-.4), breaks=(seq(-.4,1,.2)))+ ggtitle("TW_Gradient_04")+  scale_x_datetime(breaks = seq(as.POSIXct("2018-05-01 00:00:00 EDT"), as.POSIXct("2019-09-01 00:00:00 EDT"), "1 month"),date_labels="%b %d, %Y")+theme(axis.text.x = element_text(angle=45, vjust = 0.5))
 ggsave("TW_Grad_04_FULL.pdf", width = 12, height = 6) 
                               
 ################ TW_PZ_05 ################
