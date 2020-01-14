@@ -39,6 +39,7 @@ TW_PZ_01_Jun2018<-read.csv("TW_WL_2018_06_18/TW-PZ-01_sn10499234.csv", skip=1, r
 TW_PZ_02_Jun2018<-read.csv("TW_WL_2018_06_18/TW_PZ_02.csv", skip=1, row.names=1)
 TW_SW_02_Jun2018<-read.csv("TW_WL_2018_06_18/TW-SW-02_sn10499246.csv", skip=1, row.names=1)
 TW_PZ_03_Jun2018<-read.csv("TW_WL_2018_06_18/TW-PZ-03_sn10499228.csv", skip=1, row.names=1)
+TW_SW_03_Jun2018<-read.csv("TW_WL_2018_06_18/TW_SW_03.csv", skip=1, row.names=1)
 TW_PZ_04_Jun2018<-read.csv("TW_WL_2018_06_18/TW_PZ_04.csv", skip=1, row.names=1)
 TW_SW_04_Jun2018<-read.csv("TW_WL_2018_06_18/TW-SW-04_sn10499238.csv", skip=1, row.names=1)
 
@@ -255,6 +256,7 @@ TW_PZ_01_Jun2018<-loggerProcess(TW_PZ_01_Jun2018)
 TW_PZ_02_Jun2018<-loggerProcess(TW_PZ_02_Jun2018)
 TW_SW_02_Jun2018<-loggerProcess(TW_SW_02_Jun2018)
 TW_PZ_03_Jun2018<-loggerProcess(TW_PZ_03_Jun2018)
+TW_SW_03_Jun2018<-loggerProcess(TW_SW_03_Jun2018)
 TW_PZ_04_Jun2018<-loggerProcess(TW_PZ_04_Jun2018)
 TW_SW_04_Jun2018<-loggerProcess(TW_SW_04_Jun2018)
 
@@ -655,8 +657,17 @@ TW_PZ_03_FULL<-rbind(TW_PZ_03_Jun2018, TW_PZ_03_Nov2018, TW_PZ_03_Jun319)
 # Save as CSV  
 write.csv(TW_PZ_03_FULL, file="TWPZ03_FULL.csv", row.names=FALSE)  
 
-############## TW_SW_03 ##############     
-# November 2018
+############## TW_SW_03 ##############
+
+# June 2018 
+# Correct based on manual stream measurements
+TW_SW_03_Jun2018[,"m_above_GS"]<-TW_SW_03_Jun2018[,"m_water"]-2
+# Remove last few rows of erroneous data
+TW_SW_03_Jun2018<-TW_SW_03_Jun2018[1:which(TW_SW_03_Jun2018[,"Date_Time"]=="06/18/18 10:30:00 AM"),]
+# Add manual data
+TW_SW_03_Jun2018[which(TW_SW_03_Jun2018[,"Date_Time"]=="06/18/18 10:30:00 AM"),"m_manual"]<-0.254
+     
+# November 2018 - MALFUNCTIONING
 # Correct based on manual stream measurements
 TW_SW_03_Nov2018[,"m_above_GS"]<-TW_SW_03_Nov2018[,"m_water"]-2
 # Add manual data
@@ -665,7 +676,7 @@ TW_SW_03_Nov2018[which(TW_SW_03_Nov2018[,"Date_Time"]=="11/20/18 10:30:00 AM"),"
 # Save as CSV  
 write.csv(TW_SW_03_Nov2018, file="TWSW03_6-18-18_to_11-20-18_MALFUNC.csv", row.names=FALSE)                               
          
-# June 2019                               
+# June 2019 - MALFUNCTIONING                               
 # Correct based on manual stream measurements
 TW_SW_03_Jun319[,"m_above_GS"]<-TW_SW_03_Jun319[,"m_water"]-2
 # Add manual data
@@ -1447,7 +1458,16 @@ ggplot(TW_PZ_03_FULL, aes(Plot_Times, TW_PZ_03_FULL[,"m_above_GS"]))+geom_line(c
 ggsave("TW_PZ_03_FULL_manual.pdf", width = 12, height = 6)  
 
 ################ TW_SW_03 ################
-# November
+# June 2018
+Plot_Times<-as.POSIXct(TW_SW_03_Jun2018[,"Date_Time"], "%m/%d/%y %I:%M:%S %p", tz="America/New_York")
+ggplot(TW_SW_03_Jun2018, aes(Plot_Times, TW_SW_03_Jun2018[,"m_above_GS"]))+geom_line(color='royalblue3', size=.6)+ ylim(0,3) + xlab("Date") + ylab("Stream Stage (m)")+ggtitle("TW_SW_03")+  scale_x_datetime(breaks = seq(Plot_Times[1], Plot_Times[length(Plot_Times)], "7 days"),date_labels="%b %d")+theme(axis.text.x = element_text(angle=45, vjust = 0.5))                                               
+ggsave("TW_SW_03_11-20-18_to_6-3-19_MALFUNC.pdf", width = 12, height = 6)
+# June with manual 
+Plot_Times<-as.POSIXct(TW_SW_03_Jun2018[,"Date_Time"], "%m/%d/%y %I:%M:%S %p", tz="America/New_York")
+ggplot(TW_SW_03_Jun2018, aes(Plot_Times, TW_SW_03_Jun2018[,"m_above_GS"]))+geom_line(color='royalblue3', size=.6)+ ylim(0,1) + xlab("Date") + ylab("Stream Stage (m)")+ggtitle("TW_SW_03")+  scale_x_datetime(breaks = seq(Plot_Times[1], Plot_Times[length(Plot_Times)], "7 days"),date_labels="%b %d")+theme(axis.text.x = element_text(angle=45, vjust = 0.5)) + geom_point(aes(x=Plot_Times, y=TW_SW_03_Jun2018[,"m_manual"]), color="orange3", size=3)                                                                                                                      
+ggsave("TW_SW_03_11-20-18_to_6-3-19_manual_MALFUNC.pdf", width = 12, height = 6)
+
+# November 2018 - MALFUNCTIONING
 Plot_Times<-as.POSIXct(TW_SW_03_Nov2018[,"Date_Time"], "%m/%d/%y %I:%M:%S %p", tz="America/New_York")
 ggplot(TW_SW_03_Nov2018, aes(Plot_Times, TW_SW_03_Nov2018[,"m_above_GS"]))+geom_line(color='royalblue3', size=.6)+ ylim(-1,3) + xlab("Date") + ylab("Stream Stage (m)")+ggtitle("TW_SW_03")+  scale_x_datetime(breaks = seq(Plot_Times[1], Plot_Times[length(Plot_Times)], "7 days"),date_labels="%b %d")+theme(axis.text.x = element_text(angle=45, vjust = 0.5))                                               
 ggsave("TW_SW_03_11-20-18_to_6-3-19_MALFUNC.pdf", width = 12, height = 6)
@@ -1456,7 +1476,7 @@ Plot_Times<-as.POSIXct(TW_SW_03_Nov2018[,"Date_Time"], "%m/%d/%y %I:%M:%S %p", t
 ggplot(TW_SW_03_Nov2018, aes(Plot_Times, TW_SW_03_Nov2018[,"m_above_GS"]))+geom_line(color='royalblue3', size=.6)+ ylim(-1,3) + xlab("Date") + ylab("Stream Stage (m)")+ggtitle("TW_SW_03")+  scale_x_datetime(breaks = seq(Plot_Times[1], Plot_Times[length(Plot_Times)], "7 days"),date_labels="%b %d")+theme(axis.text.x = element_text(angle=45, vjust = 0.5)) + geom_point(aes(x=Plot_Times, y=TW_SW_03_Nov2018[,"m_manual"]), color="orange3", size=3)                                                                                                                      
 ggsave("TW_SW_03_11-20-18_to_6-3-19_manual_MALFUNC.pdf", width = 12, height = 6)
                                                             
-# June
+# June 2019 - MALFUNCTIONING
 Plot_Times<-as.POSIXct(TW_SW_03_Jun319[,"Date_Time"], "%m/%d/%y %I:%M:%S %p", tz="America/New_York")
 ggplot(TW_SW_03_Jun319, aes(Plot_Times, TW_SW_03_Jun319[,"m_above_GS"]))+geom_line(color='royalblue3', size=.6)+ ylim(-1,3) + xlab("Date") + ylab("Stream Stage (m)")+ggtitle("TW_SW_03")+  scale_x_datetime(breaks = seq(Plot_Times[1], Plot_Times[length(Plot_Times)], "7 days"),date_labels="%b %d")+theme(axis.text.x = element_text(angle=45, vjust = 0.5))                                               
 ggsave("TW_SW_03_11-20-18_to_6-3-19.pdf", width = 12, height = 6)
