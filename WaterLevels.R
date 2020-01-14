@@ -719,7 +719,7 @@ write.csv(TW_SW_04_FULL, file="TWSW04_FULL.csv", row.names=FALSE)
 
 ############## TW_Grad_04 ##############
 # November 2018
-# Calculate the vertical gradient between PZ_02 and SW_02     
+# Calculate the vertical gradient between PZ_04 and SW_04     
 # Join the pz and sw files together by the "Date_Time" column
 TW_Grad_04_Nov2018<-join(TW_PZ_04_Nov2018[,c("Date_Time","m_above_GS")], TW_SW_04_Nov2018[,c("Date_Time","m_above_GS")], by="Date_Time")
 # Rename the columns to designate between pz and sw water level values
@@ -727,7 +727,7 @@ colnames(TW_Grad_04_Nov2018)<-c( "Date_Time", "PZ_m_above_GS", "SW_m_above_GS")
 # Define dh (difference in head values)
 TW_Grad_04_Nov2018[,"dh"]<--(TW_Grad_04_Nov2018[,"PZ_m_above_GS"]-TW_Grad_04_Nov2018[,"SW_m_above_GS"])
 # Define dz (vertical distance between midpoint of screens)
-TW_Grad_04_Nov2018[,"dz"]<-.8865-0         
+TW_Grad_04_Nov2018[,"dz"]<-.9865-0         
 # Calculate the gradient (dh/dz) such that a positive gradient indicates downward flow
 TW_Grad_04_Nov2018[,"dh/dz"]<-TW_Grad_04_Nov2018[,"dh"]/TW_Grad_04_Nov2018[,"dz"]    
 # Remove the rows where there is no data for pz 04  
@@ -735,6 +735,22 @@ no_data<-which(TW_Grad_04_Nov2018[,"Date_Time"]=="07/12/18 12:15:00 PM")
 TW_Grad_04_Nov2018<-TW_Grad_04_Nov2018[-(1:no_data),]             
 # Save as CSV  
 write.csv(TW_Grad_04_Nov2018, file="TWGrad04_7-12-18_to_11-20-18.csv", row.names=FALSE)    
+
+# November 2018
+# Calculate the vertical gradient between PZ_04 and SW_04     
+# Join the pz and sw files together by the "Date_Time" column
+TW_Grad_04_FULL<-join(TW_PZ_04_FULL[,c("Date_Time","m_above_GS")], TW_SW_04_FULL[,c("Date_Time","m_above_GS")], by="Date_Time")
+# Rename the columns to designate between pz and sw water level values
+colnames(TW_Grad_04_FULL)<-c( "Date_Time", "PZ_m_above_GS", "SW_m_above_GS")
+# Define dh (difference in head values)
+TW_Grad_04_FULL[,"dh"]<--(TW_Grad_04_FULL[,"PZ_m_above_GS"]-TW_Grad_04_FULL[,"SW_m_above_GS"])
+# Define dz (vertical distance between midpoint of screens)
+TW_Grad_04_FULL[,"dz"]<-.9865-0         
+# Calculate the gradient (dh/dz) such that a positive gradient indicates downward flow
+TW_Grad_04_FULL[,"dh/dz"]<-TW_Grad_04_FULL[,"dh"]/TW_Grad_04_FULL[,"dz"]    
+# Calculate the gradient (dh/dz) such that a positive gradient indicates downward flow
+TW_Grad_04_FULL[,"dh/dz"]<-TW_Grad_04_FULL[,"dh"]/TW_Grad_04_FULL[,"dz"]    
+write.csv(TW_Grad_04_FULL, file="TWGrad04_FULL.csv", row.names=FALSE)    
 
 ############## TW_PZ_05 ##############   
 # Create a column for the depth to water below ground surface
@@ -1429,12 +1445,15 @@ Plot_Times<-as.POSIXct(TW_SW_04_FULL[,"Date_Time"], "%m/%d/%y %I:%M:%S %p", tz="
 ggplot(TW_SW_04_FULL, aes(Plot_Times, TW_SW_04_FULL[,"m_above_GS"]))+geom_line(color='royalblue3', size=.3) + xlab("Date") + ylab("Stream Stage (m)")+ggtitle("TW_SW_04")+  scale_x_datetime(breaks = seq(as.POSIXct("2018-05-01 00:00:00 EDT"), as.POSIXct("2019-09-01 00:00:00 EDT"), "1 month"),date_labels="%b %d, %Y")+ ylim(0,0.8) +theme(axis.text.x = element_text(angle=45, vjust = 0.5))+ geom_point(aes(x=Plot_Times, y=TW_SW_04_FULL[,"m_manual"]), color="orange3", size=3)                                          
 ggsave("TW_SW_04_FULL_manual.pdf", width = 12, height = 6)  
 
-
 ################ TW_Grad_04 ################
 Plot_Times<-as.POSIXct(TW_Grad_04_Nov2018[,"Date_Time"], "%m/%d/%y %I:%M:%S %p", tz="America/New_York")
 ggplot(TW_Grad_04_Nov2018, aes(Plot_Times, TW_Grad_04_Nov2018[,"dh/dz"]))+geom_line(color='darkgreen', size=0.5) + xlab("Date") + ylab("Vertical Hydraulic Gradient")+ scale_y_reverse(limits =c(.5,-.2))+ ggtitle("TW_Gradient_04")+  scale_x_datetime(breaks = seq(Plot_Times[1], Plot_Times[length(Plot_Times)], "7 days"),date_labels="%b %d")+theme(axis.text.x = element_text(angle=45, vjust = 0.5))
 ggsave("TW_Grad_04_7-12-18_to_11-20-18.pdf", width = 12, height = 6) 
-                       
+          
+Plot_Times<-as.POSIXct(TW_Grad_04_FULL[,"Date_Time"], "%m/%d/%y %I:%M:%S %p", tz="America/New_York")
+ggplot(TW_Grad_04_FULL, aes(Plot_Times, TW_Grad_04_FULL[,"dh/dz"]))+geom_point(color='darkgreen', size=0.3) + xlab("Date") + ylab("Vertical Hydraulic Gradient")+ scale_y_reverse(limits =c(1,-.4), breaks=(seq(-.4,1,.2)))+ ggtitle("TW_Gradient_04")+  scale_x_datetime(breaks = seq(as.POSIXct("2018-05-01 00:00:00 EDT"), as.POSIXct("2019-09-01 00:00:00 EDT"), "1 month"),date_labels="%b %d, %Y")+theme(axis.text.x = element_text(angle=45, vjust = 0.5))
+ggsave("TW_Grad_04_FULL.pdf", width = 12, height = 6) 
+                              
 ################ TW_PZ_05 ################
 Plot_Times<-as.POSIXct(TW_PZ_05_3_3[,"Date_Time"], "%m/%d/%y %I:%M:%S %p", tz="America/New_York")
 ggplot(TW_PZ_05_3_3, aes(Plot_Times, TW_PZ_05_3_3[,"m_below_GS"]))+geom_line(color='royalblue3', size=.6) + xlab("Date") + ylab("Depth to Water Below Ground Surface (m)")+ggtitle("TW_PZ_05")+  scale_x_datetime(breaks = seq(Plot_Times[1], Plot_Times[length(Plot_Times)], "7 days"),date_labels="%b %d")+ scale_y_reverse(limits =c(1,-.2)) +theme(axis.text.x = element_text(angle=45, vjust = 0.5))
