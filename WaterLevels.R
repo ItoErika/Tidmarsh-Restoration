@@ -43,6 +43,7 @@ TW_SW_04_Jun2018<-read.csv("TW_WL_2018_06_18/TW-SW-04_sn10499238.csv", skip=1, r
 
 # JULY 18, 2018 LOGGER RETRIEVAL
 TW_PZ_02_Jul2018<-read.csv("TW_WL_2018_07_11/TW_PZ_02.csv", skip=1, row.names=1)
+TW_PZ_03_Jul2018<-read.csv("TW_WL_2018_07_11/TW-PZ-03_sn10499228.csv", skip=1, row.names=1)
 TW_SW_04_Jul2018<-read.csv("TW_WL_2018_07_11/TW-SW-04_sn10499238.csv", skip=1, row.names=1)
 
 # NOVEMBER 20, 2018 LOGGER RETRIEVAL
@@ -256,6 +257,7 @@ TW_SW_04_Jun2018<-loggerProcess(TW_SW_04_Jun2018)
 
 # JULY 2018 DATA
 TW_PZ_02_Jul2018<-loggerProcess(TW_PZ_02_Jul2018)
+TW_PZ_03_Jul2018<-loggerProcess(TW_PZ_03_Jul2018)
 TW_SW_04_Jul2018<-loggerProcess(TW_SW_04_Jul2018)
 
 # NOVEMBER 2018 DATA                      
@@ -591,6 +593,12 @@ TW_Grad_02_FULL[,"dh/dz"]<-TW_Grad_02_FULL[,"dh"]/TW_Grad_02_FULL[,"dz"]
 write.csv(TW_Grad_02_FULL, file="TWGrad02_FULL.csv", row.names=FALSE)    
 
 ############## TW_PZ_03 ##############    
+# July 2018
+# Create a column for the depth to water below ground surface
+# The top of piezometer casing to ground surface = 58 cm
+#TW_PZ_03_Jul2018[,"m_above_GS"]<-(151/100-(58/100+TW_PZ_03_Jul2018[,"m_water"]) )*-1 
+
+# November 2018
 # Create a column for the depth to water below ground surface
 # The top of piezometer casing to ground surface = 58 cm
 TW_PZ_03_Nov2018[,"m_above_GS"]<-(151/100-(58/100+TW_PZ_03_Nov2018[,"m_water"]) )*-1 
@@ -602,9 +610,13 @@ TW_PZ_03_Nov2018[which(TW_PZ_03_Nov2018[,"Date_Time"]=="11/20/18 09:15:00 AM"),"
 #TW_PZ_03_Nov2018[,"lat"]<-41.91499167
 #TW_PZ_03_Nov2018[,"long"]<--70.57736111   
 write.csv(TW_PZ_03_Nov2018, file="TWPZ03_7-12-18_to_11-20-18.csv", row.names=FALSE)  
-   
+# June 2019   
 # Create a column for the depth to water below ground surface
 TW_PZ_03_Jun319[,"m_above_GS"]<-(TW_PZ_03_Jun319[,"m_water"])-.46
+# Remove first few rows of data that overlap with previous dataset
+TW_PZ_03_Jun319<-TW_PZ_03_Jun319[which(TW_PZ_03_Jun319[,"Date_Time"]=="11/20/18 10:30:00 AM"):nrow(TW_PZ_03_Jun319),]
+
+
 # Interpolate between the 3/30 spike                     
 Start_Spike<-which(TW_PZ_03_Jun319[,"Date_Time"]=="03/30/19 03:45:00 PM")
 Stop_Spike<-which(TW_PZ_03_Jun319[,"Date_Time"]=="03/30/19 04:15:00 PM")     
