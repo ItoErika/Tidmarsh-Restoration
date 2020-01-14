@@ -666,6 +666,8 @@ TW_SW_03_Jun2018[,"m_above_GS"]<-TW_SW_03_Jun2018[,"m_water"]-2
 TW_SW_03_Jun2018<-TW_SW_03_Jun2018[1:which(TW_SW_03_Jun2018[,"Date_Time"]=="06/18/18 10:30:00 AM"),]
 # Add manual data
 TW_SW_03_Jun2018[which(TW_SW_03_Jun2018[,"Date_Time"]=="06/18/18 10:30:00 AM"),"m_manual"]<-0.254
+# Save as CSV  
+write.csv(TW_SW_03_Jun2018, file="TWSW03_5-6-18_to_6-18-18_MALFUNC.csv", row.names=FALSE)         
      
 # November 2018 - MALFUNCTIONING
 # Correct based on manual stream measurements
@@ -683,7 +685,12 @@ TW_SW_03_Jun319[,"m_above_GS"]<-TW_SW_03_Jun319[,"m_water"]-2
 TW_SW_03_Jun319[which(TW_SW_03_Jun319[,"Date_Time"]=="03/30/19 04:00:00 PM"),"m_manual"]<-0.204
 TW_SW_03_Jun319[which(TW_SW_03_Jun319[,"Date_Time"]=="06/03/19 12:30:00 PM"),"m_manual"]<-0.245 
 # Save as CSV  
-write.csv(TW_SW_03_Jun319, file="TWSW03_11-20-18_to_6-3-19.csv", row.names=FALSE)                        
+write.csv(TW_SW_03_Jun319, file="TWSW03_11-20-18_to_6-3-19.csv", row.names=FALSE)       
+
+# Bind all of the data frames together...                  
+TW_SW_03_FULL<-rbind(TW_SW_03_Jun2018, TW_SW_03_Nov2018, TW_SW_03_Jun319)   
+# Save as CSV  
+write.csv(TW_SW_03_FULL, file="TWSW03_FULL_MALFUNC.csv", row.names=FALSE)                   
                 
 ############## TW_PZ_04 ##############  
 # June 2018
@@ -1458,23 +1465,23 @@ ggplot(TW_PZ_03_FULL, aes(Plot_Times, TW_PZ_03_FULL[,"m_above_GS"]))+geom_line(c
 ggsave("TW_PZ_03_FULL_manual.pdf", width = 12, height = 6)  
 
 ################ TW_SW_03 ################
-# June 2018
+# June 2018 - MALFUNCTIONING
 Plot_Times<-as.POSIXct(TW_SW_03_Jun2018[,"Date_Time"], "%m/%d/%y %I:%M:%S %p", tz="America/New_York")
-ggplot(TW_SW_03_Jun2018, aes(Plot_Times, TW_SW_03_Jun2018[,"m_above_GS"]))+geom_line(color='royalblue3', size=.6)+ ylim(0,3) + xlab("Date") + ylab("Stream Stage (m)")+ggtitle("TW_SW_03")+  scale_x_datetime(breaks = seq(Plot_Times[1], Plot_Times[length(Plot_Times)], "7 days"),date_labels="%b %d")+theme(axis.text.x = element_text(angle=45, vjust = 0.5))                                               
-ggsave("TW_SW_03_11-20-18_to_6-3-19_MALFUNC.pdf", width = 12, height = 6)
+ggplot(TW_SW_03_Jun2018, aes(Plot_Times, TW_SW_03_Jun2018[,"m_above_GS"]))+geom_line(color='royalblue3', size=.6)+ ylim(-0.5,1) + xlab("Date") + ylab("Stream Stage (m)")+ggtitle("TW_SW_03")+  scale_x_datetime(breaks = seq(Plot_Times[1], Plot_Times[length(Plot_Times)], "7 days"),date_labels="%b %d")+theme(axis.text.x = element_text(angle=45, vjust = 0.5))                                               
+ggsave("TW_SW_03_5-6-18_to_6-18-18_MALFUNC.pdf", width = 12, height = 6)
 # June with manual 
 Plot_Times<-as.POSIXct(TW_SW_03_Jun2018[,"Date_Time"], "%m/%d/%y %I:%M:%S %p", tz="America/New_York")
-ggplot(TW_SW_03_Jun2018, aes(Plot_Times, TW_SW_03_Jun2018[,"m_above_GS"]))+geom_line(color='royalblue3', size=.6)+ ylim(0,1) + xlab("Date") + ylab("Stream Stage (m)")+ggtitle("TW_SW_03")+  scale_x_datetime(breaks = seq(Plot_Times[1], Plot_Times[length(Plot_Times)], "7 days"),date_labels="%b %d")+theme(axis.text.x = element_text(angle=45, vjust = 0.5)) + geom_point(aes(x=Plot_Times, y=TW_SW_03_Jun2018[,"m_manual"]), color="orange3", size=3)                                                                                                                      
-ggsave("TW_SW_03_11-20-18_to_6-3-19_manual_MALFUNC.pdf", width = 12, height = 6)
+ggplot(TW_SW_03_Jun2018, aes(Plot_Times, TW_SW_03_Jun2018[,"m_above_GS"]))+geom_line(color='royalblue3', size=.6)+ ylim(-0.5,1) + xlab("Date") + ylab("Stream Stage (m)")+ggtitle("TW_SW_03")+  scale_x_datetime(breaks = seq(Plot_Times[1], Plot_Times[length(Plot_Times)], "7 days"),date_labels="%b %d")+theme(axis.text.x = element_text(angle=45, vjust = 0.5)) + geom_point(aes(x=Plot_Times, y=TW_SW_03_Jun2018[,"m_manual"]), color="orange3", size=3)                                                                                                                      
+ggsave("TW_SW_03_5-6-18_to_6-18-18_manual_MALFUNC.pdf", width = 12, height = 6)
 
 # November 2018 - MALFUNCTIONING
 Plot_Times<-as.POSIXct(TW_SW_03_Nov2018[,"Date_Time"], "%m/%d/%y %I:%M:%S %p", tz="America/New_York")
 ggplot(TW_SW_03_Nov2018, aes(Plot_Times, TW_SW_03_Nov2018[,"m_above_GS"]))+geom_line(color='royalblue3', size=.6)+ ylim(-1,3) + xlab("Date") + ylab("Stream Stage (m)")+ggtitle("TW_SW_03")+  scale_x_datetime(breaks = seq(Plot_Times[1], Plot_Times[length(Plot_Times)], "7 days"),date_labels="%b %d")+theme(axis.text.x = element_text(angle=45, vjust = 0.5))                                               
-ggsave("TW_SW_03_11-20-18_to_6-3-19_MALFUNC.pdf", width = 12, height = 6)
+ggsave("TW_SW_03_6-18-18_to_11-20-18_MALFUNC.pdf", width = 12, height = 6)
 # November with manual 
 Plot_Times<-as.POSIXct(TW_SW_03_Nov2018[,"Date_Time"], "%m/%d/%y %I:%M:%S %p", tz="America/New_York")
 ggplot(TW_SW_03_Nov2018, aes(Plot_Times, TW_SW_03_Nov2018[,"m_above_GS"]))+geom_line(color='royalblue3', size=.6)+ ylim(-1,3) + xlab("Date") + ylab("Stream Stage (m)")+ggtitle("TW_SW_03")+  scale_x_datetime(breaks = seq(Plot_Times[1], Plot_Times[length(Plot_Times)], "7 days"),date_labels="%b %d")+theme(axis.text.x = element_text(angle=45, vjust = 0.5)) + geom_point(aes(x=Plot_Times, y=TW_SW_03_Nov2018[,"m_manual"]), color="orange3", size=3)                                                                                                                      
-ggsave("TW_SW_03_11-20-18_to_6-3-19_manual_MALFUNC.pdf", width = 12, height = 6)
+ggsave("TW_SW_03_6-18-18_to_11-20-18_manual_MALFUNC.pdf", width = 12, height = 6)
                                                             
 # June 2019 - MALFUNCTIONING
 Plot_Times<-as.POSIXct(TW_SW_03_Jun319[,"Date_Time"], "%m/%d/%y %I:%M:%S %p", tz="America/New_York")
@@ -1484,6 +1491,15 @@ ggsave("TW_SW_03_11-20-18_to_6-3-19.pdf", width = 12, height = 6)
 Plot_Times<-as.POSIXct(TW_SW_03_Jun319[,"Date_Time"], "%m/%d/%y %I:%M:%S %p", tz="America/New_York")
 ggplot(TW_SW_03_Jun319, aes(Plot_Times, TW_SW_03_Jun319[,"m_above_GS"]))+geom_line(color='royalblue3', size=.6)+ ylim(-1,3) + xlab("Date") + ylab("Stream Stage (m)")+ggtitle("TW_SW_03")+  scale_x_datetime(breaks = seq(Plot_Times[1], Plot_Times[length(Plot_Times)], "7 days"),date_labels="%b %d")+theme(axis.text.x = element_text(angle=45, vjust = 0.5)) + geom_point(aes(x=Plot_Times, y=TW_SW_03_Jun319[,"m_manual"]), color="orange3", size=3)                                                                                                                      
 ggsave("TW_SW_03_11-20-18_to_6-3-19_manual.pdf", width = 12, height = 6)
+
+# Complete PZ_03 dataset
+Plot_Times<-as.POSIXct(TW_SW_03_FULL[,"Date_Time"], "%m/%d/%y %I:%M:%S %p", tz="America/New_York")
+ggplot(TW_SW_03_FULL, aes(Plot_Times, TW_SW_03_FULL[,"m_above_GS"]))+geom_line(color='royalblue3', size=.3) + xlab("Date") + ylab("Stream Stage (m)")+ggtitle("TW_SW_03")+  scale_x_datetime(breaks = seq(as.POSIXct("2018-05-01 00:00:00 EDT"), as.POSIXct("2019-09-01 00:00:00 EDT"), "1 month"),date_labels="%b %d, %Y")+ ylim(-1,3) +theme(axis.text.x = element_text(angle=45, vjust = 0.5))
+ggsave("TW_SW_03_FULL_MALFUNC.pdf", width = 12, height = 6)  
+# Complete with manual
+Plot_Times<-as.POSIXct(TW_SW_03_FULL[,"Date_Time"], "%m/%d/%y %I:%M:%S %p", tz="America/New_York")
+ggplot(TW_SW_03_FULL, aes(Plot_Times, TW_SW_03_FULL[,"m_above_GS"]))+geom_line(color='royalblue3', size=.3) + xlab("Date") + ylab("Stream Stage (m)")+ggtitle("TW_SW_03")+  scale_x_datetime(breaks = seq(as.POSIXct("2018-05-01 00:00:00 EDT"), as.POSIXct("2019-09-01 00:00:00 EDT"), "1 month"),date_labels="%b %d, %Y") + ylim(-1,3) +theme(axis.text.x = element_text(angle=45, vjust = 0.5))+ geom_point(aes(x=Plot_Times, y=TW_SW_03_FULL[,"m_manual"]), color="orange3", size=3) 
+ggsave("TW_SW_03_FULL_manual_MALFUNC.pdf", width = 12, height = 6)  
                                                                                       
 ################ TW_PZ_04 ################
 
