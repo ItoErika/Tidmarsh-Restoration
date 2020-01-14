@@ -381,12 +381,14 @@ TW_PZ_01_Jun319[,"m_below_GS"]<-130.4/100-(25.8/100+TW_PZ_01_Jun319[,"m_water"])
 # Add manual data
 TW_PZ_01_Jun319[which(TW_PZ_01_Jun319[,"Date_Time"]=="03/30/19 12:30:00 PM"),"m_manual"]<-0.155 
 TW_PZ_01_Jun319[which(TW_PZ_01_Jun319[,"Date_Time"]=="06/03/19 12:45:00 PM"),"m_manual"]<-0.106   
+# Remove last few rows of erroneous data
+TW_PZ_01_Jun319<-TW_PZ_01_Jun319[1:which(TW_PZ_01_Jun319[,"Date_Time"]=="06/03/19 12:45:00 PM"),]                     
 # Create a copy without the isotope sample dip:    
 TW_PZ_01_Jun319_NO_ISO <-TW_PZ_01_Jun319 
 Start_Iso<-which(TW_PZ_01_Jun319_NO_ISO[,"Date_Time"]=="03/30/19 12:30:00 PM")
 Stop_Iso<-which(TW_PZ_01_Jun319_NO_ISO[,"Date_Time"]=="03/31/19 04:00:00 AM") 
 # Replace the isotope dip with NA
-TW_PZ_01_Jun319_NO_ISO[Start_Spike:Stop_Spike,"m_below_GS"]<-NA                   
+TW_PZ_01_Jun319_NO_ISO[Start_Spike:Stop_Spike,"m_below_GS"]<-NA   
 # Save as CSV  
 write.csv(TW_PZ_01_Jun319, file="TW-WL_2019_06_03/June_6_19_Processed/TWPZ01_11-20-18_to_6-3-19.csv", row.names=FALSE)                         
 write.csv(TW_PZ_01_Jun319_NO_ISO, file="TW-WL_2019_06_03/June_6_19_Processed/TWPZ01_11-20-18_to_6-3-19.csv", row.names=FALSE)                         
