@@ -43,6 +43,7 @@ TW_SW_03_Jun2018<-read.csv("TW_WL_2018_06_18/TW_SW_03.csv", skip=1, row.names=1)
 TW_PZ_04_Jun2018<-read.csv("TW_WL_2018_06_18/TW_PZ_04.csv", skip=1, row.names=1)
 TW_SW_04_Jun2018<-read.csv("TW_WL_2018_06_18/TW-SW-04_sn10499238.csv", skip=1, row.names=1)
 TW_PZ_05_SAND_Jun2018<-read.csv("TW_WL_2018_06_18/TW-PZ-05-SAND_sn10499236.csv", skip=1, row.names=1)
+TW_PZ_06_Jun2018<-read.csv("TW_WL_2018_06_18/TW-PZ-06_sn10499244.csv", skip=1, row.names=1)
 
 # JULY 18, 2018 LOGGER RETRIEVAL
 TW_PZ_02_Jul2018<-read.csv("TW_WL_2018_07_11/TW_PZ_02.csv", skip=1, row.names=1)
@@ -261,6 +262,7 @@ TW_SW_03_Jun2018<-loggerProcess(TW_SW_03_Jun2018)
 TW_PZ_04_Jun2018<-loggerProcess(TW_PZ_04_Jun2018)
 TW_SW_04_Jun2018<-loggerProcess(TW_SW_04_Jun2018)
 TW_PZ_05_SAND_Jun2018<-loggerProcess(TW_PZ_05_SAND_Jun2018)
+TW_PZ_06_Jun2018<-loggerProcess(TW_PZ_06_Jun2018)
 
 # JULY 2018 DATA
 TW_PZ_02_Jul2018<-loggerProcess(TW_PZ_02_Jul2018)
@@ -951,7 +953,7 @@ Smoothed_Spike<-seq(TW_PZ_06_Nov2018[Start_Spike,"m_below_GS"], TW_PZ_06_Nov2018
 # Replace the spike with the smoothed interpolated data
 TW_PZ_06_Nov2018[Start_Spike:Stop_Spike,"m_below_GS"]<-Smoothed_Spike
 # Remove the end of the dataset (where logger was not submerged) 
-TW_PZ_06_Nov2018<-TW_PZ_06_Nov2018[1:which(TW_PZ_06_Nov2018[,"Date_Time"]=="11/19/18 04:15:00 PM"),]
+TW_PZ_06_Nov2018<-TW_PZ_06_Nov2018[1:which(TW_PZ_06_Nov2018[,"Date_Time"]=="11/19/18 04:00:00 PM"),]
 # Add manual data
 TW_PZ_06_Nov2018[which(TW_PZ_06_Nov2018[,"Date_Time"]=="06/19/18 02:45:00 PM"),"m_manual"]<-0.297
 TW_PZ_06_Nov2018[which(TW_PZ_06_Nov2018[,"Date_Time"]=="07/11/18 01:30:00 PM"),"m_manual"]<-0.36
