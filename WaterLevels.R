@@ -1692,14 +1692,22 @@ ggplot(TW_SW_04_FULL, aes(Plot_Times, TW_SW_04_FULL[,"m_above_GS"]))+geom_line(c
 ggsave("TW_SW_04_FULL_manual.pdf", width = 12, height = 6)  
 
 ################ TW_Grad_04 ################
+		       
+# Plot vertical gradient over time		       
 Plot_Times<-as.POSIXct(TW_Grad_04_Nov2018[,"Date_Time"], "%m/%d/%y %I:%M:%S %p", tz="America/New_York")
 ggplot(TW_Grad_04_Nov2018, aes(Plot_Times, TW_Grad_04_Nov2018[,"dh/dz"]))+geom_line(color='darkgreen', size=0.5) + xlab("Date") + ylab("Vertical Hydraulic Gradient")+ scale_y_reverse(limits =c(.5,-.2))+ ggtitle("TW_Gradient_04")+  scale_x_datetime(breaks = seq(Plot_Times[1], Plot_Times[length(Plot_Times)], "7 days"),date_labels="%b %d")+theme(axis.text.x = element_text(angle=45, vjust = 0.5))
 ggsave("TW_Grad_04_7-12-18_to_11-20-18.pdf", width = 12, height = 6) 
           
 Plot_Times<-as.POSIXct(TW_Grad_04_FULL[,"Date_Time"], "%m/%d/%y %I:%M:%S %p", tz="America/New_York")
 ggplot(TW_Grad_04_FULL, aes(Plot_Times, TW_Grad_04_FULL[,"dh/dz"]))+geom_point(color='darkolivegreen', size=0.3) + xlab("Date") + ylab("Vertical Hydraulic Gradient")+ scale_y_reverse(limits =c(1,-.4), breaks=(seq(-.4,1,.2)))+ ggtitle("TW_Gradient_04")+  scale_x_datetime(breaks = seq(as.POSIXct("2018-05-01 00:00:00 EDT"), as.POSIXct("2019-09-01 00:00:00 EDT"), "1 month"),date_labels="%b %d, %Y")+theme(axis.text.x = element_text(angle=45, vjust = 0.5))
-ggsave("TW_Grad_04_FULL.pdf", width = 12, height = 6) 
-                              
+ggsave("TW_Grad_04_FULL.pdf", width = 12, height = 6)                        
+  
+# Plot head measurements together
+# Complete with manual
+Plot_Times<-as.POSIXct(na.omit(TW_Grad_04_FULL)[,"Date_Time"], "%m/%d/%y %I:%M:%S %p", tz="America/New_York")
+ggplot(na.omit(TW_Grad_04_FULL), aes(Plot_Times))+geom_line(aes(y=PZ_m_above_GS, colour='PZ'))+geom_line(aes(y=SW_m_above_GS, colour='SW'))+scale_colour_manual(values=c("#d8b365","#5ab4ac"))+ xlab("Date")+ ylab("Head (m)")+ ylim(-1,0.8)+ ggtitle("TW_PZ/SW_04")+ scale_x_datetime(breaks = seq(as.POSIXct("2018-05-01 00:00:00 EDT"), as.POSIXct("2019-09-01 00:00:00 EDT"), "1 month"),date_labels="%b %d, %Y") +theme(axis.text.x = element_text(angle=45, vjust = 0.5))
+ggsave("TW_PZ-SW_FULL.pdf", width = 12, height = 6) 
+
 ################ TW_PZ_05 ################
 Plot_Times<-as.POSIXct(TW_PZ_05_3_3[,"Date_Time"], "%m/%d/%y %I:%M:%S %p", tz="America/New_York")
 ggplot(TW_PZ_05_3_3, aes(Plot_Times, TW_PZ_05_3_3[,"m_below_GS"]))+geom_line(color='royalblue3', size=.6) + xlab("Date") + ylab("Depth to Water Below Ground Surface (m)")+ggtitle("TW_PZ_05")+  scale_x_datetime(breaks = seq(Plot_Times[1], Plot_Times[length(Plot_Times)], "7 days"),date_labels="%b %d")+ scale_y_reverse(limits =c(1,-.2)) +theme(axis.text.x = element_text(angle=45, vjust = 0.5))
