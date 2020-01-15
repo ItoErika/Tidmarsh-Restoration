@@ -46,6 +46,7 @@ TW_PZ_05_SAND_Jun2018<-read.csv("TW_WL_2018_06_18/TW-PZ-05-SAND_sn10499236.csv",
 TW_PZ_06_Jun2018<-read.csv("TW_WL_2018_06_18/TW-PZ-06_sn10499244.csv", skip=1, row.names=1)
 TW_PZ_06_SAND_Jun2018<-read.csv("TW_WL_2018_06_18/TW-PZ-06-SAND_sn10499231.csv", skip=1, row.names=1)
 TW_PZ_07_Jun2018<-read.csv("TW_WL_2018_06_18/TW-PZ-07_sn10499240.csv", skip=1, row.names=1)
+TW_SW_07_Jun2018<-read.csv("TW_WL_2018_06_18/TW-SW-07_sn10744415.csv", skip=1, row.names=1)
 
 # JULY 18, 2018 LOGGER RETRIEVAL
 TW_PZ_02_Jul2018<-read.csv("TW_WL_2018_07_11/TW_PZ_02.csv", skip=1, row.names=1)
@@ -267,6 +268,7 @@ TW_PZ_05_SAND_Jun2018<-loggerProcess(TW_PZ_05_SAND_Jun2018)
 TW_PZ_06_Jun2018<-loggerProcess(TW_PZ_06_Jun2018)
 TW_PZ_06_SAND_Jun2018<-loggerProcess(TW_PZ_06_SAND_Jun2018)
 TW_PZ_07_Jun2018<-loggerProcess(TW_PZ_07_Jun2018)
+TW_SW_07_Jun2018<-loggerProcess(TW_SW_07_Jun2018)
 
 # JULY 2018 DATA
 TW_PZ_02_Jul2018<-loggerProcess(TW_PZ_02_Jul2018)
@@ -1172,26 +1174,45 @@ TW_PZ_07_3_19[which(TW_PZ_07_3_19[,"Date_Time"]=="03/19/18 10:15:00 AM"),"m_manu
 # Save as CSV  
 write.csv(TW_PZ_07_3_19, file="TWPZ07_8-29-17_to_33-19-18.csv", row.names=FALSE)           
 
+# June 2018
+# Correct based on manual stream measurements
+TW_SW_07_Jun2018[,"m_above_GS"]<-TW_SW_07_Jun2018[,"m_water"]-.14
+# Remove first rows of erroneous data
+TW_SW_07_Jun2018<-TW_SW_07_Jun2018[which(TW_SW_07_Jun2018[,"Date_Time"]=="05/06/18 03:00:00 PM"):nrow(TW_SW_07_Jun2018),]
+# Add manual data
+TW_SW_07_Jun2018[which(TW_SW_07_Jun2018[,"Date_Time"]=="06/18/18 11:45:00 AM"),"m_manual"]<-0.265                     
+# Save as CSV  
+write.csv(TW_SW_07_Nov, file="TWSW07_5-6-18_to_6-18-18.csv", row.names=FALSE) 
+
+# November 2018
 # Correct based on manual stream measurements
 TW_SW_07_Nov2018[,"m_above_GS"]<-TW_SW_07_Nov2018[,"m_water"]-.14
-# Add manual data
-TW_SW_07_Nov2018[which(TW_SW_07_Nov2018[,"Date_Time"]=="07/11/18 12:15:00 PM"),"m_manual"]<-0.28                     
-TW_SW_07_Nov2018[which(TW_SW_07_Nov2018[,"Date_Time"]=="11/19/18 03:15:00 PM"),"m_manual"]<-0.21
 # Remove last few rows of data 
 TW_SW_07_Nov2018<-TW_SW_07_Nov2018[1:which(TW_SW_07_Nov2018[,"Date_Time"]=="11/19/18 05:00:00 PM"),]
 # Remove blank rows from logger extractions
 TW_SW_07_Nov2018<-TW_SW_07_Nov2018[-which(is.na(TW_SW_07_Nov2018[,"m_above_GS"])),]  
 #TW_SW_07_Nov2018[,"lat"]<-41.91708333
 #TW_SW_07_Nov2018[,"long"]<--70.57833333
+# Add manual data
+TW_SW_07_Nov2018[which(TW_SW_07_Nov2018[,"Date_Time"]=="07/11/18 12:15:00 PM"),"m_manual"]<-0.28                     
+TW_SW_07_Nov2018[which(TW_SW_07_Nov2018[,"Date_Time"]=="11/19/18 03:15:00 PM"),"m_manual"]<-0.21
 write.csv(TW_SW_07_Nov2018, file="TWSW07_6-18-18_to_11-19-18.csv", row.names=FALSE) 
 
+# July 2019
 # Correct based on manual stream measurements
 TW_SW_07_Jun319[,"m_above_GS"]<-TW_SW_07_Jun319[,"m_water"]-.1
+# Remove first and last few rows of erroneous or overlapping data
+TW_SW_07_Jun319<-TW_SW_07_Jun319[which(TW_SW_07_Jun319[,"Date_Time"]=="11/19/18 05:15:00 PM"):which(TW_SW_07_Jun319[,"Date_Time"]=="06/03/19 09:15:00 AM"),]
 # Add manual data
-TW_SW_07_Jun319[which(TW_SW_07_Jun319[,"Date_Time"]=="03/30/19 01:45:00 PM"),"m_manual"]<-0.077                      
-TW_SW_07_Jun319[which(TW_SW_07_Jun319[,"Date_Time"]=="06/03/19 09:15:00 AM"),"m_manual"]<-0.109
+TW_SW_07_Jun319[which(TW_SW_07_Jun319[,"Date_Time"]=="03/30/19 01:45:00 PM"),"m_manual"]<-0.132                     
+TW_SW_07_Jun319[which(TW_SW_07_Jun319[,"Date_Time"]=="06/03/19 09:15:00 AM"),"m_manual"]<-0.198
 # Save as CSV
-write.csv(TW_SW_07_Nov, file="TWSW07_6-18-18_to_11-19-18.csv", row.names=FALSE) 
+write.csv(TW_SW_07_Nov, file="TWSW07_11-19-18_to_6-3-19.csv", row.names=FALSE) 
+
+# Bind all of the data frames together...                  
+TW_SW_07_FULL<-rbind(TW_SW_07_Jun2018, TW_SW_07_Nov2018, TW_SW_07_Jun319)    
+# Save as CSV  
+write.csv(TW_SW_07_FULL, file="TWSW07_FULL.csv", row.names=FALSE)  
 
 ############## TW_Grad_07 ##############
 # November 2018
@@ -1849,7 +1870,16 @@ Plot_Times<-as.POSIXct(TW_SW_07_3_3[,"Date_Time"], "%m/%d/%y %I:%M:%S %p", tz="A
 ggplot(TW_SW_07_3_3, aes(Plot_Times, TW_SW_07_3_3[,"m_above_GS"]))+geom_line(color='royalblue3', size=.6)+ ylim(0,.4) + xlab("Date") + ylab("Stream Stage (m)")+ggtitle("TW_SW_07")+  scale_x_datetime(breaks = seq(Plot_Times[1], Plot_Times[length(Plot_Times)], "7 days"),date_labels="%b %d")+theme(axis.text.x = element_text(angle=45, vjust = 0.5))                                               
 ggsave("TW_SW_07_3_3.pdf", width = 12, height = 6)       
 
-# November
+# June 2018 
+Plot_Times<-as.POSIXct(TW_SW_07_Jun2018[,"Date_Time"], "%m/%d/%y %I:%M:%S %p", tz="America/New_York")
+ggplot(TW_SW_07_Jun2018, aes(Plot_Times, TW_SW_07_Jun2018[,"m_above_GS"]))+geom_line(color='royalblue3', size=.6)+ ylim(0,.4) + xlab("Date") + ylab("Stream Stage (m)")+ggtitle("TW_SW_07")+  scale_x_datetime(breaks = seq(Plot_Times[1], Plot_Times[length(Plot_Times)], "7 days"),date_labels="%b %d")+theme(axis.text.x = element_text(angle=45, vjust = 0.5))                                               
+ggsave("TW_SW_07_5-6-18_to_6-18-18.pdf", width = 12, height = 6) 
+# June with manual
+Plot_Times<-as.POSIXct(TW_SW_07_Jun2018[,"Date_Time"], "%m/%d/%y %I:%M:%S %p", tz="America/New_York")
+ggplot(TW_SW_07_Jun2018, aes(Plot_Times, TW_SW_07_Jun2018[,"m_above_GS"]))+geom_line(color='royalblue3', size=.6)+ ylim(0,.4) + xlab("Date") + ylab("Stream Stage (m)")+ggtitle("TW_SW_07")+  scale_x_datetime(breaks = seq(Plot_Times[1], Plot_Times[length(Plot_Times)], "7 days"),date_labels="%b %d")+theme(axis.text.x = element_text(angle=45, vjust = 0.5)) + geom_point(aes(x=Plot_Times, y=TW_SW_07_Jun2018[,"m_manual"]), color="orange3", size=3)                                                                                                                         
+ggsave("TW_SW_07_5-6-18_to_6-18-18_manual.pdf", width = 12, height = 6)   
+
+# November 2018
 Plot_Times<-as.POSIXct(TW_SW_07_Nov2018[,"Date_Time"], "%m/%d/%y %I:%M:%S %p", tz="America/New_York")
 ggplot(TW_SW_07_Nov2018, aes(Plot_Times, TW_SW_07_Nov2018[,"m_above_GS"]))+geom_line(color='royalblue3', size=.6)+ ylim(0,.5) + xlab("Date") + ylab("Stream Stage (m)")+ggtitle("TW_SW_07")+  scale_x_datetime(breaks = seq(Plot_Times[1], Plot_Times[length(Plot_Times)], "7 days"),date_labels="%b %d")+theme(axis.text.x = element_text(angle=45, vjust = 0.5))                                               
 ggsave("TW_SW_07_6-18-18_to_11-19-18.pdf", width = 12, height = 6) 
@@ -1857,6 +1887,24 @@ ggsave("TW_SW_07_6-18-18_to_11-19-18.pdf", width = 12, height = 6)
 Plot_Times<-as.POSIXct(TW_SW_07_Nov2018[,"Date_Time"], "%m/%d/%y %I:%M:%S %p", tz="America/New_York")
 ggplot(TW_SW_07_Nov2018, aes(Plot_Times, TW_SW_07_Nov2018[,"m_above_GS"]))+geom_line(color='royalblue3', size=.6)+ ylim(0,.5) + xlab("Date") + ylab("Stream Stage (m)")+ggtitle("TW_SW_07")+  scale_x_datetime(breaks = seq(Plot_Times[1], Plot_Times[length(Plot_Times)], "7 days"),date_labels="%b %d")+theme(axis.text.x = element_text(angle=45, vjust = 0.5)) + geom_point(aes(x=Plot_Times, y=TW_SW_07_Nov2018[,"m_manual"]), color="orange3", size=3)                                                                                                                         
 ggsave("TW_SW_07_6-18-18_to_11-19-18_manual.pdf", width = 12, height = 6)                                                                           
+
+# June 2019
+Plot_Times<-as.POSIXct(TW_SW_07_Jun319[,"Date_Time"], "%m/%d/%y %I:%M:%S %p", tz="America/New_York")
+ggplot(TW_SW_07_Jun319, aes(Plot_Times, TW_SW_07_Jun319[,"m_above_GS"]))+geom_line(color='royalblue3', size=.6)+ ylim(0,.5) + xlab("Date") + ylab("Stream Stage (m)")+ggtitle("TW_SW_07")+  scale_x_datetime(breaks = seq(Plot_Times[1], Plot_Times[length(Plot_Times)], "7 days"),date_labels="%b %d")+theme(axis.text.x = element_text(angle=45, vjust = 0.5))                                               
+ggsave("TW_SW_07_11-19-18_to_6-3-19.pdf", width = 12, height = 6) 
+# June with manual
+Plot_Times<-as.POSIXct(TW_SW_07_Jun319[,"Date_Time"], "%m/%d/%y %I:%M:%S %p", tz="America/New_York")
+ggplot(TW_SW_07_Jun319, aes(Plot_Times, TW_SW_07_Jun319[,"m_above_GS"]))+geom_line(color='royalblue3', size=.6)+ ylim(0,.5) + xlab("Date") + ylab("Stream Stage (m)")+ggtitle("TW_SW_07")+  scale_x_datetime(breaks = seq(Plot_Times[1], Plot_Times[length(Plot_Times)], "7 days"),date_labels="%b %d")+theme(axis.text.x = element_text(angle=45, vjust = 0.5)) + geom_point(aes(x=Plot_Times, y=TW_SW_07_Jun319[,"m_manual"]), color="orange3", size=3)                                                                                                                         
+ggsave("TW_SW_07_11-19-18_to_6-3-19_manual.pdf", width = 12, height = 6)                                                                           
+
+# Complete SW_07 dataset
+Plot_Times<-as.POSIXct(TW_SW_07_FULL[,"Date_Time"], "%m/%d/%y %I:%M:%S %p", tz="America/New_York")
+ggplot(TW_SW_07_FULL, aes(Plot_Times, TW_SW_07_FULL[,"m_above_GS"]))+geom_line(color='royalblue3', size=.3) + xlab("Date") + ylab("Stream Stage (m)")+ggtitle("TW_SW_07")+  scale_x_datetime(breaks = seq(as.POSIXct("2018-05-01 00:00:00 EDT"), as.POSIXct("2019-09-01 00:00:00 EDT"), "1 month"),date_labels="%b %d, %Y")+ ylim(0,0.5) +theme(axis.text.x = element_text(angle=45, vjust = 0.5))
+ggsave("TW_SW_07_FULL.pdf", width = 12, height = 6)  
+# Complete with manual
+Plot_Times<-as.POSIXct(TW_SW_07_FULL[,"Date_Time"], "%m/%d/%y %I:%M:%S %p", tz="America/New_York")
+ggplot(TW_SW_07_FULL, aes(Plot_Times, TW_SW_07_FULL[,"m_above_GS"]))+geom_line(color='royalblue3', size=.3) + xlab("Date") + ylab("Stream Stage (m)")+ggtitle("TW_SW_07")+  scale_x_datetime(breaks = seq(as.POSIXct("2018-05-01 00:00:00 EDT"), as.POSIXct("2019-09-01 00:00:00 EDT"), "1 month"),date_labels="%b %d, %Y")+ ylim(0,0.5) +theme(axis.text.x = element_text(angle=45, vjust = 0.5))+ geom_point(aes(x=Plot_Times, y=TW_SW_07_FULL[,"m_manual"]), color="orange3", size=3)                                          
+ggsave("TW_SW_07_FULL_manual.pdf", width = 12, height = 6)  
 
 ################ TW_Grad_07 ################
 Plot_Times<-as.POSIXct(TW_Grad_07_Nov2018[,"Date_Time"], "%m/%d/%y %I:%M:%S %p", tz="America/New_York")
