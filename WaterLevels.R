@@ -1774,14 +1774,16 @@ PZ4_man[,"x"]<-as.POSIXct(PZ4_man[,"x"], "%m/%d/%y %I:%M:%S %p", tz="America/New
 SW4_man<-na.omit(TW_Grad_04_FULL[,c("Date_Time","SW_manual")])
 colnames(SW4_man)<-c("x","y")
 SW4_man[,"x"]<-as.POSIXct(SW4_man[,"x"], "%m/%d/%y %I:%M:%S %p", tz="America/New_York")
+# Bind all of the data frames together
+FULL04<-rbind(PZ4, SW4, PZ4_man, SW4_man)
+# Add a column with an ID tag for which data frame the row came from
+FULL04$ID <- c(rep("PZ", nrow(PZ4)), rep("SW", nrow(SW4)), rep("PZ_man", nrow(PZ4_man)), rep("SW_man", nrow(SW4_man)))
 
 # Plot the data! 
-
-
-ggplot() + geom_line(data = PZ4, aes(x, y, color='PZ')) + geom_line(data = SW4, aes(x, y, color='SW')) + geom_point(data = PZ4_man, aes(x, y, color='PZ manual'))+ geom_point(data = SW4_man, aes(x, y, color='SW manual'))+ xlab("Date")+ ylab("Head (m)")+ ylim(-1,0.8)+ ggtitle("TW_PZ/SW_04")+ scale_x_datetime(breaks = seq(as.POSIXct("2018-05-01 00:00:00 EDT"), as.POSIXct("2019-09-01 00:00:00 EDT"), "1 month"),date_labels="%b %d, %Y") +theme(axis.text.x = element_text(angle=45, vjust = 0.5))+scale_colour_manual(values=c("#bf812d","#543005","#5ab4ac","#003c30"))
+ggplot() + geom_line(data = PZ4, aes(x, y, color='PZ')) + geom_line(data = SW4, aes(x, y, color='SW')) + geom_point(data = PZ4_man, aes(x, y, color='PZ manual'), size=3)+ geom_point(data = SW4_man, aes(x, y, color='SW manual'), shape=17, size=3)+ xlab("Date")+ ylab("Head (m)")+ ylim(-1,0.8)+ ggtitle("TW_PZ/SW_04")+ scale_x_datetime(breaks = seq(as.POSIXct("2018-05-01 00:00:00 EDT"), as.POSIXct("2019-09-01 00:00:00 EDT"), "1 month"),date_labels="%b %d, %Y") +theme(axis.text.x = element_text(angle=45, vjust = 0.5))+scale_colour_manual(values=c("#bf812d","#543005","#5ab4ac","#003c30"))
 ggsave("TW_PZ-SW_04_FULL.pdf", width = 12, height = 6) 
   
-ggplot() + geom_line(data = PZ4, aes(x, y, color='PZ')) + geom_line(data = SW4, aes(x, y, color='SW')) + geom_point(data = PZ4_man, aes(x, y, color='PZ manual'))+ geom_point(data = SW4_man, aes(x, y, color='SW manual'))+ xlab("Date")+ ylab("Head (m)")+ ylim(0,0.7)+ ggtitle("TW_PZ/SW_04")+ scale_x_datetime(breaks = seq(as.POSIXct("2018-05-01 00:00:00 EDT"), as.POSIXct("2019-09-01 00:00:00 EDT"), "1 month"),date_labels="%b %d, %Y") +theme(axis.text.x = element_text(angle=45, vjust = 0.5))+scale_colour_manual(values=c("#bf812d","#543005","#5ab4ac","#003c30"))
+ggplot() + geom_line(data = PZ4, aes(x, y, color='PZ')) + geom_line(data = SW4, aes(x, y, color='SW')) + geom_point(data = PZ4_man, aes(x, y, color='PZ manual'), size=3)+ geom_point(data = SW4_man, aes(x, y, color='SW manual'), shape=17, size=3)+ xlab("Date")+ ylab("Head (m)")+ ylim(0,0.7)+ ggtitle("TW_PZ/SW_04")+ scale_x_datetime(breaks = seq(as.POSIXct("2018-05-01 00:00:00 EDT"), as.POSIXct("2019-09-01 00:00:00 EDT"), "1 month"),date_labels="%b %d, %Y") +theme(axis.text.x = element_text(angle=45, vjust = 0.5))+scale_colour_manual(values=c("#bf812d","#543005","#5ab4ac","#003c30"))
 ggsave("TW_PZ-SW_04_FULL_ZOOM.pdf", width = 12, height = 6) 
   
 ################ TW_PZ_05 ################
