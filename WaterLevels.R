@@ -294,7 +294,7 @@ TW_SW_10_Nov2018<-loggerProcess(TW_SW_10_Nov2018)
 TW_PZ_05_SAND_Nov2018<-loggerProcess(TW_PZ_05_SAND_Nov2018)
 TW_PZ_06_SAND_Nov2018<-loggerProcess(TW_PZ_06_SAND_Nov2018)                                     
 
-# JUNE 2018 DATA
+# JUNE 2019 DATA
 TW_PZ_01_Jun319<-loggerProcess(TW_PZ_01_Jun319)  
 TW_PZ_01_SAND_Jun319<-loggerProcess(TW_PZ_01_SAND_Jun319)
 TW_PZ_02_Jun319<-loggerProcess(TW_PZ_02_Jun319)  
@@ -1755,15 +1755,34 @@ Plot_Times<-as.POSIXct(na.omit(TW_Grad_04_FULL)[,"Date_Time"], "%m/%d/%y %I:%M:%
 ggplot(na.omit(TW_Grad_04_FULL), aes(Plot_Times))+geom_line(aes(y=PZ_m_above_GS, colour='PZ'), size=0.3)+geom_line(aes(y=SW_m_above_GS, colour='SW'), size=0.3)+scale_colour_manual(values=c("#bf812d","#5ab4ac"))+ xlab("Date")+ ylab("Head (m)")+ ylim(0,0.7)+ ggtitle("TW_PZ/SW_04")+ scale_x_datetime(breaks = seq(as.POSIXct("2018-05-01 00:00:00 EDT"), as.POSIXct("2019-09-01 00:00:00 EDT"), "1 month"),date_labels="%b %d, %Y") +theme(axis.text.x = element_text(angle=45, vjust = 0.5))
 ggsave("TW_PZ-SW_04_FULL_ZOOM.pdf", width = 12, height = 6) 
 
-Plot_Times<-as.POSIXct(TW_Grad_04_FULL[,"Date_Time"], "%m/%d/%y %I:%M:%S %p", tz="America/New_York")
-ggplot(TW_Grad_04_FULL, aes(Plot_Times))+geom_line(aes(y=PZ_m_above_GS, colour='PZ'), size=0.3)+geom_point(aes(y=SW_m_above_GS, colour='SW'),na.rm=TRUE, size=0.3)+scale_colour_manual(values=c("#bf812d","#543005","#5ab4ac","#003c30"))+ xlab("Date")+ ylab("Head (m)")+ ylim(0,0.7)+ ggtitle("TW_PZ/SW_02")+ scale_x_datetime(breaks = seq(as.POSIXct("2018-05-01 00:00:00 EDT"), as.POSIXct("2019-09-01 00:00:00 EDT"), "1 month"),date_labels="%b %d, %Y") +theme(axis.text.x = element_text(angle=45, vjust = 0.5))+  geom_point(aes(x=Plot_Times, y=PZ_manual, color="PZ Manual"), size=2) +  geom_point(aes(x=Plot_Times, y=SW_manual, color="SW_manual"), size=2) 
+# Plot all head measurements together
+# Need to do a little extra work to plot all of the PZ/SW 04 data together because the measurement time interval on the SW 04 logger was > 15 minutes for a period of time
+# Create individual data frames for the processed PZ and SW data (logger and manual) 
+# PZ logger
+PZ4<-na.omit(TW_Grad_04_FULL[,c("Date_Time","PZ_m_above_GS")])
+colnames(PZ4)<-c("x","y")
+PZ4[,"x"]<-as.POSIXct(PZ4[,"x"], "%m/%d/%y %I:%M:%S %p", tz="America/New_York")
+# SW logger
+SW4<-na.omit(TW_Grad_04_FULL[,c("Date_Time","SW_m_above_GS")])
+colnames(SW4)<-c("x","y")
+SW4[,"x"]<-as.POSIXct(SW4[,"x"], "%m/%d/%y %I:%M:%S %p", tz="America/New_York")
+# PZ manual
+PZ4_man<-na.omit(TW_Grad_04_FULL[,c("Date_Time","PZ_manual")])
+colnames(PZ4_man)<-c("x","y")
+PZ4_man[,"x"]<-as.POSIXct(PZ4_man[,"x"], "%m/%d/%y %I:%M:%S %p", tz="America/New_York")
+# SW manual
+SW4_man<-na.omit(TW_Grad_04_FULL[,c("Date_Time","SW_manual")])
+colnames(SW4_man)<-c("x","y")
+SW4_man[,"x"]<-as.POSIXct(SW4_man[,"x"], "%m/%d/%y %I:%M:%S %p", tz="America/New_York")
 
-Plot_Times<-as.POSIXct(TW_Grad_04_FULL[,"Date_Time"], "%m/%d/%y %I:%M:%S %p", tz="America/New_York")
-ggplot(TW_Grad_04_FULL, aes(Plot_Times))+geom_line(aes(y=PZ_m_above_GS, colour='PZ'), size=0.3)+geom_line(aes(y=SW_m_above_GS, colour='SW'), size=0.3)+scale_colour_manual(values=c("#bf812d","#543005","#5ab4ac","#003c30"))+ xlab("Date")+ ylab("Head (m)")+ ylim(0,0.7)+ ggtitle("TW_PZ/SW_02")+ scale_x_datetime(breaks = seq(as.POSIXct("2018-05-01 00:00:00 EDT"), as.POSIXct("2019-09-01 00:00:00 EDT"), "1 month"),date_labels="%b %d, %Y") +theme(axis.text.x = element_text(angle=45, vjust = 0.5))+  geom_point(aes(x=Plot_Times, y=PZ_manual, color="PZ Manual"), size=2) +  geom_point(aes(x=Plot_Times, y=SW_manual, color="SW_manual"), size=2)                                
-ggsave("test2.pdf", width = 12, height = 6) 
+# Plot the data! 
 
- Plot_Times<-as.POSIXct(subset(TW_Grad_04_FULL,!is.na(TW_Grad_04_FULL$SW_m_above_GS))[,"Date_Time"], "%m/%d/%y %I:%M:%S %p", tz="America/New_York")
-ggplot(subset(TW_Grad_04_FULL,!is.na(TW_Grad_04_FULL$SW_m_above_GS)), aes(Plot_Times))+geom_line(aes(y=PZ_m_above_GS, colour='PZ'), size=0.3)+geom_line(aes(y=SW_m_above_GS, colour='SW'), size=0.3)+scale_colour_manual(values=c("#bf812d","#543005","#5ab4ac","#003c30"))+ xlab("Date")+ ylab("Head (m)")+ ylim(0,0.7)+ ggtitle("TW_PZ/SW_04")+ scale_x_datetime(breaks = seq(as.POSIXct("2018-05-01 00:00:00 EDT"), as.POSIXct("2019-09-01 00:00:00 EDT"), "1 month"),date_labels="%b %d, %Y") +theme(axis.text.x = element_text(angle=45, vjust = 0.5))+  geom_point(aes(x=Plot_Times, y=SW_manual, color="SW_manual"), size=2)  +  geom_point(aes(x=Plot_Times, y=SW_manual, color="SW_manual"), size=2)                                
+
+ggplot() + geom_line(data = PZ4, aes(x, y, color='PZ')) + geom_line(data = SW4, aes(x, y, color='SW')) + geom_point(data = PZ4_man, aes(x, y, color='PZ manual'))+ geom_point(data = SW4_man, aes(x, y, color='SW manual'))+ xlab("Date")+ ylab("Head (m)")+ ylim(-1,0.8)+ ggtitle("TW_PZ/SW_04")+ scale_x_datetime(breaks = seq(as.POSIXct("2018-05-01 00:00:00 EDT"), as.POSIXct("2019-09-01 00:00:00 EDT"), "1 month"),date_labels="%b %d, %Y") +theme(axis.text.x = element_text(angle=45, vjust = 0.5))+scale_colour_manual(values=c("#bf812d","#543005","#5ab4ac","#003c30"))
+ggsave("TW_PZ-SW_04_FULL.pdf", width = 12, height = 6) 
+  
+ggplot() + geom_line(data = PZ4, aes(x, y, color='PZ')) + geom_line(data = SW4, aes(x, y, color='SW')) + geom_point(data = PZ4_man, aes(x, y, color='PZ manual'))+ geom_point(data = SW4_man, aes(x, y, color='SW manual'))+ xlab("Date")+ ylab("Head (m)")+ ylim(0,0.7)+ ggtitle("TW_PZ/SW_04")+ scale_x_datetime(breaks = seq(as.POSIXct("2018-05-01 00:00:00 EDT"), as.POSIXct("2019-09-01 00:00:00 EDT"), "1 month"),date_labels="%b %d, %Y") +theme(axis.text.x = element_text(angle=45, vjust = 0.5))+scale_colour_manual(values=c("#bf812d","#543005","#5ab4ac","#003c30"))
+ggsave("TW_PZ-SW_04_FULL_ZOOM.pdf", width = 12, height = 6) 
   
 ################ TW_PZ_05 ################
 Plot_Times<-as.POSIXct(TW_PZ_05_3_3[,"Date_Time"], "%m/%d/%y %I:%M:%S %p", tz="America/New_York")
