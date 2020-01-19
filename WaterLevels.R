@@ -1445,6 +1445,8 @@ Plot_Times<-as.POSIXct(TW_PZ_01_FULL_NO_ISO[,"Date_Time"], "%m/%d/%y %I:%M:%S %p
 ggplot(TW_PZ_01_FULL_NO_ISO, aes(Plot_Times, TW_PZ_01_FULL_NO_ISO[,"m_below_GS"]))+geom_line(color='royalblue3', size=.6) + xlab("Date") + ylab("Depth to Water Below Ground Surface (m)")+ggtitle("TW_PZ_01")+  scale_x_datetime(breaks = seq(as.POSIXct("2018-05-01 00:00:00 EDT"), as.POSIXct("2019-09-01 00:00:00 EDT"), "1 month"),date_labels="%b %d, %Y")+ scale_y_reverse(limits =c(.3,-.1)) +theme(axis.text.x = element_text(angle=45, vjust = 0.5))+ geom_point(aes(x=Plot_Times, y=TW_PZ_01_FULL_NO_ISO[,"m_manual"]), color="orange3", size=3) 
 ggsave("TW_PZ_01_NO_ISO_FULL_manual.pdf", width = 12, height = 6)                             
                        
+################ TW_PZ_01_SAND ################
+
 #### TW_PZ_01_SAND ####
 Plot_Times<-as.POSIXct(TW_PZ_01_SAND_Jun319[,"Date_Time"], "%m/%d/%y %I:%M:%S %p", tz="America/New_York")
 ggplot(TW_PZ_01_SAND_Jun319, aes(Plot_Times, TW_PZ_01_SAND_Jun319[,"m_below_GS"]))+geom_line(color='royalblue3', size=.6) + xlab("Date") + ylab("Depth to Water Below Ground Surface (m)")+ggtitle("TW_PZ_01_SAND")+  scale_x_datetime(breaks = seq(Plot_Times[1], Plot_Times[length(Plot_Times)], "7 days"),date_labels="%b %d")+ scale_y_reverse(limits =c(.3,-.3)) +theme(axis.text.x = element_text(angle=45, vjust = 0.5))
