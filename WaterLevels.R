@@ -1266,7 +1266,7 @@ TW_PZ_08_Jun2018<-TW_PZ_08_Jun2018[which(TW_PZ_08_Jun2018[,"Date_Time"]=="05/06/
 # Add manual data
 TW_PZ_08_Jun2018[which(TW_PZ_08_Jun2018[,"Date_Time"]=="06/18/18 02:45:00 PM"),"m_manual"]<-0.149       
 # Save as CSV
-write.csv(TW_PZ_08_Jun319, file="TWPZ08_5-6-18_to_6-18-18_MALFUNC.csv", row.names=FALSE)           
+write.csv(TW_PZ_08_Jun2018, file="TWPZ08_5-6-18_to_6-18-18_MALFUNC.csv", row.names=FALSE)           
 
 # Create a column for the depth to water below ground surface
 # The top of piezometer casing to ground surface = 28 cm
@@ -1802,10 +1802,10 @@ FULL04<-rbind(PZ4, SW4, PZ4_man, SW4_man)
 FULL04$ID <- c(rep("PZ", nrow(PZ4)), rep("SW", nrow(SW4)), rep("PZ_man", nrow(PZ4_man)), rep("SW_man", nrow(SW4_man)))
 
 # Plot the data! 
-ggplot() + geom_line(data = PZ4, aes(x, y, color='PZ')) + geom_line(data = SW4, aes(x, y, color='SW')) + geom_point(data = PZ4_man, aes(x, y, color='PZ manual'), size=3)+ geom_point(data = SW4_man, aes(x, y, color='SW manual'), shape=17, size=3)+ xlab("Date")+ ylab("Head (m)")+ ylim(-1,0.8)+ ggtitle("TW_PZ/SW_04")+ scale_x_datetime(breaks = seq(as.POSIXct("2018-05-01 00:00:00 EDT"), as.POSIXct("2019-09-01 00:00:00 EDT"), "1 month"),date_labels="%b %d, %Y") +theme(axis.text.x = element_text(angle=45, vjust = 0.5))+scale_colour_manual(values=c("#bf812d","#543005","#5ab4ac","#003c30"))
+ggplot() + geom_line(data = PZ4, aes(x, y, color='PZ'), size=0.3) + geom_line(data = SW4, aes(x, y, color='SW'), size=0.3) + geom_point(data = PZ4_man, aes(x, y, color='PZ manual'), size=3)+ geom_point(data = SW4_man, aes(x, y, color='SW manual'), shape=17, size=3)+ xlab("Date")+ ylab("Head (m)")+ ylim(-1,0.8)+ ggtitle("TW_PZ/SW_04")+ scale_x_datetime(breaks = seq(as.POSIXct("2018-05-01 00:00:00 EDT"), as.POSIXct("2019-09-01 00:00:00 EDT"), "1 month"),date_labels="%b %d, %Y") +theme(axis.text.x = element_text(angle=45, vjust = 0.5))+scale_colour_manual(values=c("#bf812d","#543005","#5ab4ac","#003c30"))
 ggsave("TW_PZ-SW_04_FULL.pdf", width = 12, height = 6) 
   
-ggplot() + geom_line(data = PZ4, aes(x, y, color='PZ')) + geom_line(data = SW4, aes(x, y, color='SW')) + geom_point(data = PZ4_man, aes(x, y, color='PZ manual'), size=3)+ geom_point(data = SW4_man, aes(x, y, color='SW manual'), shape=17, size=3)+ xlab("Date")+ ylab("Head (m)")+ ylim(0,0.7)+ ggtitle("TW_PZ/SW_04")+ scale_x_datetime(breaks = seq(as.POSIXct("2018-05-01 00:00:00 EDT"), as.POSIXct("2019-09-01 00:00:00 EDT"), "1 month"),date_labels="%b %d, %Y") +theme(axis.text.x = element_text(angle=45, vjust = 0.5))+scale_colour_manual(values=c("#bf812d","#543005","#5ab4ac","#003c30"))
+ggplot() + geom_line(data = PZ4, aes(x, y, color='PZ'), size=0.3) + geom_line(data = SW4, aes(x, y, color='SW'), size=0.3) + geom_point(data = PZ4_man, aes(x, y, color='PZ manual'), size=3)+ geom_point(data = SW4_man, aes(x, y, color='SW manual'), shape=17, size=3)+ xlab("Date")+ ylab("Head (m)")+ ylim(0,0.7)+ ggtitle("TW_PZ/SW_04")+ scale_x_datetime(breaks = seq(as.POSIXct("2018-05-01 00:00:00 EDT"), as.POSIXct("2019-09-01 00:00:00 EDT"), "1 month"),date_labels="%b %d, %Y") +theme(axis.text.x = element_text(angle=45, vjust = 0.5))+scale_colour_manual(values=c("#bf812d","#543005","#5ab4ac","#003c30"))
 ggsave("TW_PZ-SW_04_FULL_ZOOM.pdf", width = 12, height = 6) 
   
 ################ TW_PZ_05 ################
@@ -2064,11 +2064,11 @@ ggsave("TW_PZ_08_11-19-18_to_6-3-19_manual.pdf", width = 12, height = 6)
 
 # Plot full dataset
 Plot_Times<-as.POSIXct(TW_PZ_08_FULL[,"Date_Time"], "%m/%d/%y %I:%M:%S %p", tz="America/New_York")
-ggplot(TW_PZ_08_FULL, aes(Plot_Times, TW_PZ_08_FULL[,"m_below_GS"]))+geom_line(color='royalblue3', size=.3) + xlab("Date") + ylab("Depth to Water Below Ground Surface (m)")+ggtitle("TW_PZ_08")+  scale_x_datetime(breaks = seq(as.POSIXct("2018-05-01 00:00:00 EDT"), as.POSIXct("2019-09-01 00:00:00 EDT"), "1 month"),date_labels="%b %d, %Y")+ scale_y_reverse(limits =c(0.8,-.4)) +theme(axis.text.x = element_text(angle=45, vjust = 0.5))                      
+ggplot(TW_PZ_08_FULL, aes(Plot_Times, TW_PZ_08_FULL[,"m_below_GS"]))+geom_line(color='royalblue3', size=.3) + xlab("Date") + ylab("Depth to Water Below Ground Surface (m)")+ggtitle("TW_PZ_08")+  scale_x_datetime(breaks = seq(as.POSIXct("2018-05-01 00:00:00 EDT"), as.POSIXct("2019-09-01 00:00:00 EDT"), "1 month"),date_labels="%b %d, %Y")+ scale_y_reverse(limits =c(0.8,-.4), breaks=(seq(-.4,0.8,.2))) +theme(axis.text.x = element_text(angle=45, vjust = 0.5))                      
 ggsave("TW_PZ_08_FULL.pdf", width = 12, height = 6)
-# June with manual
+# Complete with manual
 Plot_Times<-as.POSIXct(TW_PZ_08_FULL[,"Date_Time"], "%m/%d/%y %I:%M:%S %p", tz="America/New_York")
-ggplot(TW_PZ_08_FULL, aes(Plot_Times, TW_PZ_08_FULL[,"m_below_GS"]))+geom_line(color='royalblue3', size=.3) + xlab("Date") + ylab("Depth to Water Below Ground Surface (m)")+ggtitle("TW_PZ_08")+  scale_x_datetime(breaks = seq(as.POSIXct("2018-05-01 00:00:00 EDT"), as.POSIXct("2019-09-01 00:00:00 EDT"), "1 month"),date_labels="%b %d, %Y")+ scale_y_reverse(limits =c(0.8,-.4)) +theme(axis.text.x = element_text(angle=45, vjust = 0.5))   + geom_point(aes(x=Plot_Times, y=TW_PZ_08_FULL[,"m_manual"]), color="orange3", size=3)                                                                                                                         
+ggplot(TW_PZ_08_FULL, aes(Plot_Times, TW_PZ_08_FULL[,"m_below_GS"]))+geom_line(color='royalblue3', size=.3) + xlab("Date") + ylab("Depth to Water Below Ground Surface (m)")+ggtitle("TW_PZ_08")+  scale_x_datetime(breaks = seq(as.POSIXct("2018-05-01 00:00:00 EDT"), as.POSIXct("2019-09-01 00:00:00 EDT"), "1 month"),date_labels="%b %d, %Y")+ scale_y_reverse(limits =c(0.8,-.4), breaks=(seq(-.4,0.8,.2))) +theme(axis.text.x = element_text(angle=45, vjust = 0.5))   + geom_point(aes(x=Plot_Times, y=TW_PZ_08_FULL[,"m_manual"]), color="orange3", size=3)                                                                                                                         
 ggsave("TW_PZ_08_FULL_manual.pdf", width = 12, height = 6)                 
 
 ################ TW_PZ_08_SAND ################
