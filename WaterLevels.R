@@ -706,9 +706,9 @@ TW_PZ_03_Jun319[,"m_above_GS"]<-(TW_PZ_03_Jun319[,"m_water"])-.46
 # Remove first few rows of data that overlap with previous dataset
 TW_PZ_03_Jun319<-TW_PZ_03_Jun319[which(TW_PZ_03_Jun319[,"Date_Time"]=="11/20/18 10:30:00 AM"):nrow(TW_PZ_03_Jun319),]
 # Interpolate between the 3/30 spike                     
-Start_Spike<-which(TW_PZ_03_Jun319[,"Date_Time"]=="03/30/19 03:45:00 PM")
-Stop_Spike<-which(TW_PZ_03_Jun319[,"Date_Time"]=="03/30/19 04:15:00 PM")     
-Smoothed_Spike<-seq(TW_PZ_03_Jun319[Start_Spike,"m_above_GS"], TW_PZ_03_Jun319[Stop_Spike,"m_above_GS"], length=Stop_Spike-Start_Spike+1) 
+#Start_Spike<-which(TW_PZ_03_Jun319[,"Date_Time"]=="03/30/19 03:45:00 PM")
+#Stop_Spike<-which(TW_PZ_03_Jun319[,"Date_Time"]=="03/30/19 04:15:00 PM")     
+#Smoothed_Spike<-seq(TW_PZ_03_Jun319[Start_Spike,"m_above_GS"], TW_PZ_03_Jun319[Stop_Spike,"m_above_GS"], length=Stop_Spike-Start_Spike+1) 
 # Replace the spike with the smoothed interpolated data
 TW_PZ_03_Jun319[Start_Spike:Stop_Spike,"m_above_GS"]<-Smoothed_Spike 
 # Correct the vertical jump in data on 3/30
