@@ -444,12 +444,12 @@ write.csv(TW_PZ_01_SAND_Jun319, file="TWPZ01_SAND_11-20-18_to_6-3-19.csv", row.n
 TW_PZ_01_SAND_FULL<-TW_PZ_01_SAND_Jun319
 # Add tag in notes for where WL was recovering from isotope sampling
 TW_PZ_01_SAND_FULL[which(TW_PZ_01_SAND_FULL[,"Date_Time"]=="03/30/19 12:45:00 PM"):which(TW_PZ_01_SAND_FULL[,"Date_Time"]=="04/01/19 05:30:00 AM"),"Notes"]<-"sampling recovery"
+# Save as CSV  
+write.csv(TW_PZ_01_SAND_FULL, file="TWPZ01_SAND_FULL.csv", row.names=FALSE)   
 # Calculate mean depth below GS and the standard deviation of the depth below GS:  
 # NOTE: we are ignoring the rows that are tagged with "sampling recovery" 
 mean(na.omit(TW_PZ_01_SAND_FULL[-which(TW_PZ_01_SAND_FULL[,"Notes"]=="sampling recovery"),"m_below_GS"])) # 0.02085052 m
 sd(na.omit(TW_PZ_01_SAND_FULL[-which(TW_PZ_01_SAND_FULL[,"Notes"]=="sampling recovery"),"m_below_GS"])) # 0.0705873 m 
-# Save as CSV  
-write.csv(TW_PZ_01_SAND_FULL, file="TWPZ01_SAND_FULL.csv", row.names=FALSE)   
 
 ############## TW_Grad_01 ##############  
 # FULL
@@ -471,10 +471,20 @@ TW_Grad_01_FULL[,"dz"]<--1.2295--.202
 # Calculate the gradient (dh/dz) such that a positive gradient indicates downward flow
 TW_Grad_01_FULL[,"dh/dz"]<-TW_Grad_01_FULL[,"dh"]/TW_Grad_01_FULL[,"dz"]    
 # Add the missing manual data into the data frame 
+TW_Grad_01_FULL[which(TW_Grad_01_FULL[,"Date_Time"]=="06/19/18 01:00:00 PM"),"Sand_manual"]<--0.195
+TW_Grad_01_FULL[which(TW_Grad_01_FULL[,"Date_Time"]=="07/11/18 09:00:00 AM"),"Sand_manual"]<--0.201
 TW_Grad_01_FULL[which(TW_Grad_01_FULL[,"Date_Time"]=="06/03/19 12:45:00 PM"),"Sand_manual"]<--0.102
+TW_Grad_01_FULL[which(TW_Grad_01_FULL[,"Date_Time"]=="11/20/18 10:15:00 AM"),"Sand_manual"]<--0.016
 # Write CSV
 write.csv(TW_Grad_01_FULL, file="TWGrad01_FULL.csv", row.names=FALSE)                
-                       
+
+# Calculate the mean gradient
+# Note: Ignore the sections of data where the WL is recovering from isotope sampling!
+TW_Grad_01_FULL2<-subset(TW_Grad_01_FULL, is.na(TW_Grad_01_FULL[,"Peat_notes"])& is.na(TW_Grad_01_FULL[,"Sand_notes"]))
+# Calculate average gradient
+mean(na.omit(TW_Grad_01_FULL2[,"dh/dz"])) # 0.05302487 m
+# Calculate standard deviation of gradient		       
+sd(na.omit(TW_Grad_01_FULL2[,"dh/dz"])) # 0.05791932 m                       
 ############## TW_PZ_02 ##############   
 
 # MAY 2018
@@ -548,7 +558,7 @@ write.csv(TW_PZ_02_Nov2018, file="TWPZ02_7-11-18_to_11-20-18.csv", row.names=FAL
 
 # JUNE 2019
 # Create a column for the depth to water above ground surface
-TW_PZ_02_Jun319[,"m_above_GS"]<-(TW_PZ_02_Jun319[,"m_water"])-.64 
+TW_PZ_02_Jun319[,"m_above_GS"]<-(TW_PZ_02_Jun319[,"m_water"])-.63 
 # Remove first few rows of data that overlap with previous November dataset
 TW_PZ_02_Jun319<-TW_PZ_02_Jun319[which(TW_PZ_02_Jun319[,"Date_Time"]=="11/20/18 10:45:00 AM"):which(TW_PZ_02_Jun319[,"Date_Time"]=="06/03/19 12:15:00 PM"),]                       
 # Add manual data
@@ -561,12 +571,15 @@ write.csv(TW_PZ_02_Jun319, file="TWPZ02_11-20-18_to_6-3-19.csv", row.names=FALSE
 # Bind all of the data frames together...                  
 TW_PZ_02_FULL<-rbind(TW_PZ_02_Jun2018, TW_PZ_02_Jul2018, TW_PZ_02_Nov2018, TW_PZ_02_Jun319)   
 # Save as CSV  
-write.csv(TW_PZ_02_FULL, file="TWPZ02_FULL.csv", row.names=FALSE)                     
+write.csv(TW_PZ_02_FULL, file="TWPZ02_FULL.csv", row.names=FALSE)
+# Calculate mean height above GS and the standard deviation of the height above GS:  
+mean(TW_PZ_02_FULL[,"m_above_GS"]) # 0.511118 m
+sd(TW_PZ_02_FULL[,"m_above_GS"]) # 0.05466867 m                      
     
 ############## TW_SW_02 ##############     
                        
 # Create a column for the depth to water below ground surface
-TW_SW_02_Jun2018[,"m_above_GS"]<-TW_SW_02_Jun2018[,"m_water"]-.04
+TW_SW_02_Jun2018[,"m_above_GS"]<-TW_SW_02_Jun2018[,"m_water"]-.037
 # Remove first and last few rows of erroneous data
 TW_SW_02_Jun2018<-TW_SW_02_Jun2018[which(TW_SW_02_Jun2018[,"Date_Time"]=="05/06/18 04:00:00 PM"):which(TW_SW_02_Jun2018[,"Date_Time"]=="06/18/18 10:15:00 AM"),]
 # Manual data for this period is not correct! 
@@ -602,6 +615,9 @@ write.csv(TW_SW_02_Jun319, file="TWSW02_11-20-18_to_6-3-19.csv", row.names=FALSE
 TW_SW_02_FULL<-rbind(TW_SW_02_Jun2018, TW_SW_02_Nov2018, TW_SW_02_Jun319)   
 # Save as CSV  
 write.csv(TW_SW_02_FULL, file="TWSW02_FULL.csv", row.names=FALSE)     
+# Calculate mean height above GS and the standard deviation of the height above GS:  
+mean(na.omit(TW_SW_02_FULL[,"m_above_GS"])) # 0.2959142 m
+sd(na.omit(TW_SW_02_FULL[,"m_above_GS"])) # 0.0595174 m     
 
 ############## TW_Grad_02 ##############
 # November 2018
@@ -622,9 +638,9 @@ write.csv(TW_Grad_02_Nov2018, file="TWGrad02_7-12-18_to_11-20-18.csv", row.names
 # June 2019
 # Calculate the vertical gradient between PZ_02 and SW_02     
 # Join the pz and sw files together by the "Date_Time" column
-TW_Grad_02_Jun319<-join(TW_PZ_02_Jun319[,c("Date_Time","m_above_GS")], TW_SW_02_Jun319[,c("Date_Time","m_above_GS")], by="Date_Time")
+TW_Grad_02_Jun319<-join(TW_PZ_02_Jun319[,c("Date_Time","m_above_GS", "m_manual")], TW_SW_02_Jun319[,c("Date_Time","m_above_GS","m_manual")], by="Date_Time")
 # Rename the columns to designate between pz and sw water level values
- colnames(TW_Grad_02_Jun319)<-c( "Date_Time", "PZ_m_above_GS", "SW_m_above_GS")
+ colnames(TW_Grad_02_Jun319)<-c( "Date_Time", "PZ_m_above_GS", "PZ_manual","SW_m_above_GS","PZ_manual")
 # Define dh (difference in head values)
 TW_Grad_02_Jun319[,"dh"]<--(TW_Grad_02_Jun319[,"PZ_m_above_GS"]-TW_Grad_02_Jun319[,"SW_m_above_GS"])
 # Define dz (vertical distance between midpoint of screens)
@@ -646,9 +662,12 @@ TW_Grad_02_FULL[,"dh"]<--(TW_Grad_02_FULL[,"PZ_m_above_GS"]-TW_Grad_02_FULL[,"SW
 TW_Grad_02_FULL[,"dz"]<-1.29-0         
 # Calculate the gradient (dh/dz) such that a positive gradient indicates downward flow
 TW_Grad_02_FULL[,"dh/dz"]<-TW_Grad_02_FULL[,"dh"]/TW_Grad_02_FULL[,"dz"]    
-# Calculate the gradient (dh/dz) such that a positive gradient indicates downward flow
-TW_Grad_02_FULL[,"dh/dz"]<-TW_Grad_02_FULL[,"dh"]/TW_Grad_02_FULL[,"dz"]    
+# Save file as CSV
 write.csv(TW_Grad_02_FULL, file="TWGrad02_FULL.csv", row.names=FALSE)    
+# Calculate average gradient
+mean(na.omit(TW_Grad_02_FULL[,"dh/dz"])) # -0.1668647 m
+# Calculate standard deviation of gradient		       
+sd(na.omit(TW_Grad_02_FULL[,"dh/dz"])) # 0.01848455 m       
 
 ############## TW_PZ_03 ##############    
 
@@ -1521,16 +1540,18 @@ ggsave("TW_PZ_01_SAND_11-20-18_to_6-3-19_manual.pdf", width = 12, height = 6)
 
 # Full dataset
 Plot_Times<-as.POSIXct(TW_Grad_01_FULL[,"Date_Time"], "%m/%d/%y %I:%M:%S %p", tz="America/New_York")
-ggplot(TW_Grad_01_FULL, aes(Plot_Times, TW_Grad_01_FULL[,"dh/dz"]))+geom_point(color='darkolivegreen', size=0.3) + xlab("Date") + ylab("Vertical Hydraulic Gradient")+ scale_y_reverse(limits =c(.3,-.3), breaks=(seq(-.4,1,.2)))+ ggtitle("TW_Gradient_01")+  scale_x_datetime(breaks = seq(as.POSIXct("2018-05-01 00:00:00 EDT"), as.POSIXct("2019-09-01 00:00:00 EDT"), "1 month"),date_labels="%b %d, %Y")+theme(axis.text.x = element_text(angle=45, vjust = 0.5))
+ggplot(TW_Grad_01_FULL, aes(Plot_Times, TW_Grad_01_FULL[,"dh/dz"]))+geom_point(color='royalblue3', size=0.3) + xlab("Date") + ylab("Vertical Hydraulic Gradient")+ scale_y_reverse(limits =c(.3,-.3), breaks=(seq(-.4,1,0.1)))+ ggtitle("TW_Gradient_01")+  scale_x_datetime(breaks = seq(as.POSIXct("2018-05-01 00:00:00 EDT"), as.POSIXct("2019-09-01 00:00:00 EDT"), "1 month"),date_labels="%b %d, %Y")+theme(axis.text.x = element_text(angle=45, vjust = 0.5))
 ggsave("TW_Grad_01_FULL.pdf", width = 12, height = 6)                        
 
 # Plot head measurements together
 # Complete with manual
-oggsave("TW_PZ-SW_01_FULL.pdf", width = 12, height = 6) 
+Plot_Times<-as.POSIXct(TW_Grad_01_FULL[,"Date_Time"], "%m/%d/%y %I:%M:%S %p", tz="America/New_York")
+ggplot(TW_Grad_01_FULL, aes(Plot_Times))+geom_line(aes(y=Peat_head_m, colour='Peat'), size=0.3)+geom_line(aes(y=Sand_head_m, colour='Sand'), size=0.3)+ geom_point(aes(y=Peat_manual, color='Peat manual'), size=3)+ geom_point(aes(y=Sand_manual, color='Sand manual'), size=3, shape=17)+ xlab("Date")+ ylab("Head (m)")+ scale_y_continuous(limits = c(-1, 0.8), breaks = seq(-1, 0.8, by = 0.5)) + ggtitle("PEAT/SAND 01")+ scale_x_datetime(breaks = seq(as.POSIXct("2018-05-01 00:00:00 EDT"), as.POSIXct("2019-09-01 00:00:00 EDT"), "1 month"),date_labels="%b %d, %Y") +theme(axis.text.x = element_text(angle=45, vjust = 0.5))+scale_colour_manual(values=c("#bf812d","#543005","#5ab4ac","#003c30"))
+ggsave("TW_PZ-SAND_01_FULL.pdf", width = 12, height = 6) 
 # Complete with manual - ZOOM
 Plot_Times<-as.POSIXct(TW_Grad_01_FULL[,"Date_Time"], "%m/%d/%y %I:%M:%S %p", tz="America/New_York")
-ggplot(TW_Grad_01_FULL, aes(Plot_Times))+geom_line(aes(y=Peat_head_m, colour='Peat'), size=0.3)+geom_line(aes(y=Sand_head_m, colour='Sand'), size=0.3)+ geom_point(aes(y=Peat_manual, color='Peat manual'), size=3)+ geom_point(aes(y=Sand_manual, color='Sand manual'), size=3, shape=17)+ xlab("Date")+ ylab("Head (m)")+ ylim(-0.5,0.5)+ ggtitle("TW_PZ/SW_01")+ scale_x_datetime(breaks = seq(as.POSIXct("2018-05-01 00:00:00 EDT"), as.POSIXct("2019-09-01 00:00:00 EDT"), "1 month"),date_labels="%b %d, %Y") +theme(axis.text.x = element_text(angle=45, vjust = 0.5))+scale_colour_manual(values=c("#bf812d","#543005","#5ab4ac","#003c30"))
-ggsave("TW_PZ-SW_01_FULL_ZOOM.pdf", width = 12, height = 6) 
+ggplot(TW_Grad_01_FULL, aes(Plot_Times))+geom_line(aes(y=Peat_head_m, colour='Peat'), size=0.3)+geom_line(aes(y=Sand_head_m, colour='Sand'), size=0.3)+ geom_point(aes(y=Peat_manual, color='Peat manual'), size=3)+ geom_point(aes(y=Sand_manual, color='Sand manual'), size=3, shape=17)+ xlab("Date")+ ylab("Head (m)")+ scale_y_continuous(limits = c(-0.4, 0.3), breaks = seq(-0.4, 0.3, by = 0.2)) + ggtitle("PEAT/SAND 01")+ scale_x_datetime(breaks = seq(as.POSIXct("2018-05-01 00:00:00 EDT"), as.POSIXct("2019-09-01 00:00:00 EDT"), "1 month"),date_labels="%b %d, %Y") +theme(axis.text.x = element_text(angle=45, vjust = 0.5))+scale_colour_manual(values=c("#bf812d","#543005","#5ab4ac","#003c30"))
+ggsave("TW_PZ-SAND_01_FULL_ZOOM.pdf", width = 12, height = 6) 
 
 ################ TW_PZ_02 ################
 Plot_Times<-as.POSIXct(TW_PZ_02_5_6[,"Date_Time"], "%m/%d/%y %I:%M:%S %p", tz="America/New_York")
@@ -1618,9 +1639,19 @@ ggplot(TW_Grad_02_Jun319, aes(Plot_Times, TW_Grad_02_Jun319[,"dh/dz"]))+geom_lin
 ggsave("TW_Grad_02_11-20-18_to_6-3-19.pdf", width = 12, height = 6) 
 
 Plot_Times<-as.POSIXct(TW_Grad_02_FULL[,"Date_Time"], "%m/%d/%y %I:%M:%S %p", tz="America/New_York")
-ggplot(TW_Grad_02_FULL, aes(Plot_Times, TW_Grad_02_FULL[,"dh/dz"]))+geom_point(color='darkolivegreen', size=0.3) + xlab("Date") + ylab("Vertical Hydraulic Gradient")+ scale_y_reverse(limits =c(0,-.3), breaks=(seq(-.3,0,.05)))+ ggtitle("TW_Gradient_02")+  scale_x_datetime(breaks = seq(as.POSIXct("2018-05-01 00:00:00 EDT"), as.POSIXct("2019-09-01 00:00:00 EDT"), "1 month"),date_labels="%b %d, %Y")+theme(axis.text.x = element_text(angle=45, vjust = 0.5))
+ggplot(TW_Grad_02_FULL, aes(Plot_Times, TW_Grad_02_FULL[,"dh/dz"]))+geom_point(color='royalblue3', size=0.3) + xlab("Date") + ylab("Vertical Hydraulic Gradient")+ scale_y_reverse(limits =c(0,-.3), breaks=(seq(-.3,0,.1)))+ ggtitle("TW_Gradient_02")+  scale_x_datetime(breaks = seq(as.POSIXct("2018-05-01 00:00:00 EDT"), as.POSIXct("2019-09-01 00:00:00 EDT"), "1 month"),date_labels="%b %d, %Y")+theme(axis.text.x = element_text(angle=45, vjust = 0.5))
 ggsave("TW_Grad_02_FULL.pdf", width = 12, height = 6) 
   
+# Plot head measurements together
+# Complete with manual
+Plot_Times<-as.POSIXct(TW_Grad_02_FULL[,"Date_Time"], "%m/%d/%y %I:%M:%S %p", tz="America/New_York")
+ggplot(TW_Grad_02_FULL, aes(Plot_Times))+geom_line(aes(y=PZ_m_above_GS, colour='PZ'), size=0.3)+geom_line(aes(y=SW_m_above_GS, colour='SW'), size=0.3)+ geom_point(aes(y=PZ_manual, color='PZ manual'), size=3)+ geom_point(aes(y=SW_manual, color='SW manual'), size=3, shape=17)+ xlab("Date")+ ylab("Head (m)")+ scale_y_continuous(limits = c(-1, 0.8), breaks = seq(-1, 0.8, by = 0.5)) + ggtitle("PZ/SW 02")+ scale_x_datetime(breaks = seq(as.POSIXct("2018-05-01 00:00:00 EDT"), as.POSIXct("2019-09-01 00:00:00 EDT"), "1 month"),date_labels="%b %d, %Y") +theme(axis.text.x = element_text(angle=45, vjust = 0.5))+scale_colour_manual(values=c("#bf812d","#543005","#5ab4ac","#003c30"))
+ggsave("TW_PZ-SW_02_FULL.pdf", width = 12, height = 6) 
+# Complete with manual - ZOOM
+Plot_Times<-as.POSIXct(TW_Grad_02_FULL[,"Date_Time"], "%m/%d/%y %I:%M:%S %p", tz="America/New_York")
+ggplot(TW_Grad_02_FULL, aes(Plot_Times))+geom_line(aes(y=PZ_m_above_GS, colour='PZ'), size=0.3)+geom_line(aes(y=SW_m_above_GS, colour='SW'), size=0.3)+ geom_point(aes(y=PZ_manual, color='PZ manual'), size=3)+ geom_point(aes(y=SW_manual, color='SW manual'), size=3, shape=17)+ xlab("Date")+ ylab("Head (m)")+ scale_y_continuous(limits = c(0.1, 0.8), breaks = seq(0.1, 0.8, by = 0.2)) + ggtitle("PZ/SW 02")+ scale_x_datetime(breaks = seq(as.POSIXct("2018-05-01 00:00:00 EDT"), as.POSIXct("2019-09-01 00:00:00 EDT"), "1 month"),date_labels="%b %d, %Y") +theme(axis.text.x = element_text(angle=45, vjust = 0.5))+scale_colour_manual(values=c("#bf812d","#543005","#5ab4ac","#003c30"))
+ggsave("TW_PZ-SW_02_FULL_ZOOM.pdf", width = 12, height = 6) 
+
 # Plot all head measurements together
 # Complete with manual
 Plot_Times<-as.POSIXct(na.omit(TW_Grad_02_FULL)[,"Date_Time"], "%m/%d/%y %I:%M:%S %p", tz="America/New_York")
@@ -1632,8 +1663,8 @@ ggplot(na.omit(TW_Grad_02_FULL), aes(Plot_Times))+geom_line(aes(y=PZ_m_above_GS,
 ggsave("TW_PZ-SW_02_FULL_ZOOM.pdf", width = 12, height = 6) 
 
 # Complete with manual - ZOOMED
-Plot_Times<-as.POSIXct(na.omit(TW_Grad_02_FULL)[,"Date_Time"], "%m/%d/%y %I:%M:%S %p", tz="America/New_York")
-ggplot(na.omit(TW_Grad_02_FULL), aes(Plot_Times))+geom_line(aes(y=PZ_m_above_GS, colour='PZ'), size=0.3)+geom_line(aes(y=SW_m_above_GS, colour='SW'), size=0.3)+scale_colour_manual(values=c("#bf812d","#5ab4ac"))+ xlab("Date")+ ylab("Head (m)")+ ylim(0,0.7)+ ggtitle("TW_PZ/SW_02")+ scale_x_datetime(breaks = seq(as.POSIXct("2018-05-01 00:00:00 EDT"), as.POSIXct("2019-09-01 00:00:00 EDT"), "1 month"),date_labels="%b %d, %Y") +theme(axis.text.x = element_text(angle=45, vjust = 0.5))+  geom_point(aes(x=Plot_Times, y=PZ_manual, color="orange3", size=3))
+Plot_Times<-as.POSIXct(TW_Grad_02_FULL[,"Date_Time"], "%m/%d/%y %I:%M:%S %p", tz="America/New_York")
+ggplot(TW_Grad_02_FULL, aes(Plot_Times))+geom_line(aes(y=PZ_m_above_GS, colour='PZ'), size=0.3)+geom_line(aes(y=SW_m_above_GS, colour='SW'), size=0.3)+scale_colour_manual(values=c("#bf812d","#5ab4ac"))+ xlab("Date")+ ylab("Head (m)")+ ylim(0,0.7)+ ggtitle("TW_PZ/SW_02")+ scale_x_datetime(breaks = seq(as.POSIXct("2018-05-01 00:00:00 EDT"), as.POSIXct("2019-09-01 00:00:00 EDT"), "1 month"),date_labels="%b %d, %Y") +theme(axis.text.x = element_text(angle=45, vjust = 0.5))+  geom_point(aes(x=Plot_Times, y=PZ_manual, color="orange3", size=3))
 ggsave("TW_PZ-SW_02_FULL_ZOOM.pdf", width = 12, height = 6) 
 
 # with all of the manual data too..
