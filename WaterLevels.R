@@ -728,6 +728,9 @@ write.csv(TW_PZ_03_Jun319, file="TWPZ03_11-20-18_to_6-3-19.csv", row.names=FALSE
 TW_PZ_03_FULL<-rbind(TW_PZ_03_Jun2018, TW_PZ_03_Nov2018, TW_PZ_03_Jun319)   
 # Save as CSV  
 write.csv(TW_PZ_03_FULL, file="TWPZ03_FULL.csv", row.names=FALSE)  
+# Calculate the mean m above GS and SD
+mean(na.omit(TW_PZ_03_FULL[,"m_above_GS"])) # 0.3720367
+sd(na.omit(TW_PZ_03_FULL[,"m_above_GS"])) # 0.06722406               
 
 ############## TW_SW_03 ##############
 
