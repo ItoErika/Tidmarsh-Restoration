@@ -1095,7 +1095,7 @@ write.csv(TW_PZ_06_3_19, file="TWPZ06_8-19-17_to_33-19-18.csv", row.names=FALSE)
 # The top of piezometer casing to ground surface = 32 cm
 TW_PZ_06_Jun2018[,"m_below_GS"]<-153/100-(32/100+TW_PZ_06_Jun2018[,"m_water"])  
 # Remove first and last few rows of erroneous data
-TW_PZ_06_Jun2018<-TW_PZ_06_Jun2018[which(TW_PZ_06_Jun2018[,"Date_Time"]=="05/06/18 11:15:00 AM"):which(TW_PZ_06_Jun2018[,"Date_Time"]=="06/18/18 02:15:00 PM"),]
+TW_PZ_06_Jun2018<-TW_PZ_06_Jun2018[which(TW_PZ_06_Jun2018[,"Date_Time"]=="05/06/18 11:45:00 AM"):which(TW_PZ_06_Jun2018[,"Date_Time"]=="06/18/18 02:00:00 PM"),]
 # Add manual data 
 TW_PZ_06_Jun2018[which(TW_PZ_06_Jun2018[,"Date_Time"]=="06/18/18 02:00:00 PM"),"m_manual"]<-0.286
 # Save as CSV  
@@ -1128,7 +1128,7 @@ write.csv(TW_PZ_06_Nov2018, file="TWPZ06_6-18-18_to_11-19-18.csv", row.names=FAL
 # The top of piezometer casing to ground surface = 32 cm
 TW_PZ_06_Jun319[,"m_below_GS"]<-153/100-(31/100+TW_PZ_06_Jun319[,"m_water"])  
 # Remove first few rows of data that overlap with previous dataset
-TW_PZ_06_Jun319<-TW_PZ_06_Jun319[which(TW_PZ_06_Jun319[,"Date_Time"]=="11/19/18 04:15:00 PM"):nrow(TW_PZ_06_Jun319),]
+TW_PZ_06_Jun319<-TW_PZ_06_Jun319[which(TW_PZ_06_Jun319[,"Date_Time"]=="11/19/18 04:45:00 PM"):nrow(TW_PZ_06_Jun319),]
 # Add manual data
 TW_PZ_06_Jun319[which(TW_PZ_06_Jun319[,"Date_Time"]=="03/30/19 12:30:00 PM"),"m_manual"]<-0.152
 TW_PZ_06_Jun319[which(TW_PZ_06_Jun319[,"Date_Time"]=="06/03/19 10:45:00 AM"),"m_manual"]<-0.145
