@@ -48,6 +48,7 @@ TW_PZ_06_SAND_Jun2018<-read.csv("TW_WL_2018_06_18/TW-PZ-06-SAND_sn10499231.csv",
 TW_PZ_07_Jun2018<-read.csv("TW_WL_2018_06_18/TW-PZ-07_sn10499240.csv", skip=1, row.names=1)
 TW_SW_07_Jun2018<-read.csv("TW_WL_2018_06_18/TW-SW-07_sn10744415.csv", skip=1, row.names=1)
 TW_PZ_08_Jun2018<-read.csv("TW_WL_2018_06_18/TW-PZ-08_sn10499239.csv", skip=1, row.names=1)
+TW_PZ_09_Jun2018<-read.csv("TW_WL_2018_06_18/TW-PZ-09.csv", skip=1, row.names=1)
 
 # JULY 18, 2018 LOGGER RETRIEVAL
 TW_PZ_02_Jul2018<-read.csv("TW_WL_2018_07_11/TW_PZ_02.csv", skip=1, row.names=1)
@@ -271,6 +272,7 @@ TW_PZ_06_SAND_Jun2018<-loggerProcess(TW_PZ_06_SAND_Jun2018)
 TW_PZ_07_Jun2018<-loggerProcess(TW_PZ_07_Jun2018)
 TW_SW_07_Jun2018<-loggerProcess(TW_SW_07_Jun2018)
 TW_PZ_08_Jun2018<-loggerProcess(TW_PZ_08_Jun2018)
+TW_PZ_09_Jun2018<-loggerProcess(TW_PZ_09_Jun2018)
 
 # JULY 2018 DATA
 TW_PZ_02_Jul2018<-loggerProcess(TW_PZ_02_Jul2018)
@@ -1601,6 +1603,14 @@ write.csv(TW_PZ_09_5_6, file="TWPZ09_8-29-17_to_4-12-18.csv", row.names=FALSE)
  
 # Create a column for the depth to water below ground surface
 # The top of piezometer casing to ground surface = 28 cm
+TW_PZ_09_Jun2018[,"m_below_GS"]<-163.5/100-(28/100+TW_PZ_09_Jun2018[,"m_water"])                       
+# Save as CSV
+write.csv(TW_PZ_09_Jun2018, file="TWPZ09.csv", row.names=FALSE) 
+
+
+
+# Create a column for the depth to water below ground surface
+# The top of piezometer casing to ground surface = 28 cm
 TW_PZ_09_Nov2018[,"m_below_GS"]<-163.5/100-(28/100+TW_PZ_09_Nov2018[,"m_water"])                       
 # Note that there is a vertical shift in data on 7/11 due to an isotope extraction 
 # Replace the portion of the data where logger was out of water on 7/11 with NA 
@@ -1609,7 +1619,7 @@ Stop_Blank<-which(TW_PZ_09_Nov2018[,"Date_Time"]=="07/11/18 05:15:00 PM")
 TW_PZ_09_Nov2018[Start_Blank:Stop_Blank,"m_below_GS"]<-NA   
 # Correct the vertical jump in data on 7/11 (date of logger retrieval); logger was in slightly different vertical position upon reinstallation
 vert_shift_start<-which(TW_PZ_09_Nov2018[,"Date_Time"]=="07/11/18 05:30:00 PM")
-TW_PZ_09_Nov2018[vert_shift_start:nrow(TW_PZ_09_Nov2018),"m_below_GS"]<-TW_PZ_09_Nov2018[vert_shift_start:nrow(TW_PZ_09_Nov2018),"m_below_GS"]+ 0.04                                 
+TW_PZ_09_Nov2018[vert_shift_start:nrow(TW_PZ_09_Nov2018),"m_below_GS"]<-TW_PZ_09_Nov2018[vert_shift_start:nrow(TW_PZ_09_Nov2018),"m_below_GS"]+ 0.05                                 
 # Remove last few rows of data 
 TW_PZ_09_Nov2018<-TW_PZ_09_Nov2018[1:which(TW_PZ_09_Nov2018[,"Date_Time"]=="11/19/18 03:30:00 PM"),]
 #TW_PZ_09_Nov2018[,"lat"]<-41.91705556
@@ -1622,7 +1632,9 @@ write.csv(TW_PZ_09_Nov, file="TWPZ09_6-18-18_to_11-19-18.csv", row.names=FALSE)
 
 # Create a column for the depth to water below ground surface
 # The top of piezometer casing to ground surface = 28 cm
-TW_PZ_09_Jun319[,"m_below_GS"]<-165/100-(28/100+TW_PZ_09_Jun319[,"m_water"])  
+TW_PZ_09_Jun319[,"m_below_GS"]<-163.5/100-(27.5/100+TW_PZ_09_Jun319[,"m_water"])  
+# Remove beginning of dataset that overlaps with Nov 2018 dataset 
+TW_PZ_09_Jun319<-TW_PZ_09_Jun319[which(TW_PZ_09_Jun319[,"Date_Time"]=="11/19/18 03:45:00 PM"):nrow(TW_PZ_09_Jun319),]    	
 # Replace the portion of the data where logger was out of water on 3/30 with NA
 TW_PZ_09_Jun319[which(TW_PZ_09_Jun319[,"Date_Time"]=="03/30/19 02:45:00 PM"),"m_below_GS"]<-NA    
 # Correct the vertical jump in data on 3/30 (date of logger retrieval); logger was in slightly different vertical position upon reinstallation
