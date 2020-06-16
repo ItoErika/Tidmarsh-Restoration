@@ -1603,11 +1603,14 @@ write.csv(TW_PZ_09_5_6, file="TWPZ09_8-29-17_to_4-12-18.csv", row.names=FALSE)
  
 # Create a column for the depth to water below ground surface
 # The top of piezometer casing to ground surface = 28 cm
-TW_PZ_09_Jun2018[,"m_below_GS"]<-163.5/100-(28/100+TW_PZ_09_Jun2018[,"m_water"])                       
+TW_PZ_09_Jun2018[,"m_below_GS"]<-139.9/100-(28/100+TW_PZ_09_Jun2018[,"m_water"])
+# Assign NA where the logger was extracted and logged erroneous data on 3/19
+TW_PZ_09_Jun2018[which(TW_PZ_09_Jun2018[,"Date_Time"]=="03/19/18 10:15:00 AM"),"m_below_GS"]<-NA
+# Add manual data
+# NOTE: there is a big increase in the water column right after this. This is likely because we added 3 temperature sensors to the PZ at this time
+TW_PZ_09_Jun2018[which(TW_PZ_09_Jun2018[,"Date_Time"]=="03/19/18 10:00:00 AM"),"m_manual"]<-0.198
 # Save as CSV
 write.csv(TW_PZ_09_Jun2018, file="TWPZ09.csv", row.names=FALSE) 
-
-
 
 # Create a column for the depth to water below ground surface
 # The top of piezometer casing to ground surface = 28 cm
@@ -1647,6 +1650,15 @@ TW_PZ_09_Jun319[which(TW_PZ_09_Jun319[,"Date_Time"]=="03/30/19 02:30:00 PM"),"m_
 TW_PZ_09_Jun319[which(TW_PZ_09_Jun319[,"Date_Time"]=="06/03/19 07:45:00 AM"),"m_manual"]<-0.133     
 # Save as CSV
 write.csv(TW_PZ_09_Jun319, file="TWPZ09_11-19-18_to_6-3-19.csv", row.names=FALSE) 
+		       
+# Bind all of the data frames together... 
+# First need to remove the columns that make the dataframes uneven:       
+TW_PZ_09_Nov2018<-TW_PZ_09_Nov2018[,-which(colnames(TW_PZ_09_Nov2018)=="NA.4")]
+TW_PZ_09_Jun319<-TW_PZ_09_Jun319[,-which(colnames(TW_PZ_09_Jun319)=="NA.4")]
+TW_PZ_09_FULL<-rbind(TW_PZ_09_Jun2018, TW_PZ_09_Nov2018, TW_PZ_09_Jun319)    
+TW_PZ_09_FULL[which(TW_PZ_09_FULL[,"Date_Time"]=="03/19/18 10:00:00 AM"),"Notes"]<-"added 3 temp loggers"
+write.csv(TW_PZ_09_FULL, file="TWPZ09_FULL.csv", row.names=FALSE) 
+
 
 ##################################################################
 ############################ TW_SW_10 ############################
@@ -2485,6 +2497,15 @@ Plot_Times<-as.POSIXct(TW_PZ_09_Jun319[,"Date_Time"], "%m/%d/%y %I:%M:%S %p", tz
 ggplot(TW_PZ_09_Jun319, aes(Plot_Times, TW_PZ_09_Jun319[,"m_below_GS"]))+geom_line(color='royalblue3', size=.6) + xlab("Date") + ylab("Depth to Water Below Ground Surface (m)")+ggtitle("TW_PZ_09")+  scale_x_datetime(breaks = seq(Plot_Times[1], Plot_Times[length(Plot_Times)], "7 days"),date_labels="%b %d")+ scale_y_reverse(limits =c(1,0)) +theme(axis.text.x = element_text(angle=45, vjust = 0.5))   + geom_point(aes(x=Plot_Times, y=TW_PZ_09_Jun319[,"m_manual"]), color="orange3", size=3)                                                                                                                         
 ggsave("TW_PZ_09_11-19-18_to_6-3-19_manual.pdf", width = 12, height = 6)                    
            
+		   
+# Complete PZ_06 dataset    
+Plot_Times<-as.POSIXct(TW_PZ_09_FULL[,"Date_Time"], "%m/%d/%y %I:%M:%S %p", tz="America/New_York")
+ggplot(TW_PZ_09_FULL, aes(Plot_Times, TW_PZ_09_FULL[,"m_below_GS"]))+geom_line(color='royalblue3', size=.3) + xlab("Date") + ylab("Depth to Water Below Ground Surface (m)")+ggtitle("TW_PZ_09")+  scale_x_datetime(breaks = seq(as.POSIXct("2018-05-01 00:00:00 EDT"), as.POSIXct("2019-09-01 00:00:00 EDT"), "1 month"),date_labels="%b %d, %Y")+ scale_y_reverse(limits =c(.9,-.1)) +theme(axis.text.x = element_text(angle=45, vjust = 0.5))                                           
+ggsave("TW_PZ_09_FULL.pdf", width = 12, height = 6)                                                                     
+# Complete with manual   
+Plot_Times<-as.POSIXct(TW_PZ_09_FULL[,"Date_Time"], "%m/%d/%y %I:%M:%S %p", tz="America/New_York")
+ggplot(TW_PZ_09_FULL, aes(Plot_Times, TW_PZ_09_FULL[,"m_below_GS"]))+geom_line(color='royalblue3', size=.3) + xlab("Date") + ylab("Depth to Water Below Ground Surface (m)")+ggtitle("TW_PZ_09")+  scale_x_datetime(breaks = seq(as.POSIXct("2018-05-01 00:00:00 EDT"), as.POSIXct("2019-09-01 00:00:00 EDT"), "1 month"),date_labels="%b %d, %Y")+ scale_y_reverse(limits =c(.9,-.1)) +theme(axis.text.x = element_text(angle=45, vjust = 0.5))  + geom_point(aes(x=Plot_Times, y=TW_PZ_09_FULL[,"m_manual"]), color="orange3", size=3)                                            
+ggsave("TW_PZ_09_FULL_manual.pdf", width = 12, height = 6)             
 ##################################################################      
 ############################ TW_SW_10 ############################
 ##################################################################
@@ -2505,6 +2526,7 @@ ggsave("TW_SW_10_11-19-18_to_6-3-19.pdf", width = 12, height = 6)
 Plot_Times<-as.POSIXct(TW_SW_10_Jun319[,"Date_Time"], "%m/%d/%y %I:%M:%S %p", tz="America/New_York")
 ggplot(TW_SW_10_Jun319, aes(Plot_Times, TW_SW_10_Jun319[,"m_above_GS"]))+geom_line(color='royalblue3', size=.6)+ ylim(0,.6) + xlab("Date") + ylab("Stream Stage (m)")+ggtitle("TW_SW_10")+  scale_x_datetime(breaks = seq(Plot_Times[1], Plot_Times[length(Plot_Times)], "7 days"),date_labels="%b %d")+theme(axis.text.x = element_text(angle=45, vjust = 0.5)) + geom_point(aes(x=Plot_Times, y=TW_SW_10_Jun319[,"m_manual"]), color="orange3", size=3)                                                                                                                         
 ggsave("TW_SW_10_11-19-18_to_6-3-19_manual.pdf", width = 12, height = 6) 
+
 
 
 
